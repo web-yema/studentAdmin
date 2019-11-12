@@ -312,11 +312,11 @@ export default {
           }
         })
       })
-    } 
+    }  
   }
 }
 </script>
 
 <style scoped>
-   @import "./asset.scss";
+   @import "./asset.scss"; 
 </style>

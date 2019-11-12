@@ -65,12 +65,12 @@ export default {
       path:"/form/index"
     }
   },
-  async mounted() {
+  async mounted() { 
     const { data } = await getMajor()
     this.getMajor = data.data
     console.log(this.getMajor)
   },
-  methods: { 
+  methods: {  
     submitForm(formName) {
       this.$refs[formName].validate(async valid => {
         if (valid) {

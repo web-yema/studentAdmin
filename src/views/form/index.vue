@@ -212,7 +212,7 @@ export default {
           type: 'warning'
         }).then(async res => {
           console.log(1)
-          this.zyStu = true
+          this.zyStu = true 
 
         }).catch(err => {
           this.$message({
