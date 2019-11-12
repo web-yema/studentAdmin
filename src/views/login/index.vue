@@ -1,9 +1,14 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
+    <el-form ref="loginForm" 
+             :model="loginForm" 
+             :rules="loginRules" 
+             class="login-form" 
+             auto-complete="on" 
+             label-position="left">
 
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">北京工商管理学院-后台管理系统</h3>
       </div>
 
       <el-form-item prop="username">
@@ -41,11 +46,22 @@
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
 
       <div class="tips">
-        <span style="margin-right:20px;">username: admin</span>
-        <span> password: any</span>
+        超级管理员：
+        <span style="margin-right:20px;">username: vvv</span>
+        <span> password: 123456</span>
+      </div>
+      <div class="tips">
+        管理员：
+        <span style="margin-right:20px;">username: 110101199003071372</span>
+        <span> password: 071372</span>
+      </div>
+      <div class="tips">
+        普通用户：
+        <span style="margin-right:20px;">username: 110101199003072818</span>
+        <span> password: 072818</span>
       </div>
 
     </el-form>
@@ -54,28 +70,29 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
+import { log } from 'util';
 
 export default {
   name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
+      if (value === '') {
+        callback(new Error('请输入正确的用户名'))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+        callback(new Error(' 密码不能小于6位'))
       } else {
         callback()
       }
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '111111'
+        username: 'vvv',
+        password: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -93,6 +110,7 @@ export default {
       },
       immediate: true
     }
+    
   },
   methods: {
     showPwd() {
@@ -116,7 +134,7 @@ export default {
             this.loading = false
           })
         } else {
-          console.log('error submit!!')
+          console.log('提交错误！！')
           return false
         }
       })

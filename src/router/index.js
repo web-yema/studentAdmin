@@ -6,6 +6,9 @@ Vue.use(Router)
 /* Layout */
 import Layout from '@/layout'
 
+/* Grtt */
+// eslint-disable-next-line no-unused-vars
+
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -30,6 +33,8 @@ import Layout from '@/layout'
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
+
+// 公共
 export const constantRoutes = [
   {
     path: '/login',
@@ -42,6 +47,19 @@ export const constantRoutes = [
     component: () => import('@/views/404'),
     hidden: true
   },
+  {
+    path: '/yourprofile ',
+    component: Layout,
+    children: [
+      {
+        path: '/yourprofile',
+        name: 'Yourprofile',
+        component: () => import('@/layout/components/yourprofile/index'),
+        meta: { title: 'ourprofile' },
+        hidden: true
+      }
+    ]
+  },
 
   {
     path: '/',
@@ -51,8 +69,44 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
+      meta: { title: '首页', icon: 'dashboard' }
     }]
+  }
+]
+
+export const asyncRoutes = [
+  // 管理员页面
+  {
+    path: '/administrators',
+    component: Layout,
+    redirect: '/administrators/page',
+    alwaysShow: true, // 将始终显示根菜单
+    name: 'Administrators',
+    meta: {
+      title: '管理员',
+      icon: 'lock',
+      roles: ['1'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'role',
+        component: () => import('@/views/administrators/role'),
+        name: 'RoleAdministrators',
+        meta: {
+          title: '管理员列表',
+          roles: ['1']
+        }
+      },
+      {
+        path: 'page',
+        component: () => import('@/views/administrators/page'),
+        name: 'PageAdministrators',
+        meta: {
+          title: '添加管理员',
+          roles: ['1'] // or you can only set roles in sub nav
+        }
+      }
+    ]
   },
 
   {
@@ -60,19 +114,19 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/example/table',
     name: 'Example',
-    meta: { title: 'Example', icon: 'example' },
+    meta: { title: 'Example', icon: 'example', roles: ['1', '2'] },
     children: [
       {
         path: 'table',
         name: 'Table',
         component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
+        meta: { title: 'Table', icon: 'table', roles: ['1', '2'] }
       },
       {
         path: 'tree',
         name: 'Tree',
         component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
+        meta: { title: 'Tree', icon: 'tree', roles: ['1', '2'] }
       }
     ]
   },
@@ -85,7 +139,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'Form',
         component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
+        meta: { title: 'Form', icon: 'form', roles: ['3'] }
       }
     ]
   },
@@ -97,7 +151,8 @@ export const constantRoutes = [
     name: 'Nested',
     meta: {
       title: 'Nested',
-      icon: 'nested'
+      icon: 'nested',
+      roles: ['2']
     },
     children: [
       {
@@ -154,7 +209,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
+        meta: { title: 'External Link', icon: 'link', roles: ['1', '2', '3'] }
       }
     ]
   },
