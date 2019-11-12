@@ -50,3 +50,4 @@ export const getMajor = () => {
   // eslint-disable-next-line no-undef
   return Axios.get('http://132.232.89.22:8080/getMajor')
 }
+

@@ -90,6 +90,7 @@ export const constantRoutes = [
         component: () => import('@/views/form/index'),
         meta: { title: '班级列表', icon: 'form' }
       },
+
       {
         path: 'classstudent',
         name: '班级成员',
