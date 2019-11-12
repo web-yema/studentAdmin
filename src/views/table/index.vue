@@ -230,7 +230,27 @@
 </template>
 
 <script>
+<<<<<<< HEAD
 import { getList } from '@/api/table'
+=======
+// 引入接口函数
+import {
+  getUpdate, // 修改学生信息
+  delAllStudent, // 删除学生
+  selectAllstud, // 查询学生信息
+  getPage, // 分页和学生
+  getMajor, // 获取所有专业
+  getMarketing, // 获取所有市场部
+  getClass, // 获取所有班级
+  getExcel // 获取excel表
+} from '../../api/api.js'
+
+//引入vuex
+import { mapGetters } from "vuex";
+
+import UploadExcelComponent from '../../components/UploadExcel/index'
+
+>>>>>>> f29887c0981d9415b15f9c6e22496267f99f7fb0
 export default {
   name: 'UploadExcel',
   components: {
