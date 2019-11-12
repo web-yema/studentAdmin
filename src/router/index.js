@@ -59,20 +59,20 @@ export const constantRoutes = [
     path: '/example',
     component: Layout,
     redirect: '/example/table',
-    name: 'Example',
-    meta: { title: 'Example', icon: 'example' },
+    name: 'All',
+    meta: { title: '学生操作', icon: 'example' },
     children: [
       {
         path: 'table',
-        name: 'Table',
+        name: '所有学生',
         component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
+        meta: { title: '所有学生', icon: 'table' }
       },
       {
         path: 'tree',
-        name: 'Tree',
+        name: 'Add',
         component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
+        meta: { title: '添加学生', icon: 'tree' }
       }
     ]
   },
