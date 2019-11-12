@@ -70,7 +70,7 @@ export default {
     this.getMajor = data.data
     console.log(this.getMajor)
   },
-  methods: {
+  methods: { 
     submitForm(formName) {
       this.$refs[formName].validate(async valid => {
         if (valid) {

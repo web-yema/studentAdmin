@@ -214,7 +214,6 @@ export default {
           console.log(1)
           this.zyStu = true
 
-
         }).catch(err => {
           this.$message({
             type: 'info',
