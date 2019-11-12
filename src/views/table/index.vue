@@ -230,27 +230,7 @@
 </template>
 
 <script>
-<<<<<<< HEAD
-// 引入接口函数
-import {
-  getUpdate, // 修改学生信息
-  delAllStudent, // 删除学生
-  selectAllstud, // 查询学生信息
-  getPage, // 分页和学生
-  getMajor, // 获取所有专业
-  getMarketing, // 获取所有市场部
-  getClass, // 获取所有班级
-  getExcel // 获取excel表
-} from '../../api/api.js'
-
-//引入vuex
-import { mapGetters } from "vuex";
-
-import UploadExcelComponent from '../../components/UploadExcel/index'
-
-=======
 import { getList } from '@/api/table'
->>>>>>> sf
 export default {
   name: 'UploadExcel',
   components: {

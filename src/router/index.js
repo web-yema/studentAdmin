@@ -142,9 +142,6 @@ export const asyncRoutes = [
         path: 'index',
         name: '班级列表',
         component: () => import('@/views/form/index'),
-<<<<<<< HEAD
-        meta: { title: 'Form', icon: 'form', roles: ['3'] }
-=======
         meta: { title: '班级列表', icon: 'form' }
       },
 
@@ -160,7 +157,6 @@ export const asyncRoutes = [
         name: '创建班级',
         component: () => import('@/views/form/addlist/index'),
         meta: { title: '创建班级', icon: 'tree' }
->>>>>>> why
       }
     ]
   },
