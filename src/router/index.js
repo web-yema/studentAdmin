@@ -13,7 +13,7 @@ import Layout from '@/layout'
  * hidden: true                   if set true, item will not show in the sidebar(default is false)
  * alwaysShow: true               if set true, will always show the root menu
  *                                if not set alwaysShow, when item has more than one children route,
- *                                it will becomes nested mode, otherwise not show the root menu
+ *                                it will becomes headmaster mode, otherwise not show the root menu
  * redirect: noRedirect           if set noRedirect will no redirect in the breadcrumb
  * name:'router-name'             the name is used by <keep-alive> (must set!!!)
  * meta : {
@@ -91,74 +91,97 @@ export const constantRoutes = [
   },
 
   {
-    path: '/nested',
+    path: '/headmaster',
     component: Layout,
-    redirect: '/nested/menu1',
-    name: 'Nested',
+    redirect: '/headmaster/menu1',
+    name: '班主任',
     meta: {
-      title: 'Nested',
-      icon: 'nested'
+      title: '班主任',
+      icon: 'form'
     },
     children: [
       {
         path: 'menu1',
-        component: () => import('@/views/nested/menu1/index'), // Parent router-view
-        name: 'Menu1',
-        meta: { title: 'Menu1' },
-        children: [
-          {
-            path: 'menu1-1',
-            component: () => import('@/views/nested/menu1/menu1-1'),
-            name: 'Menu1-1',
-            meta: { title: 'Menu1-1' }
-          },
-          {
-            path: 'menu1-2',
-            component: () => import('@/views/nested/menu1/menu1-2'),
-            name: 'Menu1-2',
-            meta: { title: 'Menu1-2' },
-            children: [
-              {
-                path: 'menu1-2-1',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
-                name: 'Menu1-2-1',
-                meta: { title: 'Menu1-2-1' }
-              },
-              {
-                path: 'menu1-2-2',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
-                name: 'Menu1-2-2',
-                meta: { title: 'Menu1-2-2' }
-              }
-            ]
-          },
-          {
-            path: 'menu1-3',
-            component: () => import('@/views/nested/menu1/menu1-3'),
-            name: 'Menu1-3',
-            meta: { title: 'Menu1-3' }
-          }
-        ]
+        component: () => import('@/views/headmaster/menu1/index'), // Parent router-view
+        name: '班主任列表',
+        meta: { title: '班主任列表', icon: 'table' }
       },
       {
         path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        meta: { title: 'menu2' }
+        component: () => import('@/views/headmaster/menu2/index'),
+        meta: { title: '添加班主任', icon: 'form' }
       }
     ]
   },
-
   {
-    path: 'external-link',
+    path: '/lecturer',
     component: Layout,
+    redirect: '/lecturer/menu1',
+    name: '讲师',
+    meta: {
+      title: '讲师',
+      icon: 'form'
+    },
     children: [
       {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
+        path: 'menu1',
+        component: () => import('@/views/lecturer/menu1/index'), // Parent router-view
+        name: '讲师列表',
+        meta: { title: '讲师列表', icon: 'table' }
+      },
+      {
+        path: 'menu2',
+        component: () => import('@/views/lecturer/menu2/index'),
+        meta: { title: '添加讲师', icon: 'form' }
       }
     ]
   },
-
+  {
+    path: '/market',
+    component: Layout,
+    redirect: '/market/menu1',
+    name: '市场部',
+    meta: {
+      title: '市场部',
+      icon: 'form'
+    },
+    children: [
+      {
+        path: 'menu1',
+        component: () => import('@/views/market/menu1/index'), // Parent router-view
+        name: '市场部列表',
+        meta: { title: '市场部列表', icon: 'table' }
+      },
+      {
+        path: 'menu2',
+        component: () => import('@/views/market/menu2/index'),
+        meta: { title: '添加市场部', icon: 'form' }
+      }
+    ]
+  },
+  {
+    path: '/major',
+    component: Layout,
+    redirect: '/major/menu1',
+    name: '专业',
+    meta: {
+      title: '专业',
+      icon: 'form'
+    },
+    children: [
+      {
+        path: 'menu1',
+        component: () => import('@/views/major/menu1/index'), // Parent router-view
+        name: '专业列表',
+        meta: { title: '专业列表', icon: 'table' }
+      },
+      {
+        path: 'menu2',
+        component: () => import('@/views/major/menu2/index'),
+        meta: { title: '添加专业', icon: 'form' }
+      }
+    ]
+  },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
@@ -177,4 +200,5 @@ export function resetRouter() {
   router.matcher = newRouter.matcher // reset router
 }
 
+// eslint-disable-next-line eol-last
 export default router

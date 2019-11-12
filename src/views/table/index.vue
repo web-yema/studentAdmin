@@ -45,7 +45,6 @@
 
 <script>
 import { getList } from '@/api/table'
-
 export default {
   filters: {
     statusFilter(status) {
