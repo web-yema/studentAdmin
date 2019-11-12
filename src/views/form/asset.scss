@@ -1,0 +1,38 @@
+.why_select{
+  width: 99.6%;
+  outline:none !important;
+  border: none !important;
+}
+.el-select-dropdown{
+  box-shadow: none;
+  border-top: 1px solid #EBEEF5;
+  border-bottom: 1px solid #EBEEF5;
+}
+.top_option{
+  padding-left: 0.3%;
+}
+.table_div{
+  width: 100%;
+  overflow: hidden;
+}
+.go_student{
+  cursor: pointer;
+  color: rgb(42, 42, 253);
+}
+.el-dialog{
+  width: 30% !important;
+  padding: 0px 24px;
+  padding-right:50px; 
+}
+.optionclass{
+  padding: 5px;
+  .el-input{
+    width: 80%;
+  }
+}
+.el-input--suffix .el-input__inner{
+  padding-right: 0px;
+}
+.el-form--inline .el-form-item{
+  margin-right: 2px;
+}

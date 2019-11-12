@@ -80,12 +80,28 @@ export const constantRoutes = [
   {
     path: '/form',
     component: Layout,
+    redirect: '/form/index',
+    name: '班级信息页',
+    meta: { title: '班级信息页', icon: 'table' },
     children: [
       {
         path: 'index',
-        name: 'Form',
+        name: '班级列表',
         component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
+        meta: { title: '班级列表', icon: 'form' }
+      },
+      {
+        path: 'classstudent',
+        name: '班级成员',
+        component: () => import('@/views/form/classstudent/index'),
+        meta: { title: '班级成员', icon: 'form' },
+        hidden: true
+      },
+      {
+        path: 'addlist',
+        name: '创建班级',
+        component: () => import('@/views/form/addlist/index'),
+        meta: { title: '创建班级', icon: 'tree' }
       }
     ]
   },
