@@ -18,7 +18,7 @@
         style="margin-left:15px;width:70%;display:flex;justify-content: space-between;margin-top:30px;"
       >
         <div>年龄：</div>
-        <el-input v-model="newAge" size="mini" placeholder="年龄" />
+        <el-input-number v-model="newAge" style="width:20%;height:28px;margin-right:460px;" :step="1" step-strictly :min="1" :max="100" label="当前成绩" />
       </div>
       <div
         style="margin-left:15px;width:70%;display:flex;justify-content: space-between;margin-top:30px;"
@@ -56,13 +56,13 @@
         style="margin-left:15px;width:70%;display:flex;justify-content: space-between;margin-top:30px;"
       >
         <div>当前成绩：</div>
-        <el-input-number style="width:20%;height:28px;margin-right:460px;" v-model="chengji" :step="1" step-strictly></el-input-number>
+        <el-input-number v-model="chengji" style="width:20%;height:28px;margin-right:460px;" :step="1" step-strictly :min="0" :max="40" label="当前成绩" />
       </div>
       <div
         style="margin-left:15px;width:70%;display:flex;justify-content: space-between;margin-top:30px;"
       >
         <div>还差成绩：</div>
-        <el-input v-model="Stillbad" size="mini" placeholder="还差成绩" />
+        <el-input-number v-model="Stillbad" style="width:20%;height:28px;margin-right:460px;" :step="1" step-strictly :min="0" :max="40" label="还差成绩" />
       </div>
       <div
         style="margin-left:15px;width:70%;display:flex;justify-content: space-between;margin-top:30px;"
@@ -160,8 +160,8 @@ export default {
     },
     // 确定(添加学生)
     async Determine() {
-      //添加一项
-      let obj = {
+      // 添加一项
+      const obj = {
         name: this.newName,
         sex: this.sex,
         age: this.newAge,
@@ -170,49 +170,49 @@ export default {
         classes: this.newclass,
         citycenter: this.cityCenter,
         chengji: this.chengji,
-        graduation:this.Stillbad,
+        graduation: this.Stillbad,
         failss: this.Fail
-      };
+      }
       if (/.*[\u4e00-\u9fa5]+.*$/.test(this.chengji)) {
-        //判断不带汉字的正则
-        this.$message.error("成绩不必带单位!");
+        // 判断不带汉字的正则
+        this.$message.error('成绩不必带单位!')
         return false
       } else if (/.*[\u4e00-\u9fa5]+.*$/.test(this.Fail)) {
-        //判断不带汉字的正则
-        this.$message.error("挂科次数不必带单位!")
+        // 判断不带汉字的正则
+        this.$message.error('挂科次数不必带单位!')
         return false
       } else {
-        let success = await getStudent(obj);
+        const success = await getStudent(obj)
         if (success.data.code === 201) {
           this.$message.error(success.data.msg)
         } else {
-            this.newName = "",
-            this.sex = "",
-            this.newAge = "",
-            this.study = "",
-            this.major = "",
-            this.newclass = "",
-            this.cityCenter = "",
-            this.chengji = "",
-            this.Stillbad = "",
-            this.Fail = ""
-          this.$confirm(`${success.data.msg},是否跳转至学生列表页`, "提示", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning"
+          this.newName = ''
+          this.sex = ''
+          this.newAge = ''
+          this.study = ''
+          this.major = ''
+          this.newclass = ''
+          this.cityCenter = ''
+          this.chengji = ''
+          this.Stillbad = ''
+          this.Fail = ''
+          this.$confirm(`${success.data.msg},是否跳转至学生列表页`, '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
           })
             .then(() => {
               this.$router.push({
-                name: "All",
+                name: 'All',
                 params: { maxpage: success.data.maxpages }
-              }); //如果想在push里传递params参数，就必须用路由对应的name跳转
+              }) // 如果想在push里传递params参数，就必须用路由对应的name跳转
             })
             .catch(() => {
               this.$message({
-                type: "info",
-                message: "取消跳转"
+                type: 'info',
+                message: '取消跳转'
+              })
             })
-          })
         }
       }
     },

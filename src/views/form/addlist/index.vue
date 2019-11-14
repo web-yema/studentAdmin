@@ -7,7 +7,7 @@
         </el-form-item>
         <el-form-item label="选择专业" prop="major">
           <el-select v-model="ruleForm.major" placeholder="选择专业">
-            <el-option v-for="site in getMajor" :label='site.majorname' :value='site.majorname' />
+            <el-option v-for="site in getMajor" :label="site.majorname" :value="site.majorname" />
           </el-select>
         </el-form-item>
         <el-form-item label="创建时间" required>
@@ -37,7 +37,7 @@ export default {
   data() {
     return {
       createClass: [], // 创建班级数据
-      getMajor:[],
+      getMajor: [],
       ruleForm: {
         classname: '',
         major: '',
@@ -62,15 +62,15 @@ export default {
           { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
         ]
       },
-      path:"/form/index"
+      path: '/form/index'
     }
   },
-  async mounted() { 
+  async mounted() {
     const { data } = await getMajor()
     this.getMajor = data.data
     console.log(this.getMajor)
   },
-  methods: {  
+  methods: {
     submitForm(formName) {
       this.$refs[formName].validate(async valid => {
         if (valid) {
@@ -94,14 +94,14 @@ export default {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning',
-            size:"mini"
+            size: 'mini'
           }).then(() => {
             this.$router.push({
-              path: this.path, // 跳转路由
+              path: this.path // 跳转路由
             })
           }).catch(() => {
-                    
-          });
+
+          })
         } else {
           console.log('error submit!!')
           return false

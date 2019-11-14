@@ -102,7 +102,7 @@ export default {
         cancelButtonText: '取消'
       }).then(async({ value }) => {
         // 判断如果value值和之前相同，或是填入空格，提示用户您没有做任何更改
-        if (value == this.tableData[scope.$index].upmajor || value.trim() === '') {
+        if (value === this.tableData[scope.$index].upmajor || value.trim() === '') {
           this.$message.error('您没有做任何更改!')
           return false
         }

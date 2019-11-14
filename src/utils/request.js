@@ -34,7 +34,6 @@ service.interceptors.request.use(
 // response interceptor
 service.interceptors.response.use(async response => {
   const res = response.data
-  console.log(res)
   // if the custom code is not 20000, it is judged as an error.
   if (res.code !== 20000) {
     Message({
@@ -65,15 +64,15 @@ service.interceptors.response.use(async response => {
     return res
   }
 },
-error => {
-  console.log('err' + error) // for debug
-  Message({
-    message: error.message,
-    type: 'error',
-    duration: 5 * 1000
-  })
-  return Promise.reject(error)
-}
+  error => {
+    console.log('err' + error) // for debug
+    Message({
+      message: error.message,
+      type: 'error',
+      duration: 5 * 1000
+    })
+    return Promise.reject(error)
+  }
 )
 
 export default service
