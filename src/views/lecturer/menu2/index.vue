@@ -12,7 +12,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="年龄" prop="age">
-          <el-input v-model="ruleForm.age" />
+          <el-input-number v-model="ruleForm.age" :min="1" :max="100" label="请输入年龄" />
         </el-form-item>
         <el-form-item label="学院" prop="college">
           <el-select v-model="ruleForm.college" placeholder="请选择学院">
@@ -55,7 +55,7 @@ export default {
     return {
       ruleForm: {
         name: '', // 姓名
-        age: '', // 年龄
+        age: 1, // 年龄
         college: '', // 学院
         time: '', // 入职时间
         job: '', // 职业
@@ -69,8 +69,7 @@ export default {
         ],
         // 年龄
         age: [
-          { required: true, message: '请输入年龄', trigger: 'blur' },
-          { type: Number(), message: '请输入数字', trigger: 'blur' }
+          { required: true, message: '请输入年龄', trigger: 'change' }
         ],
         // 学院
         college: [

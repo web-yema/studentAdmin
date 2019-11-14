@@ -168,19 +168,19 @@ export const asyncRoutes = [
     name: '班主任',
     meta: {
       title: '班主任',
-      icon: 'form'
+      icon: 'headMaster'
     },
     children: [
       {
         path: 'menu1',
         component: () => import('@/views/headmaster/menu1/index'), // Parent router-view
         name: '班主任列表',
-        meta: { title: '班主任列表', icon: 'table' }
+        meta: { title: '班主任列表', icon: 'headmasterList' }
       },
       {
         path: 'menu2',
         component: () => import('@/views/headmaster/menu2/index'),
-        meta: { title: '添加班主任', icon: 'form' }
+        meta: { title: '添加班主任', icon: 'addHeadmaster' }
       }
     ]
   },
@@ -191,19 +191,19 @@ export const asyncRoutes = [
     name: '讲师',
     meta: {
       title: '讲师',
-      icon: 'form'
+      icon: 'lecturer'
     },
     children: [
       {
         path: 'menu1',
         component: () => import('@/views/lecturer/menu1/index'), // Parent router-view
         name: '讲师列表',
-        meta: { title: '讲师列表', icon: 'table' }
+        meta: { title: '讲师列表', icon: 'lecturerList' }
       },
       {
         path: 'menu2',
         component: () => import('@/views/lecturer/menu2/index'),
-        meta: { title: '添加讲师', icon: 'form' }
+        meta: { title: '添加讲师', icon: 'addLecturer' }
       }
     ]
   },
@@ -214,19 +214,19 @@ export const asyncRoutes = [
     name: '市场部',
     meta: {
       title: '市场部',
-      icon: 'form'
+      icon: 'market'
     },
     children: [
       {
         path: 'menu1',
         component: () => import('@/views/market/menu1/index'), // Parent router-view
         name: '市场部列表',
-        meta: { title: '市场部列表', icon: 'table' }
+        meta: { title: '市场部列表', icon: 'marketList' }
       },
       {
         path: 'menu2',
         component: () => import('@/views/market/menu2/index'),
-        meta: { title: '添加市场部', icon: 'form' }
+        meta: { title: '添加市场部', icon: 'addMarket' }
       }
     ]
   },
@@ -237,19 +237,19 @@ export const asyncRoutes = [
     name: '专业',
     meta: {
       title: '专业',
-      icon: 'form'
+      icon: 'major'
     },
     children: [
       {
         path: 'menu1',
         component: () => import('@/views/major/menu1/index'), // Parent router-view
         name: '专业列表',
-        meta: { title: '专业列表', icon: 'table' }
+        meta: { title: '专业列表', icon: 'majorList' }
       },
       {
         path: 'menu2',
         component: () => import('@/views/major/menu2/index'),
-        meta: { title: '添加专业', icon: 'form' }
+        meta: { title: '添加专业', icon: 'addMajor' }
       }
     ]
   },
