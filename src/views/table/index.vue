@@ -165,7 +165,7 @@
       </el-button>
     </div>
   </div>
-  </div>
+</div>
 </template>
 
 <script>
@@ -289,16 +289,16 @@ export default {
       const { data } = await getPage(page)
       this.tableData = data.data
       this.total = data.total
+    },
+    // 获取专业
+    async Majors() {
+      const { data } = await getMajor()
+      for (let i = 0; i < data.data.length; i++) {
+        this.upmajors.push({
+        value: data.data[i].majorname
+      })
+    }
   },
-  // 获取专业
-  async Majors() {
-    const { data } = await getMajor()
-    for (let i = 0; i < data.data.length; i++) {
-      this.upmajors.push({
-      value: data.data[i].majorname
-    })
-  }
-},
   // 获取班级
   async Classs() {
     const { data } = await getClass()
