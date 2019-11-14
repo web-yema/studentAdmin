@@ -48,8 +48,8 @@
 </template>
 
 <script>
-import CountTo from "vue-count-to";
-import { getAll } from "@/api/api";
+import CountTo from 'vue-count-to'
+import { getAll } from '@/api/api'
 export default {
   components: {
     CountTo
@@ -57,19 +57,19 @@ export default {
   data() {
     return {
       allstudent: 10
-    };
+    }
   },
   async mounted() {
     // 获取学生总人数
-    let { data } = await getAll();
-    this.allstudent = data.data.length;
+    const { data } = await getAll()
+    this.allstudent = data.data.length
   },
   methods: {
     handleSetLineChartData(type) {
-      this.$emit("handleSetLineChartData", type);
+      this.$emit('handleSetLineChartData', type)
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

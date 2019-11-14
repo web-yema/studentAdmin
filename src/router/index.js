@@ -114,19 +114,19 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/example/table',
     name: 'All',
-    meta: { title: '学生操作', icon: 'example' },
+    meta: { title: '学生管理', icon: 'studentOption' },
     children: [
       {
         path: 'table',
-        name: '所有学生',
+        name: '学生列表',
         component: () => import('@/views/table/index'),
-        meta: { title: '所有学生', icon: 'table' }
+        meta: { title: '学生列表', icon: 'studentList' }
       },
       {
         path: 'tree',
         name: 'Add',
         component: () => import('@/views/tree/index'),
-        meta: { title: '添加学生', icon: 'tree' }
+        meta: { title: '添加学生', icon: 'addStudent' }
       }
     ]
   },

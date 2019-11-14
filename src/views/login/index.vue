@@ -1,11 +1,13 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" 
-             :model="loginForm" 
-             :rules="loginRules" 
-             class="login-form" 
-             auto-complete="on" 
-             label-position="left">
+    <el-form
+      ref="loginForm"
+      :model="loginForm"
+      :rules="loginRules"
+      class="login-form"
+      auto-complete="on"
+      label-position="left"
+    >
 
       <div class="title-container">
         <h3 class="title">北京工商管理学院-后台管理系统</h3>
@@ -69,8 +71,8 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
-import { log } from 'util';
+// import { validUsername } from '@/utils/validate'
+// import { log } from 'util'
 
 export default {
   name: 'Login',
@@ -110,7 +112,7 @@ export default {
       },
       immediate: true
     }
-    
+
   },
   methods: {
     showPwd() {
