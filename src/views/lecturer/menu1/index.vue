@@ -78,15 +78,25 @@
         </template>
       </el-table-column>
     </el-table>
+    <!-- 分页模块 -->
+    <pageCount style="position:fixed;left:205px;  top:520px;" :total="total" :pageSize="pageSize" :currentPage="currentPage" @getcurrentPage="getcurrentPage" />
   </div>
 </template>
 
 <script>
 // 引入接口函数
 import { getTeacherAll, updateTeacher, deleteTeacher } from '../../../api/headAll'
+// 分页模块
+import pageCount from '../../../components/Pagination/index'
 export default {
+  components: {
+    pageCount
+  },
   data() {
     return {
+      total: 1, // 数据总条数，默认给1
+      pageSize: 6, // 数据的总条数，默认是6条
+      currentPage: 1, // 总页数，默认是第1页
       dialogVisible: false, // 弹窗状态
       listLoading: false,
       tableData: [], // 所有讲师
@@ -111,12 +121,17 @@ export default {
     }
   },
   mounted() {
-    this.getTeacherAlls()
+    this.getTeacherAlls(this.currentPage)
   },
   methods: {
+    //调用子组件传过来的事件
+    getcurrentPage(currentPage) {
+      this.currentPage = currentPage
+      this.getTeacherAlls(currentPage)
+    },
     // 下拉框：全部讲师，视觉设计，WEB架构
     async changeTeacher(id) {
-      const { data } = await getTeacherAll()
+      const { data } = await getTeacherAll(this.currentPage)
       this.tableData = data.data
       var list = []
       for (var i = 0; i < this.tableData.length; i++) {
@@ -128,9 +143,10 @@ export default {
       this.tableData = list
     },
     // 获取全部讲师
-    async getTeacherAlls() {
-      const { data } = await getTeacherAll()
+    async getTeacherAlls(page) {
+      const { data } = await getTeacherAll(page)
       this.tableData = data.data
+      this.total = data.total
     },
     // 修改讲师信息
     open(scope) {
@@ -139,7 +155,7 @@ export default {
         cancelButtonText: '取消'
       }).then(async({ value }) => {
         // 如果value和之前一样，或填入空格，提示用户您没有做任何更改
-        if (value == this.tableData[scope.$index].upmajor || value.trim() === '') {
+        if (value === this.tableData[scope.$index].upmajor || value.trim() === '') {
           this.$message.error('您没有做任何更改!')
           return false
         }
@@ -148,7 +164,7 @@ export default {
         if (data.code === 200) {
           // 如果code码为200，提示用户修改成功，并获取所有讲师
           this.$message.success(data.msg)
-          this.getTeacherAlls()
+          this.getTeacherAlls(this.currentPage)
         } else {
           // 否则就修改失败，重试
           this.$message.error('修改失败，请重试!')
@@ -174,7 +190,7 @@ export default {
         if (data.code === 200) {
           // 如果code码为200，提示用户删除成功，并获取所有讲师
           this.$message.success(data.msg)
-          this.getTeacherAlls()
+          this.getTeacherAlls(this.currentPage)
         } else if (data.code === 201) {
           // 如果code码为201，提示用户没有当前项
           this.$message.error('没有当前项!')

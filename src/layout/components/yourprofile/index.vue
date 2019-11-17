@@ -3,7 +3,7 @@
     <div class="personalCenter-left">
       <!-- 用户头像 -->
       <div class="demo-type">
-        <img :src="avatar" class="avatar" />
+        <img :src="avatar" class="avatar">
         <el-upload
           action="http://132.232.89.22:8080/uploadAvatar"
           class="avatar-uploader"
@@ -19,27 +19,27 @@
         </el-upload>
       </div>
       <!-- 用户名 -->
-      <div class="personalCenter-name">{{name}}</div>
+      <div class="personalCenter-name">{{ name }}</div>
       <!-- 修改密码 -->
       <div class="modify-password">
         <el-button type="text" @click="dialogFormVisible = true">修改密码</el-button>
         <el-dialog title="修改密码" :visible.sync="dialogFormVisible">
           <el-form
+            ref="ruleForm"
             :model="ruleForm"
             status-icon
             :rules="rules"
-            ref="ruleForm"
             label-width="100px"
             class="demo-ruleForm"
           >
             <el-form-item label="原始密码" prop="age">
-              <el-input type="password" v-model="ruleForm.age"></el-input>
+              <el-input v-model="ruleForm.age" type="password" />
             </el-form-item>
             <el-form-item label="新密码" prop="pass">
-              <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
+              <el-input v-model="ruleForm.pass" type="password" autocomplete="off" />
             </el-form-item>
             <el-form-item label="确认密码" prop="checkPass">
-              <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
+              <el-input v-model="ruleForm.checkPass" type="password" autocomplete="off" />
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="submitForm('ruleForm')">确定</el-button>
@@ -52,24 +52,24 @@
     </div>
     <!-- 占位 -->
     <div class="exhibition">
-        <img :src="avatar" class="avatar" />
+      <img :src="avatar" class="avatar">
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import { updateAdminPass } from "@/api/api";
+import { mapGetters } from 'vuex'
+import { updateAdminPass } from '@/api/api'
 export default {
   data() {
     //  原始密码
     var checkAge = (rule, value, callback) => {
       if (!value) {
-        return callback(new Error("原始密码不能为空"));
+        return callback(new Error('原始密码不能为空'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     // 新密码
     var validatePass = (rule, value, callback) => {
       var regularpassword = /(?=.*?[a-zA-Z])(?=.*?[0-9])[a-zA-Z0-9]{8,16}$/
@@ -85,102 +85,102 @@ export default {
         }
         callback();
       }
-    };
+    }
     // 确认密码
     var validatePass2 = (rule, value, callback) => {
 
       if (value === "") {
         callback(new Error("请再次输入密码"));
       } else if (value !== this.ruleForm.pass) {
-        callback(new Error("两次输入密码不一致!"));
+        callback(new Error('两次输入密码不一致!'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     return {
       ruleForm: {
         // 修改密码
-        pass: "",
-        checkPass: "",
-        age: ""
+        pass: '',
+        checkPass: '',
+        age: ''
       },
       rules: {
         // 修改密码
-        pass: [{ validator: validatePass, trigger: "blur" }],
-        checkPass: [{ validator: validatePass2, trigger: "blur" }],
-        age: [{ validator: checkAge, trigger: "blur" }]
+        pass: [{ validator: validatePass, trigger: 'blur' }],
+        checkPass: [{ validator: validatePass2, trigger: 'blur' }],
+        age: [{ validator: checkAge, trigger: 'blur' }]
       },
       dialogFormVisible: false, // 点击确定退出
-      dialogImageUrl: "",
+      dialogImageUrl: '',
       dialogVisible: false
-    };
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'name', // 从vuex中拿用户名字
+      'avatar', // 从vuex中拿用户头像
+      'id'
+    ])
   },
   methods: {
     errorHandler() {
-      return true;
+      return true
     },
     //   点击确定修改密码
     submitForm(formName) {
       this.$refs[formName].validate(async valid => {
         if (valid) {
-          let { data } = await updateAdminPass({
+          const { data } = await updateAdminPass({
             _id: this.id,
             oldpassword: this.ruleForm.age,
             newpassword: this.ruleForm.pass
-          });
+          })
           if (data.code === 201) {
-            this.$message.error(data.msg);
+            this.$message.error(data.msg)
           } else {
             this.$message({
-              message: data.msg + ",3秒后跳转到登录页！",
-              type: "success"
-            });
-            this.dialogFormVisible = false; // 确定退出弹框
-            this.resetForm(formName); // 调用重设方法
+              message: data.msg + ',3秒后跳转到登录页！',
+              type: 'success'
+            })
+            this.dialogFormVisible = false // 确定退出弹框
+            this.resetForm(formName) // 调用重设方法
             setTimeout(() => {
-              this.logout(); //调用跳转到登陆页的方法
-            }, 3000);
+              this.logout() // 调用跳转到登陆页的方法
+            }, 3000)
           }
         } else {
-          console.log("提交错误！！");
-          return false;
+          console.log('提交错误！！')
+          return false
         }
-      });
+      })
     },
     // 重设方法
     resetForm(formName) {
-      this.$refs[formName].resetFields();
+      this.$refs[formName].resetFields()
     },
     // 退出返回到登录页方法
     async logout() {
-      await this.$store.dispatch("user/logout");
-      this.$router.push(`/login`);
+      await this.$store.dispatch('user/logout')
+      this.$router.push(`/login`)
     },
     // 上传头像
-     handleAvatarSuccess(res, file) {
-        this.$store.dispatch('user/getInfo')
-      },
-      beforeAvatarUpload(file) {
-        const isJPG = /^image\/(jpeg|png|jpg|gif)$/.test(file.type);
-        const isLt2M = file.size / 1024 / 1024 < 2;
+    handleAvatarSuccess(res, file) {
+      this.$store.dispatch('user/getInfo')
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = /^image\/(jpeg|png|jpg|gif)$/.test(file.type)
+      const isLt2M = file.size / 1024 / 1024 < 2
 
-        if (!isJPG) {
-          this.$message.error('上传头像图片只能是 jpg/gif/png 格式!');
-        }
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
-        }
-        return isJPG && isLt2M;
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 jpg/gif/png 格式!')
       }
-  },
-  computed: {
-    ...mapGetters([
-      "name", // 从vuex中拿用户名字
-      "avatar", // 从vuex中拿用户头像
-      "id"
-    ])
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+      return isJPG && isLt2M
+    }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

@@ -32,8 +32,10 @@
       </el-form-item>
       <!-- 操作按钮 -->
       <el-form-item>
-        <el-button type="primary"
-                   @click="submitForm('ruleForm')">提交</el-button>
+        <el-button
+          type="primary"
+          @click="submitForm('ruleForm')"
+        >提交</el-button>
         <el-button @click="resetForm('ruleForm')">重置</el-button>
       </el-form-item>
       <!-- 复制 -->
@@ -69,9 +71,9 @@ export default {
         this.ruleForm.pass = "";
         callback();
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     // 用户密码
     var validatePass = (rule, value, callback) => {
       if (value === "") {
@@ -82,7 +84,7 @@ export default {
           return callback(new Error("请输入密码"));
         }
       } else {
-        callback();
+        callback()
       }
     };
 
@@ -93,7 +95,7 @@ export default {
         power: '2',  // 权限
         loginFlag: true // 第一次登录的标识
       },
-      username:'',
+      username: '',
       rules: {
         pass: [{ validator: validatePass, trigger: "blur" }],
         name: [{ validator: checkAge, trigger: ["blur",'change'] }]
@@ -103,7 +105,7 @@ export default {
         message1:'',
         message2:''
       }
-    };
+    }
   },
   methods: {
     // 点击提交
@@ -122,22 +124,22 @@ export default {
             this.message.message1 = data.message1;
             this.message.message2 = data.message2;
             setTimeout(() => {
-              this.resetForm(formName);
-            }, 1000);
+              this.resetForm(formName)
+            }, 1000)
           } else {
             Message({
               message: data.message,
-              type: "error",
+              type: 'error',
               duration: 2 * 1000
             });
             this.ruleForm.pass = "";
 
           }
         } else {
-          console.log("提交错误！");
-          return false;
+          console.log('提交错误！')
+          return false
         }
-      });
+      })
     },
     // 重置 input框
     resetForm(formName) {
@@ -155,7 +157,7 @@ export default {
         });
     }
   }
-};
+}
 </script>
 
 <style scoped>

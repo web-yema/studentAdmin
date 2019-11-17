@@ -4,25 +4,25 @@
     <div class="optionclass">
       <el-form :inline="true" :data="onSubmit" :model="searchStudentdata" class="demo-form-inline">
         <el-form-item style="width:10.48%" label="">
-          <el-input :disabled="true" v-model="searchStudentdata.classes" placeholder="班级名称"></el-input>
+          <el-input v-model="searchStudentdata.classes" :disabled="true" placeholder="班级名称" />
         </el-form-item>
         <el-form-item style="width:12.25%" label="">
-          <el-input v-model="searchStudentdata.name" placeholder="姓名"></el-input>
+          <el-input v-model="searchStudentdata.name" placeholder="姓名" />
         </el-form-item>
         <el-form-item style="width:12.25%" label="">
-          <el-input v-model="searchStudentdata.age" placeholder="年龄"></el-input>
+          <el-input v-model="searchStudentdata.age" placeholder="年龄" />
         </el-form-item>
         <el-form-item style="width:12.25%" label="">
-          <el-input v-model="searchStudentdata.chengji" placeholder="已有成绩"></el-input>
+          <el-input v-model="searchStudentdata.chengji" placeholder="已有成绩" />
         </el-form-item>
         <el-form-item style="width:12.25%" label="">
-          <el-input v-model="searchStudentdata.graduation" placeholder="还差成绩"></el-input>
+          <el-input v-model="searchStudentdata.graduation" placeholder="还差成绩" />
         </el-form-item>
         <el-form-item style="width:12.25%" label="">
-          <el-input v-model="searchStudentdata.failss" placeholder="挂科次数"></el-input>
+          <el-input v-model="searchStudentdata.failss" placeholder="挂科次数" />
         </el-form-item>
         <el-form-item style="width:12.25%" label="">
-          <el-input v-model="searchStudentdata.study" placeholder="学制"></el-input>
+          <el-input v-model="searchStudentdata.study" placeholder="学制" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" size="mini" @click="onSubmit">查询</el-button>
@@ -39,8 +39,8 @@
       >
         <el-table-column
           type="selection"
-          width="55">
-        </el-table-column>
+          width="55"
+        />
         <el-table-column
           prop="classes"
           label="班级"
@@ -91,19 +91,20 @@
       <el-dialog
         title="修改操作"
         :visible.sync="show"
-        width="30%">
-        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+        width="30%"
+      >
+        <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
           <el-form-item label="班级" prop="classes">
-            <el-input v-model="ruleForm.classes"></el-input>
+            <el-input v-model="ruleForm.classes" />
           </el-form-item>
           <el-form-item label="已有成绩" prop="chengji">
-            <el-input v-model="ruleForm.chengji"></el-input>
+            <el-input v-model="ruleForm.chengji" />
           </el-form-item>
           <el-form-item label="还差成绩" prop="graduation">
-            <el-input v-model="ruleForm.graduation"></el-input>
+            <el-input v-model="ruleForm.graduation" />
           </el-form-item>
           <el-form-item label="挂科次数" prop="failss">
-            <el-input v-model="ruleForm.failss"></el-input>
+            <el-input v-model="ruleForm.failss" />
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -114,7 +115,7 @@
     </div>
     <!-- 批量删除 -->
     <template>
-      <el-button style="margin-top:10px" type="danger" size="small" @click="soamdelstudent()" :disabled="this.sels.length === 0">批量删除</el-button>
+      <el-button style="margin-top:10px" type="danger" size="small" :disabled="this.sels.length === 0" @click="soamdelstudent()">批量删除</el-button>
     </template>
     <!-- 添加 -->
     <template>
@@ -125,22 +126,22 @@
 
 <script>
 // 引入接口函数
-import { allstudent, updateAllstud, delallStudent, addallStudent } from '../../../api/api.js'
+import { allstudent, updateAllstud, delallStudent } from '../../../api/api.js'
 export default {
   data() {
     return {
       listLoading: true,
       show: false, // 弹窗
       classes: [], // 获取所有班级
-      allstudent:[], //获取所有学生
-      classstudents:[],
-      all:[], //获取班级学生
+      allstudent: [], // 获取所有学生
+      classstudents: [],
+      all: [], // 获取班级学生
       ruleForm: {
-        classes:"",
-        chengji:"",
-        graduation:"",
-        failss:"",
-        id:""
+        classes: '',
+        chengji: '',
+        graduation: '',
+        failss: '',
+        id: ''
       },
       rules: {
         classes: [
@@ -151,17 +152,17 @@ export default {
           { required: true, message: '请输入已有成绩', trigger: 'blur' },
           { min: 1, max: 5, message: '输入错误', trigger: 'blur' }
         ],
-        graduation:[
+        graduation: [
           { required: true, message: '请输入还差成绩', trigger: 'blur' },
           { min: 1, max: 5, message: '输入错误', trigger: 'blur' }
         ],
-        failss:[
+        failss: [
           { required: true, message: '请输入挂科次数', trigger: 'blur' },
           { min: 1, max: 3, message: '输入错误', trigger: 'blur' }
         ]
       },
-      rowlist:[], //修改旧值
-      search:"", //查询
+      rowlist: [], // 修改旧值
+      search: '', // 查询
       formInline: {
         classname: '',
         createDate: '',
@@ -169,12 +170,12 @@ export default {
         lecturer: '',
         headteacher: ''
       },
-      searchStudentdata:{
-        classname: '',
-        
+      searchStudentdata: {
+        classname: ''
+
       },
-      path:"/example/tree",
-      sels: [],//选中的值显示
+      path: '/example/tree',
+      sels: []// 选中的值显示
     }
   },
   async mounted() {
@@ -182,8 +183,8 @@ export default {
     this.allstudent = data.data
     this.listLoading = false
     // 接收存储数据
-    this.all = JSON.parse(localStorage.getItem('data'));
-    if(this.all == ""){
+    this.all = JSON.parse(localStorage.getItem('data'))
+    if (this.all === '') {
       return false
     }
     this.searchStudentdata.classes = this.all[0].classes
@@ -191,7 +192,7 @@ export default {
   },
   methods: {
     async getStudata() {
-      this.all = JSON.parse(localStorage.getItem('data'));
+      this.all = JSON.parse(localStorage.getItem('data'))
     },
     // 删除学生
     remove(id) {
@@ -217,7 +218,7 @@ export default {
           message: data.msg,
           type: 'error'
         })
-      }).catch(err => {
+      }).catch(error => {
         this.$message({
           type: 'info',
           message: '已取消删除'
@@ -227,96 +228,94 @@ export default {
     // 修改
     update(index, row) {
       // console.log(row)
-      this.rowlist = row;
-      this.show = true;
-      this.ruleForm.classes = row.classes;
-      this.ruleForm.chengji = row.chengji;
-      this.ruleForm.graduation = row.graduation;
-      this.ruleForm.failss = row.failss;
-      this.ruleForm.id = row._id;
+      this.rowlist = row
+      this.show = true
+      this.ruleForm.classes = row.classes
+      this.ruleForm.chengji = row.chengji
+      this.ruleForm.graduation = row.graduation
+      this.ruleForm.failss = row.failss
+      this.ruleForm.id = row._id
     },
     // 确定修改
     async submitForm() {
       // 默认值
-      let obj = {
-        classes:this.ruleForm.classes,
-        chengji:this.ruleForm.chengji,
-        graduation:this.ruleForm.graduation,
-        failss:this.ruleForm.failss
+      const obj = {
+        classes: this.ruleForm.classes,
+        chengji: this.ruleForm.chengji,
+        graduation: this.ruleForm.graduation,
+        failss: this.ruleForm.failss
       }
-      let ID = this.ruleForm.id
+      const ID = this.ruleForm.id
       console.log(ID)
       // console.log(obj)
       // console.log(this.rowlist)
-      let { data } = await updateAllstud(obj,ID);
+      const { data } = await updateAllstud(obj, ID)
       console.log(data.code)
       // 判断值是否改变
-      if(
+      if (
         obj.classes === this.rowlist.classes &&
         obj.chengji === this.rowlist.chengji &&
         obj.graduation === this.rowlist.graduation &&
         obj.failss === this.rowlist.failss
-      ){
+      ) {
         this.$message.success('没有任何修改')
-        this.show = false;
-      }
-      else if (data.code === 200) {
+        this.show = false
+      } else if (data.code === 200) {
         console.log(obj)
         this.getStudata()
-        this.$message.success("修改成功")
-        this.show = false;
-      }
-      else {
-        this.$message.error(data.msg);
-        return false;
+        this.$message.success('修改成功')
+        this.show = false
+      } else {
+        this.$message.error(data.msg)
+        return false
       }
     },
     // 取消修改
     secede(formName) {
-      this.$refs[formName].resetFields();
+      this.$refs[formName].resetFields()
       this.$message({
         type: 'info',
         message: '已取消修改'
 
       })
-      this.show = false;
+      this.show = false
     },
     // 查询
     onSubmit() {
-      console.log('submit!');
+      console.log('submit!')
     },
     // 添加
-    addstudent(){
+    addstudent() {
       this.$router.push({
-        path: this.path, // 跳转路由
+        path: this.path // 跳转路由
       })
     },
     selsChange(sels) {
       this.sels = sels
     },
     soamdelstudent() {
-      let path = this.sels.map(item => item.path).join()//获取所有选中行的path组成的字符串，以逗号分隔
+      const path = this.sels.map(item => item.path).join()// 获取所有选中行的path组成的字符串，以逗号分隔
       console.log(path)
       this.$confirm('此操作将永久删除该文件及其子文件, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.all({paths:path}).then(result => {
-          let {data} = result
-          console.log("批量删除")
-          let flag = this.$config.executeResult(data)
+        this.all({ paths: path }).then(result => {
+          const { data } = result
+          console.log('批量删除')
+          const flag = this.$config.executeResult(data)
           if (flag) {
-            this.$message.success("ok")
+            this.$message.success('ok')
             this.$emit('reloadTree')
           }
         })
       })
-    }  
+    }
   }
 }
 </script>
 
 <style scoped>
-   @import "./asset.scss"; 
+   @import "./asset.scss";
 </style>

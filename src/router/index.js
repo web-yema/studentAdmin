@@ -121,7 +121,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'table',
-        name: '所有学生',
+        name: '学生列表',
         component: () => import('@/views/table/index'),
         meta: { title: '所有学生', icon: 'table', roles: ['1', '2', '3'] }
       },

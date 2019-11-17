@@ -14,30 +14,30 @@
     <div class="optionclass">
       <el-form :inline="true" :data="onSubmit" :model="searchClassdata" class="demo-form-inline">
         <el-form-item style="width:14.24%" label="">
-          <el-input v-model="searchClassdata.classname" placeholder="班级名称"></el-input>
+          <el-input v-model="searchClassdata.classname" placeholder="班级名称" />
         </el-form-item>
         <el-form-item style="width:14.24%" label="" required>
-            <el-form-item prop="date1">
-              <el-date-picker type="date" placeholder="选择日期" v-model="searchClassdata.createDate" style="width: 100%;"></el-date-picker>
-            </el-form-item>
+          <el-form-item prop="date1">
+            <el-date-picker v-model="searchClassdata.createDate" type="date" placeholder="选择日期" style="width: 100%;" />
+          </el-form-item>
         </el-form-item>
         <el-form-item style="width:14.24%" label="">
           <el-select v-model="searchClassdata.major" placeholder="专业">
-            <el-option label="Web架构" value="Web架构"></el-option>
-            <el-option label="UI设计" value="UI设计"></el-option>
+            <el-option label="Web架构" value="Web架构" />
+            <el-option label="UI设计" value="UI设计" />
           </el-select>
         </el-form-item>
         <el-form-item style="width:14.24%" label="">
-          <el-input v-model="searchClassdata.lecturer" placeholder="讲师"></el-input>
+          <el-input v-model="searchClassdata.lecturer" placeholder="讲师" />
         </el-form-item>
         <el-form-item style="width:14.24%" label="">
-          <el-input v-model="searchClassdata.headteacher" placeholder="班主任"></el-input>
+          <el-input v-model="searchClassdata.headteacher" placeholder="班主任" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" size="mini" @click="onSubmit">查 询</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button style="margin-left:7px" type="success" size="mini" v-if="play" @click="returndata">返 回</el-button>
+          <el-button v-if="play" style="margin-left:7px" type="success" size="mini" @click="returndata">返 回</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -71,9 +71,9 @@
         <el-table-column
           label="班级成员"
         >
-        <template slot-scope="scope">
-          <span class="go_student" @click="member(scope.row)">详 情</span>
-        </template>
+          <template slot-scope="scope">
+            <span class="go_student" @click="member(scope.row)">详 情</span>
+          </template>
         </el-table-column>
         <el-table-column
           label="操作"
@@ -88,13 +88,14 @@
       <el-dialog
         title="修改操作"
         :visible.sync="show"
-        width="30%">
-        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+        width="30%"
+      >
+        <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
           <el-form-item label="讲师" prop="lecturer">
-            <el-input v-model="ruleForm.lecturer"></el-input>
+            <el-input v-model="ruleForm.lecturer" />
           </el-form-item>
           <el-form-item label="班主任" prop="headteacher">
-            <el-input v-model="ruleForm.headteacher"></el-input>
+            <el-input v-model="ruleForm.headteacher" />
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -107,7 +108,8 @@
       title="转移学生"
       :visible.sync="zyStu"
       width="30%"
-      :before-close="handleClose">
+      :before-close="handleClose"
+    >
       <span>这是一段信息</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="zyStu = false">取 消</el-button>
@@ -119,16 +121,16 @@
 
 <script>
 // 引入接口函数
-import { getClass, delClass, updateClass, allstudent,searchClass } from '../../api/api.js'
+import { getClass, delClass, updateClass, allstudent, searchClass } from '../../api/api.js'
 export default {
   data() {
     return {
-      zyStu : false,
+      zyStu: false,
       listLoading: true,
       show: false, // 弹窗
       classes: [], // 获取所有班级
-      allstudent:[], //获取所有学生
-      classstudents:[],
+      allstudent: [], // 获取所有学生
+      classstudents: [],
       options: [{
         value: '全部班级',
         label: '全部班级'
@@ -142,9 +144,9 @@ export default {
       value: '全部班级',
       path: '/form/classstudent',
       ruleForm: {
-        lecturer:"",
-        headteacher:"",
-        id:""
+        lecturer: '',
+        headteacher: '',
+        id: ''
       },
       rules: {
         lecturer: [
@@ -156,17 +158,17 @@ export default {
           { min: 2, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
         ]
       },
-      rowlist:[], //修改旧值
-      searchClass:[],
-      list:[],
-      all:[],
-      searchClassdata:{
-        classname: '',
+      rowlist: [], // 修改旧值
+      searchClass: [],
+      list: [],
+      all: [],
+      searchClassdata: {
+        classname: ''
         // createDate:'',
         // major:'',
         // lecturer:'',
         // headteacher:''
-      }, //查询
+      }, // 查询
       play: false
     }
   },
@@ -184,21 +186,21 @@ export default {
       }
     },
     // 删除用户
-    async remove(e,id) {
+    async remove(e, id) {
       const { data } = await allstudent()
       this.allstudent = data.data
       const classstudents = this.classstudents
-      for(var i = 0;i<this.allstudent.length;i++){
-        if(e.classname === this.allstudent[i].classes){
+      for (var i = 0; i < this.allstudent.length; i++) {
+        if (e.classname === this.allstudent[i].classes) {
           classstudents.push(this.allstudent[i])
         }
       }
       this.allstudent = classstudents
-      localStorage.setItem("datas",JSON.stringify(this.allstudent))
-      this.all = JSON.parse(localStorage.getItem('datas'));
+      localStorage.setItem('datas', JSON.stringify(this.allstudent))
+      this.all = JSON.parse(localStorage.getItem('datas'))
       console.log(this.all)
       // 判断班里是否有学生
-      if(this.all[0]){
+      if (this.all[0]) {
         // 若有学生，转移学生
         const h = this.$createElement
         this.$msgbox({
@@ -212,16 +214,15 @@ export default {
           type: 'warning'
         }).then(async res => {
           console.log(1)
-          this.zyStu = true 
-
-        }).catch(err => {
+          this.zyStu = true
+        }).catch(error => {
           this.$message({
             type: 'info',
             message: '已取消删除'
           })
         })
         this.classstudents = []
-      }else{
+      } else {
         // 若没有学生,直接删除
         const h = this.$createElement
         this.$msgbox({
@@ -244,29 +245,28 @@ export default {
             message: data.msg,
             type: 'error'
           })
-        }).catch(err => {
+        }).catch(error => {
           this.$message({
             type: 'info',
             message: '已取消删除'
           })
         })
       }
-      
     },
     // 班级成员
     async member(e) {
       const { data } = await allstudent()
       this.allstudent = data.data
       const classstudents = this.classstudents
-      for(var i = 0;i<this.allstudent.length;i++){
-        if(e.classname === this.allstudent[i].classes){
+      for (var i = 0; i < this.allstudent.length; i++) {
+        if (e.classname === this.allstudent[i].classes) {
           classstudents.push(this.allstudent[i])
         }
       }
       this.allstudent = classstudents
-      localStorage.setItem("data",JSON.stringify(this.allstudent))
+      localStorage.setItem('data', JSON.stringify(this.allstudent))
       this.$router.push({
-        path: this.path, // 跳转路由
+        path: this.path // 跳转路由
       })
     },
     // 选择专业
@@ -285,54 +285,51 @@ export default {
     // 修改
     update(index, row) {
       console.log(row)
-      this.rowlist = row;
-      this.show = true;
-      this.ruleForm.lecturer = row.lecturer;
-      this.ruleForm.headteacher = row.headteacher;
-      this.ruleForm.id = row._id;
+      this.rowlist = row
+      this.show = true
+      this.ruleForm.lecturer = row.lecturer
+      this.ruleForm.headteacher = row.headteacher
+      this.ruleForm.id = row._id
     },
     // 确定修改
     async submitForm() {
-      let obj = {
-        _id:this.ruleForm.id,
-        lecturer:this.ruleForm.lecturer,
-        headteacher:this.ruleForm.headteacher
+      const obj = {
+        _id: this.ruleForm.id,
+        lecturer: this.ruleForm.lecturer,
+        headteacher: this.ruleForm.headteacher
       }
-      console.log(obj)
-      let { data } = await updateClass(obj);
-      if(
+      const { data } = await updateClass(obj)
+      if (
         obj.lecturer === this.rowlist.lecturer &&
         obj.headteacher === this.rowlist.headteacher
-      ){
+      ) {
         this.$message.success('没有任何修改')
-        this.show = false;
-      }
-      else if (data.code === 200) {
+        this.show = false
+      } else if (data.code === 200) {
         this.handlegetHeadTeacher()
-        this.$message.success("修改成功")
-        this.show = false;
-      }
-      else {
-        this.$message.error(data.msg);
-        return false;
+        this.$message.success('修改成功')
+        this.show = false
+      } else {
+        this.$message.error(data.msg)
+        return false
       }
     },
     // 取消修改
     secede(formName) {
-      this.$refs[formName].resetFields();
+      this.$refs[formName].resetFields()
       this.$message({
         type: 'info',
         message: '已取消修改'
 
       })
-      this.show = false;
+      this.show = false
     },
     // 查询
     async onSubmit() {
-      let { data } = await searchClass(this.searchClassdata);
+      const { data } = await searchClass(this.searchClassdata)
       const classes = data.data
       console.log(classes)
-      if(this.searchClassdata.classname === "" || this.searchClassdata.createDate === "" || this.searchClassdata.major === "" || this.searchClassdata.lecturer === "" || this.searchClassdata.headteacher === ""){
+      if (this.searchClassdata.classname === '' || this.searchClassdata.createDate === '' || this.searchClassdata.major === '' || this.searchClassdata.lecturer === '' || this.searchClassdata.headteacher === '') {
         this.play = false
         return false
       }
@@ -341,7 +338,7 @@ export default {
       this.play = true
     },
     // 返回
-    async returndata(){
+    async returndata() {
       // this.searchClassdata.classname = ""
       // this.searchClassdata.createDate = ""
       // this.searchClassdata.major = ""
@@ -353,12 +350,12 @@ export default {
       this.play = false
     },
     handleClose(done) {
-        this.$confirm('确认关闭？')
-          .then(_ => {
-            done();
-          })
-          .catch(_ => {});
-      }
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          done()
+        })
+        .catch(_ => {})
+    }
   }
 }
 </script>
