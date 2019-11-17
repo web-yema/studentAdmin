@@ -135,14 +135,14 @@ export const asyncRoutes = [
     path: '/form',
     component: Layout,
     redirect: '/form/index',
-    name: '班级信息页',
-    meta: { title: '班级信息页', icon: 'table' },
+    name: '班级信息',
+    meta: { title: '班级信息', icon: 'classgl' },
     children: [
       {
         path: 'index',
         name: '班级列表',
         component: () => import('@/views/form/index'),
-        meta: { title: '班级列表', icon: 'form' }
+        meta: { title: '班级列表', icon: 'classlb' }
       },
 
       {
@@ -156,7 +156,7 @@ export const asyncRoutes = [
         path: 'addlist',
         name: '创建班级',
         component: () => import('@/views/form/addlist/index'),
-        meta: { title: '创建班级', icon: 'tree' }
+        meta: { title: '创建班级', icon: 'tjclass' }
       }
     ]
   },

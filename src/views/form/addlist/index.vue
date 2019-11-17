@@ -48,15 +48,7 @@ export default {
       rules: {
         classname: [
           { required: true, message: '请输入班级名称', trigger: 'blur' },
-          { min: 5, max: 5, message: '班级名称不规范', trigger: 'blur' }
-        ],
-        lecturer: [
-          { required: true, message: '请输入讲师姓名', trigger: 'blur' },
-          { min: 2, max: 4, message: '请输入正确的姓名', trigger: 'blur' }
-        ],
-        headteacher: [
-          { required: true, message: '请输入班主任姓名', trigger: 'blur' },
-          { min: 2, max: 4, message: '请输入正确的姓名', trigger: 'blur' }
+          { min: 5, max: 7, message: '班级名称不规范', trigger: 'blur' }
         ],
         createDate: [
           { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
@@ -68,7 +60,6 @@ export default {
   async mounted() { 
     const { data } = await getMajor()
     this.getMajor = data.data
-    console.log(this.getMajor)
   },
   methods: {  
     submitForm(formName) {
@@ -103,7 +94,10 @@ export default {
                     
           });
         } else {
-          console.log('error submit!!')
+          this.$message({
+            type: 'info',
+            message: '创建失败！'
+          })
           return false
         }
       })
