@@ -50,7 +50,7 @@
         </el-dialog>
       </div>
     </div>
-    
+    <!-- 占位 -->
     <div class="exhibition">
         <img :src="avatar" class="avatar" />
     </div>
@@ -72,20 +72,23 @@ export default {
     };
     // 新密码
     var validatePass = (rule, value, callback) => {
-      if (value === "") {
+      var regularpassword = /(?=.*?[a-zA-Z])(?=.*?[0-9])[a-zA-Z0-9]{8,16}$/
+      if (value === this.ruleForm.age) {
+        callback(new Error('新密码不能与原密码相同!'))
+      } else if (value === "") {
         callback(new Error("请输入密码"));
-      } else if (value.length < 6) {
-        callback(new Error("不能小于六位"));
-      } else {
+      } else if(!regularpassword.test(value) ){
+        callback(new Error("格式为：数字+英文且不能小于8位不能大于16位"));
+      } else{
         if (this.ruleForm.checkPass !== "") {
           this.$refs.ruleForm.validateField("checkPass");
         }
-
         callback();
       }
     };
     // 确认密码
     var validatePass2 = (rule, value, callback) => {
+
       if (value === "") {
         callback(new Error("请再次输入密码"));
       } else if (value !== this.ruleForm.pass) {

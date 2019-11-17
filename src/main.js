@@ -38,6 +38,14 @@ Vue.prototype.$echarts = echarts
 
 Vue.config.productionTip = false
 
+// 复制-功能插件
+import VueClipboard from 'vue-clipboard2'
+Vue.use(VueClipboard)
+
+// 登录强行修改密码-背景插件
+import VueParticles from 'vue-particles'
+Vue.use(VueParticles)
+
 new Vue({
   el: '#app',
   router,

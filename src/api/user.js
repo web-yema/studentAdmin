@@ -27,7 +27,7 @@ export function logout() {
 }
 
 // 创建用户
-export function createUser(data) {
+export function register(data) {
   return axios.post('http://132.232.89.22:8080/register', data)
 }
 

@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
@@ -7,7 +8,8 @@ const state = {
   name: '',
   avatar: '',
   introduction: '',
-  roles: []
+  roles: [],
+  id: ''
 }
 
 const mutations = {
@@ -28,6 +30,9 @@ const mutations = {
   },
   SET_ID: (state, id) => {
     state.id = id
+  },
+  SET_LOGINfLAG: (state, loginFlag) => {
+    state.loginFlag = loginFlag
   }
 }
 
@@ -57,7 +62,7 @@ const actions = {
           return false
         }
 
-        const { roles, name, avatar, introduction, token, id } = data
+        const { roles, name, avatar, introduction, token, id, loginFlag } = data
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
           reject('getInfo: roles must be a non-null array!')
@@ -68,6 +73,7 @@ const actions = {
         commit('SET_AVATAR', avatar)
         commit('SET_INTRODUCTION', introduction)
         commit('SET_ID', id)
+        commit('SET_LOGINfLAG', loginFlag)
         setToken(token)
         resolve(data)
       }).catch(error => {
