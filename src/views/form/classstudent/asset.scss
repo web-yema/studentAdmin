@@ -1,3 +1,35 @@
 .optionclass{
   margin-top: 30px; 
 } 
+.table_divs{
+  margin-top: 20px;
+}
+.czbtn{
+  position: fixed;
+  bottom: 20px;
+  z-index: 1000
+}
+.fileinp{
+  position: relative;
+}
+.fileinpd{
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
+.btn{
+  padding: 8px 10px;
+  background: #67C23A;
+  color: #FFF;
+  border: none;
+  font-size: 12px;
+  border-radius: 16px;
+  transition: 0.2s;
+}
+.btn:hover{
+  background-color: #85CE61;
+}
+#text{
+  color: red;
+}

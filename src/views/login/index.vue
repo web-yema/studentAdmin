@@ -1,6 +1,8 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" 
+    <canvas ref="canvas"></canvas>
+    <div class="login-containe-form">
+        <el-form ref="loginForm" 
              :model="loginForm" 
              :rules="loginRules" 
              class="login-form" 
@@ -8,7 +10,7 @@
              label-position="left">
 
       <div class="title-container">
-        <h3 class="title">北京工商管理学院-后台管理系统</h3>
+        <h3 class="title">数字媒体学院-学生管理系统</h3>
       </div>
 
       <el-form-item prop="username">
@@ -18,7 +20,7 @@
         <el-input
           ref="username"
           v-model="loginForm.username"
-          placeholder="Username"
+          placeholder="用户名"
           name="username"
           type="text"
           tabindex="1"
@@ -35,7 +37,7 @@
           ref="password"
           v-model="loginForm.password"
           :type="passwordType"
-          placeholder="Password"
+          placeholder="密码"
           name="password"
           tabindex="2"
           auto-complete="on"
@@ -45,35 +47,24 @@
           <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
         </span>
       </el-form-item>
-
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
-
-      <div class="tips">
-        超级管理员：
-        <span style="margin-right:20px;">username: vvv</span>
-        <span> password: 123456</span>
-      </div>
-      <div class="tips">
-        管理员：
-        <span style="margin-right:20px;">username: 110101199003071372</span>
-        <span> password: 071372</span>
-      </div>
-      <div class="tips">
-        普通用户：
-        <span style="margin-right:20px;">username: 110101199003072818</span>
-        <span> password: 072818</span>
-      </div>
-
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;"  @click.native.prevent="handleLogin">登录</el-button>
     </el-form>
+    </div>
+    <CopyrightNotice />
   </div>
 </template>
 
 <script>
 import { validUsername } from '@/utils/validate'
 import { log } from 'util';
-
+import CopyrightNotice from '@/components/CopyrightNotice/index'
+import '@/assets/css/style.css'
+import branch from '@/assets/js/script.js'
 export default {
   name: 'Login',
+  components:{
+    CopyrightNotice
+  },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (value === '') {
@@ -91,8 +82,9 @@ export default {
     }
     return {
       loginForm: {
-        username: 'vvv',
-        password: ''
+        username: '',
+        password: '',
+        loginFlag:''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -103,6 +95,9 @@ export default {
       redirect: undefined
     }
   },
+  mounted(){
+    branch(this.$refs.canvas)
+  },
   watch: {
     $route: {
       handler: function(route) {
@@ -110,9 +105,10 @@ export default {
       },
       immediate: true
     }
-    
+
   },
   methods: {
+    // 显示密码
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
@@ -123,18 +119,18 @@ export default {
         this.$refs.password.focus()
       })
     },
+    // 登录按钮事件
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || '/' })
-            this.loading = false
+          this.$router.push({ path: this.redirect || '/' })
+          this.loading = false
           }).catch(() => {
             this.loading = false
           })
         } else {
-          console.log('提交错误！！')
           return false
         }
       })
@@ -234,11 +230,11 @@ $light_gray:#eee;
     position: relative;
 
     .title {
-      font-size: 26px;
+      font-size: 35px;
       color: $light_gray;
       margin: 0px auto 40px auto;
       text-align: center;
-      font-weight: bold;
+      font-family: 华文行楷;
     }
   }
 
@@ -251,5 +247,14 @@ $light_gray:#eee;
     cursor: pointer;
     user-select: none;
   }
+}
+.login-container .login-form{
+  padding-top: 0px;
+}
+.login-containe-form{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>

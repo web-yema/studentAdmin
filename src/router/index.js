@@ -41,6 +41,12 @@ export const constantRoutes = [
     component: () => import('@/views/login/index'),
     hidden: true
   },
+  // 登录-修改密码
+  {
+    path: '/changepassword',
+    component: () => import('@/views/changepassword/index'),
+    hidden: true
+  },
 
   {
     path: '/404',
@@ -74,19 +80,16 @@ export const constantRoutes = [
   }
 ]
 
+// 权限
 export const asyncRoutes = [
-  // 管理员页面
+  // 管理员路由
   {
     path: '/administrators',
     component: Layout,
-    redirect: '/administrators/page',
+    redirect: '/administrators/role',
     alwaysShow: true, // 将始终显示根菜单
     name: 'Administrators',
-    meta: {
-      title: '管理员',
-      icon: 'lock',
-      roles: ['1'] // you can set roles in root nav
-    },
+    meta: { title: '管理员', icon: 'lock', roles: ['1'] },
     children: [
       {
         path: 'role',
@@ -114,19 +117,19 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/example/table',
     name: 'All',
-    meta: { title: '学生操作', icon: 'example' },
+    meta: { title: '学生操作', icon: 'example', roles: ['1', '2', '3'] },
     children: [
       {
         path: 'table',
-        name: '所有学生',
+        name: '学生列表',
         component: () => import('@/views/table/index'),
-        meta: { title: '所有学生', icon: 'table' }
+        meta: { title: '所有学生', icon: 'table', roles: ['1', '2', '3'] }
       },
       {
         path: 'tree',
         name: 'Add',
         component: () => import('@/views/tree/index'),
-        meta: { title: '添加学生', icon: 'tree' }
+        meta: { title: '添加学生', icon: 'tree', roles: ['1', '2'] }
       }
     ]
   },
@@ -135,28 +138,28 @@ export const asyncRoutes = [
     path: '/form',
     component: Layout,
     redirect: '/form/index',
-    name: '班级信息页',
-    meta: { title: '班级信息页', icon: 'table' },
+    name: '班级信息',
+    meta: { title: '班级信息', icon: 'classgl' },
     children: [
       {
         path: 'index',
         name: '班级列表',
         component: () => import('@/views/form/index'),
-        meta: { title: '班级列表', icon: 'form' }
+        meta: { title: '班级列表', icon: 'classlb' }
       },
 
       {
         path: 'classstudent',
         name: '班级成员',
         component: () => import('@/views/form/classstudent/index'),
-        meta: { title: '班级成员', icon: 'form' },
+        meta: { title: '班级成员', icon: 'form', roles: ['1', '2', '3'] },
         hidden: true
       },
       {
         path: 'addlist',
         name: '创建班级',
         component: () => import('@/views/form/addlist/index'),
-        meta: { title: '创建班级', icon: 'tree' }
+        meta: { title: '创建班级', icon: 'tjclass' }
       }
     ]
   },
@@ -166,21 +169,18 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/headmaster/menu1',
     name: '班主任',
-    meta: {
-      title: '班主任',
-      icon: 'form'
-    },
+    meta: { title: '班主任', icon: 'form', roles: ['1', '2', '3'] },
     children: [
       {
         path: 'menu1',
         component: () => import('@/views/headmaster/menu1/index'), // Parent router-view
         name: '班主任列表',
-        meta: { title: '班主任列表', icon: 'table' }
+        meta: { title: '班主任列表', icon: 'table', roles: ['1', '2', '3'] }
       },
       {
         path: 'menu2',
         component: () => import('@/views/headmaster/menu2/index'),
-        meta: { title: '添加班主任', icon: 'form' }
+        meta: { title: '添加班主任', icon: 'form', roles: ['1', '2'] }
       }
     ]
   },
@@ -189,21 +189,18 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/lecturer/menu1',
     name: '讲师',
-    meta: {
-      title: '讲师',
-      icon: 'form'
-    },
+    meta: { title: '讲师', icon: 'form', roles: ['1', '2', '3'] },
     children: [
       {
         path: 'menu1',
         component: () => import('@/views/lecturer/menu1/index'), // Parent router-view
         name: '讲师列表',
-        meta: { title: '讲师列表', icon: 'table' }
+        meta: { title: '讲师列表', icon: 'table', roles: ['1', '2', '3'] }
       },
       {
         path: 'menu2',
         component: () => import('@/views/lecturer/menu2/index'),
-        meta: { title: '添加讲师', icon: 'form' }
+        meta: { title: '添加讲师', icon: 'form', roles: ['1', '2'] }
       }
     ]
   },
@@ -212,21 +209,18 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/market/menu1',
     name: '市场部',
-    meta: {
-      title: '市场部',
-      icon: 'form'
-    },
+    meta: { title: '市场部', icon: 'form', roles: ['1', '2', '3'] },
     children: [
       {
         path: 'menu1',
         component: () => import('@/views/market/menu1/index'), // Parent router-view
         name: '市场部列表',
-        meta: { title: '市场部列表', icon: 'table' }
+        meta: { title: '市场部列表', icon: 'table', roles: ['1', '2', '3'] }
       },
       {
         path: 'menu2',
         component: () => import('@/views/market/menu2/index'),
-        meta: { title: '添加市场部', icon: 'form' }
+        meta: { title: '添加市场部', icon: 'form', roles: ['1', '2'] }
       }
     ]
   },
@@ -235,21 +229,18 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/major/menu1',
     name: '专业',
-    meta: {
-      title: '专业',
-      icon: 'form'
-    },
+    meta: { title: '专业', icon: 'form', roles: ['1', '2', '3'] },
     children: [
       {
         path: 'menu1',
         component: () => import('@/views/major/menu1/index'), // Parent router-view
         name: '专业列表',
-        meta: { title: '专业列表', icon: 'table' }
+        meta: { title: '专业列表', icon: 'table', roles: ['1', '2', '3'] }
       },
       {
         path: 'menu2',
         component: () => import('@/views/major/menu2/index'),
-        meta: { title: '添加专业', icon: 'form' }
+        meta: { title: '添加专业', icon: 'form', roles: ['1', '2'] }
       }
     ]
   },

@@ -11,37 +11,6 @@
       />
     </el-select>
 
-    <div class="optionclass">
-      <el-form :inline="true" :data="onSubmit" :model="searchClassdata" class="demo-form-inline">
-        <el-form-item style="width:14.24%" label="">
-          <el-input v-model="searchClassdata.classname" placeholder="班级名称"></el-input>
-        </el-form-item>
-        <el-form-item style="width:14.24%" label="" required>
-            <el-form-item prop="date1">
-              <el-date-picker type="date" placeholder="选择日期" v-model="searchClassdata.createDate" style="width: 100%;"></el-date-picker>
-            </el-form-item>
-        </el-form-item>
-        <el-form-item style="width:14.24%" label="">
-          <el-select v-model="searchClassdata.major" placeholder="专业">
-            <el-option label="Web架构" value="Web架构"></el-option>
-            <el-option label="UI设计" value="UI设计"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item style="width:14.24%" label="">
-          <el-input v-model="searchClassdata.lecturer" placeholder="讲师"></el-input>
-        </el-form-item>
-        <el-form-item style="width:14.24%" label="">
-          <el-input v-model="searchClassdata.headteacher" placeholder="班主任"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" size="mini" @click="onSubmit">查 询</el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button style="margin-left:7px" type="success" size="mini" v-if="play" @click="returndata">返 回</el-button>
-        </el-form-item>
-      </el-form>
-    </div>
-
     <div class="table_div">
       <el-table
         v-loading="listLoading"
@@ -71,9 +40,9 @@
         <el-table-column
           label="班级成员"
         >
-        <template slot-scope="scope">
-          <span class="go_student" @click="member(scope.row)">详 情</span>
-        </template>
+          <template slot-scope="scope">
+            <span class="go_student" @click="member(scope.row)">详 情</span>
+          </template>
         </el-table-column>
         <el-table-column
           label="操作"
@@ -85,16 +54,18 @@
           </template>
         </el-table-column>
       </el-table>
+      <!-- 分页 -->
       <el-dialog
         title="修改操作"
         :visible.sync="show"
-        width="30%">
-        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+        width="30%"
+      >
+        <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
           <el-form-item label="讲师" prop="lecturer">
-            <el-input v-model="ruleForm.lecturer"></el-input>
+            <el-input v-model="ruleForm.lecturer" />
           </el-form-item>
           <el-form-item label="班主任" prop="headteacher">
-            <el-input v-model="ruleForm.headteacher"></el-input>
+            <el-input v-model="ruleForm.headteacher" />
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -103,32 +74,77 @@
         </span>
       </el-dialog>
     </div>
+    <!-- 转移学生 -->
     <el-dialog
+      class="allstulog"
       title="转移学生"
       :visible.sync="zyStu"
       width="30%"
-      :before-close="handleClose">
-      <span>这是一段信息</span>
+      :before-close="handleClose"
+    >
+      <el-table
+        ref="multipleTable"
+        highlight-current-row
+        style="width: 100%"
+        class="allstutab"
+        :data="all"
+        height="300"
+        @current-change="handleCurrentChange"
+      >
+        <el-table-column
+          prop="name"
+          label="姓名"
+        >
+          <template slot-scope="scope">
+            <div style="height:100%">{{ scope.row.name }}</div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="chengji"
+          label="成绩"
+        >
+          <template slot-scope="scope">
+            <div>{{ scope.row.chengji }}</div>
+          </template>
+        </el-table-column>
+      </el-table>
+      <p class="allp">转移到</p>
+
+      <div style="position:relative">
+        <el-select v-model="value1" style="padding-left:10px" filterable placeholder="请选择" @change="changeClass">
+          <el-option
+            v-for="item in classes"
+            :key="item._id"
+            :label="item.classname"
+            :value="item.classname"
+            :disabled="item.disabled"
+          />
+        </el-select>
+        <br>
+        <el-button style="margin:0px 10px;width:92%;position:absolute;bottom:0;" type="primary" @click="zyStus">转移</el-button>
+      </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="zyStu = false">取 消</el-button>
-        <el-button type="primary" @click="zyStu = false">确 定</el-button>
+        <el-button size="small" @click="zyStu = false">关 闭</el-button>
       </span>
     </el-dialog>
+
   </div>
 </template>
 
 <script>
 // 引入接口函数
-import { getClass, delClass, updateClass, allstudent,searchClass } from '../../api/api.js'
+import { getClass, delClass, updateClass, allstudent, getUpdate } from '../../api/api.js'
 export default {
   data() {
     return {
-      zyStu : false,
+      zyStu: false,
       listLoading: true,
       show: false, // 弹窗
       classes: [], // 获取所有班级
-      allstudent:[], //获取所有学生
-      classstudents:[],
+      allstudent: [], // 获取所有学生
+      classstudents: [],
+      expands: [], // 要展开的行，数值的元素是row的key值
+      xzmajor: '', // 选择专业
       options: [{
         value: '全部班级',
         label: '全部班级'
@@ -140,11 +156,12 @@ export default {
         label: '视觉设计'
       }],
       value: '全部班级',
+      value1: '全部班级',
       path: '/form/classstudent',
       ruleForm: {
-        lecturer:"",
-        headteacher:"",
-        id:""
+        lecturer: '',
+        headteacher: '',
+        id: ''
       },
       rules: {
         lecturer: [
@@ -156,18 +173,14 @@ export default {
           { min: 2, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
         ]
       },
-      rowlist:[], //修改旧值
-      searchClass:[],
-      list:[],
-      all:[],
-      searchClassdata:{
-        classname: '',
-        // createDate:'',
-        // major:'',
-        // lecturer:'',
-        // headteacher:''
-      }, //查询
-      play: false
+      rowlist: [], // 修改旧值
+      all: [], // 班级内的学生
+      zystuclass: [], // 转移学生
+      play: false, // 控制显示隐藏
+      changeStuClass: '', // 转移选择班级
+      zyStuId: '', // 学生id
+      multipleSelection: '',
+      currentRow: null
     }
   },
   async mounted() {
@@ -183,22 +196,22 @@ export default {
         this.listLoading = false
       }
     },
-    // 删除用户
-    async remove(e,id) {
+    // 删除班级
+    async remove(e, id) {
       const { data } = await allstudent()
       this.allstudent = data.data
       const classstudents = this.classstudents
-      for(var i = 0;i<this.allstudent.length;i++){
-        if(e.classname === this.allstudent[i].classes){
+      for (var i = 0; i < this.allstudent.length; i++) {
+        if (e.classname === this.allstudent[i].classes) {
           classstudents.push(this.allstudent[i])
         }
       }
       this.allstudent = classstudents
-      localStorage.setItem("datas",JSON.stringify(this.allstudent))
-      this.all = JSON.parse(localStorage.getItem('datas'));
+      localStorage.setItem('datas', JSON.stringify(this.allstudent))
+      this.all = JSON.parse(localStorage.getItem('datas'))
       console.log(this.all)
       // 判断班里是否有学生
-      if(this.all[0]){
+      if (this.all[0]) {
         // 若有学生，转移学生
         const h = this.$createElement
         this.$msgbox({
@@ -211,9 +224,8 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(async res => {
-          console.log(1)
-          this.zyStu = true 
-
+          this.zyStu = true
+        // eslint-disable-next-line handle-callback-err
         }).catch(err => {
           this.$message({
             type: 'info',
@@ -221,7 +233,7 @@ export default {
           })
         })
         this.classstudents = []
-      }else{
+      } else {
         // 若没有学生,直接删除
         const h = this.$createElement
         this.$msgbox({
@@ -238,12 +250,14 @@ export default {
           console.log(data)
           if (data.code === 200) {
             this.handlegetHeadTeacher()
+            this.op_click(this.xzmajor)
             return this.$message.success(data.msg)
           }
           this.$message({
             message: data.msg,
             type: 'error'
           })
+        // eslint-disable-next-line handle-callback-err
         }).catch(err => {
           this.$message({
             type: 'info',
@@ -251,26 +265,17 @@ export default {
           })
         })
       }
-      
     },
     // 班级成员
     async member(e) {
-      const { data } = await allstudent()
-      this.allstudent = data.data
-      const classstudents = this.classstudents
-      for(var i = 0;i<this.allstudent.length;i++){
-        if(e.classname === this.allstudent[i].classes){
-          classstudents.push(this.allstudent[i])
-        }
-      }
-      this.allstudent = classstudents
-      localStorage.setItem("data",JSON.stringify(this.allstudent))
+      localStorage.setItem('data', JSON.stringify(e.classname))
       this.$router.push({
-        path: this.path, // 跳转路由
+        path: this.path // 跳转路由
       })
     },
     // 选择专业
     async op_click(vel) {
+      this.xzmajor = vel
       const { data } = await getClass()
       this.classes = data.data
       // 筛选专业
@@ -281,84 +286,107 @@ export default {
         }
       }
       this.classes = list
+      console.log(this.classes)
     },
     // 修改
     update(index, row) {
       console.log(row)
-      this.rowlist = row;
-      this.show = true;
-      this.ruleForm.lecturer = row.lecturer;
-      this.ruleForm.headteacher = row.headteacher;
-      this.ruleForm.id = row._id;
+      this.rowlist = row
+      this.show = true
+      this.ruleForm.lecturer = row.lecturer
+      this.ruleForm.headteacher = row.headteacher
+      this.ruleForm.id = row._id
     },
     // 确定修改
     async submitForm() {
-      let obj = {
-        _id:this.ruleForm.id,
-        lecturer:this.ruleForm.lecturer,
-        headteacher:this.ruleForm.headteacher
+      const obj = {
+        _id: this.ruleForm.id,
+        lecturer: this.ruleForm.lecturer,
+        headteacher: this.ruleForm.headteacher
       }
       console.log(obj)
-      let { data } = await updateClass(obj);
-      if(
+      const { data } = await updateClass(obj)
+      if (
         obj.lecturer === this.rowlist.lecturer &&
         obj.headteacher === this.rowlist.headteacher
-      ){
+      ) {
         this.$message.success('没有任何修改')
-        this.show = false;
-      }
-      else if (data.code === 200) {
+        this.show = false
+      } else if (data.code === 200) {
         this.handlegetHeadTeacher()
-        this.$message.success("修改成功")
-        this.show = false;
+        this.$message.success('修改成功')
+        this.show = false
+      } else {
+        this.$message.error(data.msg)
+        return false
       }
-      else {
-        this.$message.error(data.msg);
-        return false;
-      }
+      this.op_click(this.xzmajor)
     },
     // 取消修改
     secede(formName) {
-      this.$refs[formName].resetFields();
+      this.$refs[formName].resetFields()
       this.$message({
         type: 'info',
         message: '已取消修改'
-
       })
-      this.show = false;
-    },
-    // 查询
-    async onSubmit() {
-      let { data } = await searchClass(this.searchClassdata);
-      const classes = data.data
-      console.log(classes)
-      if(this.searchClassdata.classname === "" || this.searchClassdata.createDate === "" || this.searchClassdata.major === "" || this.searchClassdata.lecturer === "" || this.searchClassdata.headteacher === ""){
-        this.play = false
-        return false
-      }
-      this.classes = classes
-      console.log(this.classes)
-      this.play = true
-    },
-    // 返回
-    async returndata(){
-      // this.searchClassdata.classname = ""
-      // this.searchClassdata.createDate = ""
-      // this.searchClassdata.major = ""
-      // this.searchClassdata.lecturer = ""
-      // this.searchClassdata.headteacher = ""
-      const { data } = await getClass()
-      this.list = data.data
-      this.classes = this.list
-      this.play = false
+      this.show = false
     },
     handleClose(done) {
-        this.$confirm('确认关闭？')
-          .then(_ => {
-            done();
-          })
-          .catch(_ => {});
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          done()
+        })
+        .catch(_ => {})
+    },
+    // 表格项
+    handleCurrentChange(rows) {
+      console.log(rows)
+      this.zyStuId = rows
+    },
+    // 选择的班级
+    changeClass(vel) {
+      this.changeStuClass = vel
+      console.log(this.classes)
+    },
+    // 点击转移
+    async zyStus() {
+      if (this.zyStuId === '') {
+        this.$message({
+          type: 'info',
+          message: '请选择学生'
+        })
+        return false
       }
+      if (this.changeStuClass === '') {
+        this.$message({
+          type: 'info',
+          message: '请选择班级'
+        })
+        return false
+      }
+      const obj = {
+        classes: this.changeStuClass
+      }
+      const _id = this.zyStuId._id
+      const success = await getUpdate(_id, obj)
+      if (success.data.code === 200) {
+        const { data } = await allstudent()
+        this.allstudent = data.data
+        if (this.all[0].classes === this.changeStuClass) {
+          this.$message({
+            type: 'info',
+            message: '不能转移到本班'
+          })
+          return false
+        } else {
+          var num = this.all.indexOf(this.zyStuId)
+          this.all.splice(num, 1)
+          this.$message.success('转移成功！')
+          this.zyStuId = ''
+        }
+      }
+      this.op_click(this.xzmajor)
+    }
   }
 }
 </script>

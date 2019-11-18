@@ -12,9 +12,9 @@
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <router-link to='/yourprofile'>
+          <router-link to="/yourprofile">
             <el-dropdown-item>
-                  个人中心
+              个人中心
             </el-dropdown-item>
           </router-link>
           <!-- <a target="_blank" href="https://panjiachen.gitee.io/vue-element-admin-site/zh/">
