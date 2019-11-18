@@ -1,9 +1,5 @@
 <template>
   <div class="top_option">
-<<<<<<< HEAD
-=======
-
->>>>>>> 869d48dbf3fda4f91a44b5b033f267b0a56c90c1
     <!-- 列表 -->
     <div class="table_divs">
       <el-table
@@ -12,8 +8,11 @@
         style="width: 100%"
         @selection-change="selsChange"
       >
-<<<<<<< HEAD
-        <el-table-column :reserve-selection="true" type="selection" width="55" />
+        <el-table-column
+          :reserve-selection="true"
+          type="selection"
+          width="55"
+        />
         <el-table-column prop="classes" label="班级" />
         <el-table-column prop="name" label="姓名" />
         <el-table-column prop="sex" label="性别" />
@@ -26,88 +25,31 @@
         <el-table-column prop="study" label="学制" />
         <el-table-column prop="nativeplace" label="籍贯" />
         <el-table-column prop="studentID" label="学号" />
-        <el-table-column label="操作" min-width="180">
-=======
-        <el-table-column
-          :reserve-selection="true"
-          type="selection"
-          width="55"
-        />
-        <el-table-column
-          prop="classes"
-          label="班级"
-        />
-        <el-table-column
-          prop="name"
-          label="姓名"
-        />
-        <el-table-column
-          prop="sex"
-          label="性别"
-        />
-        <el-table-column
-          prop="age"
-          label="年龄"
-        />
-        <el-table-column
-          prop="major"
-          label="专业"
-        />
-        <el-table-column
-          prop="citycenter"
-          label="市场部"
-        />
-        <el-table-column
-          prop="chengji"
-          label="已有成绩"
-        />
-        <el-table-column
-          prop="graduation"
-          label="还差成绩"
-        />
-        <el-table-column
-          prop="failss"
-          label="挂科次数"
-        />
-        <el-table-column
-          prop="study"
-          label="学制"
-        />
-        <el-table-column
-          prop="nativeplace"
-          label="籍贯"
-        />
-        <el-table-column
-          prop="studentID"
-          label="学号"
-        />
-        <el-table-column
-          label="操作"
-          min-width="180"
-        >
->>>>>>> 869d48dbf3fda4f91a44b5b033f267b0a56c90c1
+        <el-table-column label="操作" min-width="180" v-if="power">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="update(scope.$index, scope.row)">修改</el-button>
-            <el-button type="danger" size="mini" @click="remove(scope.row._id)">删除</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="update(scope.$index, scope.row)"
+            >修改</el-button>
+            <el-button
+type="danger"
+size="mini" @click="remove(scope.row._id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
       <!-- 修改 -->
-<<<<<<< HEAD
       <el-dialog title="修改操作" :visible.sync="show" width="30%">
-=======
-      <el-dialog
-        title="修改操作"
-        :visible.sync="show"
-        width="30%"
-      >
->>>>>>> 869d48dbf3fda4f91a44b5b033f267b0a56c90c1
-        <el-form ref="ruleForm" :model="ruleForm" label-width="100px" class="demo-ruleForm">
+        <el-form
+          ref="ruleForm"
+          :model="ruleForm"
+          label-width="100px"
+          class="demo-ruleForm"
+        >
           <el-form-item label="班级" prop="classes">
             <el-input v-model="ruleForm.classes" />
           </el-form-item>
           <el-form-item label="已有成绩" prop="chengji">
-<<<<<<< HEAD
             <el-input
               v-model="ruleForm.chengji"
               oninput="value=value.replace(/[^\d.]/g,'')"
@@ -127,86 +69,70 @@
               oninput="value=value.replace(/[^\d.]/g,'')"
               maxlength="2"
             />
-=======
-            <el-input v-model="ruleForm.chengji" oninput="value=value.replace(/[^\d.]/g,'')" maxlength="2" />
-          </el-form-item>
-          <el-form-item label="还差成绩" prop="graduation">
-            <el-input v-model="ruleForm.graduation" oninput="value=value.replace(/[^\d.]/g,'')" maxlength="2" />
-          </el-form-item>
-          <el-form-item label="挂科次数" prop="failss">
-            <el-input v-model="ruleForm.failss" oninput="value=value.replace(/[^\d.]/g,'')" maxlength="2" />
->>>>>>> 869d48dbf3fda4f91a44b5b033f267b0a56c90c1
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button size="small" @click="secede('ruleForm')">取 消</el-button>
-          <el-button type="primary" size="small" @click="submitForm()">修 改</el-button>
+          <el-button
+type="primary"
+size="small" @click="submitForm()">修 改</el-button>
         </span>
       </el-dialog>
     </div>
 
-    <div style="position:fixed;bottom:20px;margin-left:20px;">
+    <div style="position:fixed;bottom:20px;margin-left:20px;" v-if="power">
       <!-- 批量删除 -->
       <template>
-<<<<<<< HEAD
         <el-button
           style="margin-top:10px"
           type="danger"
           size="small"
-          :disabled="this.sels.length === 0"
           @click="soamdelstudent()"
         >批量删除</el-button>
       </template>
       <!-- 批量修改 -->
       <template>
         <el-button
-          style="margin-top:10px"
-          type="success"
-          size="small"
-          :disabled="this.sels.length === 0"
-        >批量修改</el-button>
-=======
-        <el-button style="margin-top:10px" type="danger" size="small" @click="soamdelstudent()">批量删除</el-button>
-      </template>
-      <!-- 批量修改 -->
-      <template>
-        <el-button style="margin-top:10px" type="success" size="small">批量修改</el-button>
->>>>>>> 869d48dbf3fda4f91a44b5b033f267b0a56c90c1
+style="margin-top:10px"
+type="success" size="small">批量修改</el-button>
       </template>
       <!-- 添加 -->
       <template>
-        <el-button style="margin-top:10px" type="primary" size="small" @click="addstudent()">添加学生</el-button>
+        <el-button
+          style="margin-top:10px"
+          type="primary"
+          size="small"
+          @click="addstudent()"
+        >添加学生</el-button>
       </template>
     </div>
 
-    <div style="position:fixed;right:50px;bottom:20px;">
+    <div style="position:fixed;right:50px;bottom:20px;" v-if="power">
       <!-- 导出 -->
-<<<<<<< HEAD
       <el-button
         size="mini"
         type="success"
         round
         :loading="downloadLoading"
         @click="handleDownload"
-      >导出当页excel</el-button>
+      >
+        导出当页excel
+      </el-button>
       <!-- 导入 -->
       <label class="fileinp">
-        <input type="button" class="btn" value="导入excel" round @click="handleInter" >
+        <input
+          type="button"
+          class="btn"
+          value="导入excel"
+          round
+          @click="handleInter"
+        >
         <input
           type="file"
           class="fileinpd"
           accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
           @change="importfxx(this)"
         >
-=======
-      <el-button size="mini" type="success" round :loading="downloadLoading" @click="handleDownload">
-        导出当页excel
-      </el-button>
-      <!-- 导入 -->
-      <label class="fileinp">
-        <input type="button" class="btn" value="导入excel" round @click="handleInter">
-        <input type="file" class="fileinpd" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" @change="importfxx(this)">
->>>>>>> 869d48dbf3fda4f91a44b5b033f267b0a56c90c1
       </label>
     </div>
   </div>
@@ -215,7 +141,6 @@
 <script>
 // 引入接口函数
 // eslint-disable-next-line no-unused-vars
-<<<<<<< HEAD
 import {
   allstudent,
   updateAllstud,
@@ -223,14 +148,11 @@ import {
   // eslint-disable-next-line no-unused-vars
   addallStudent,
   getExcel
-} from '../../../api/api.js';
-// eslint-disable-next-line no-unused-vars
-import UploadExcel from '../../../components/UploadExcel/index';
-=======
-import { allstudent, updateAllstud, delallStudent, addallStudent, getExcel } from '../../../api/api.js'
+} from '../../../api/api.js'
 // eslint-disable-next-line no-unused-vars
 import UploadExcel from '../../../components/UploadExcel/index'
->>>>>>> 869d48dbf3fda4f91a44b5b033f267b0a56c90c1
+// 引入vuex 权限
+import { mapGetters} from 'vuex'
 export default {
   data() {
     return {
@@ -255,7 +177,18 @@ export default {
       path: '/example/tree',
       sels: [], // 选中的值显示
       checkeds: [], // 批量删除选中id
-      updateShow: 100000 // 最大匹配的值
+      updateShow: 100000, // 最大匹配的值
+      power: true // 操作按钮权限
+    }
+  },
+  // vuex 权限  
+  computed: {
+    ...mapGetters(['roles'])
+  },
+  // '3' 代表的普通用户，普通用户登录会将操作按钮隐藏
+  created() {
+    if(this.roles.includes('3')){
+      this.power = false
     }
   },
   async mounted() {
@@ -315,20 +248,12 @@ export default {
           })
           // eslint-disable-next-line handle-callback-err
         })
-<<<<<<< HEAD
         // eslint-disable-next-line handle-callback-err
         .catch(err => {
           this.$message({
             type: 'info',
             message: '已取消删除'
           })
-=======
-      // eslint-disable-next-line handle-callback-err
-      }).catch(err => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
->>>>>>> 869d48dbf3fda4f91a44b5b033f267b0a56c90c1
         })
     },
     // 修改
@@ -416,7 +341,6 @@ export default {
     handleDownload() {
       this.downloadLoading = true
       import('../../../excel/Export2Excel.js').then(excel => {
-<<<<<<< HEAD
         const tHeader = [
           '班级',
           '姓名',
@@ -445,10 +369,6 @@ export default {
           'nativeplace',
           'studentID'
         ] // 获取的数据字段名
-=======
-        const tHeader = ['班级', '姓名', '性别', '年龄', '专业', '市场部', '已有成绩', '还差成绩', '挂科次数', '学制', '籍贯', '学号'] // excel 表头
-        const filterVal = ['classes', 'name', 'sex', 'age', 'major', 'citycenter', 'chengji', 'graduation', 'failss', 'study', 'nativeplace', 'studentID'] // 获取的数据字段名
->>>>>>> 869d48dbf3fda4f91a44b5b033f267b0a56c90c1
         const list = this.all // 所要生成Excel数据源
         const data = this.formatJson(filterVal, list)
         excel.export_json_to_excel({
@@ -481,11 +401,7 @@ export default {
       var reader = new FileReader()
       // if (!FileReader.prototype.readAsBinaryString) {
       FileReader.prototype.readAsBinaryString = function(f) {
-<<<<<<< HEAD
-        var binary = '';
-=======
         var binary = ''
->>>>>>> 869d48dbf3fda4f91a44b5b033f267b0a56c90c1
         var rABS = false // 是否将文件读取为二进制字符串
         // eslint-disable-next-line no-unused-vars
         var pt = this
@@ -497,7 +413,6 @@ export default {
           var length = bytes.byteLength
           for (var i = 0; i < length; i++) {
             binary += String.fromCharCode(bytes[i])
-<<<<<<< HEAD
           }
           var XLSX = require('xlsx')
           if (rABS) {
@@ -540,68 +455,16 @@ export default {
           })
           // eslint-disable-next-line no-unused-vars
           const para = {
-            withList: arr
-          }
-=======
-          }
-          var XLSX = require('xlsx')
-          if (rABS) {
-            // eslint-disable-next-line no-undef
-            wb = XLSX.read(btoa(fixdata(binary)), { // 手动转化
-              type: 'base64'
-            })
-          } else {
-            wb = XLSX.read(binary, {
-              type: 'binary'
-            })
-          }
-          outdata = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]) // outdata就是你想要的东西
-          this.da = [...outdata]
-          const arr = []
-          this.da.map(v => {
-            const obj = {}
-            obj.classes = v.班级
-            obj.name = v.姓名
-            obj.sex = v.性别
-            obj.age = v.年龄
-            obj.major = v.专业
-            obj.citycenter = v.市场部
-            obj.chengji = v.已有成绩
-            obj.graduation = v.还差成绩
-            obj.failss = v.挂科次数
-            obj.study = v.学制
-            obj.nativeplace = v.籍贯
-            obj.studentID = v.学号
-            arr.push(obj)
-          })
-          console.log(arr)
-          getExcel(arr).then(res => {
-            // eslint-disable-next-line no-empty
-            if (res.data.code === 201) {
-
-              // eslint-disable-next-line no-empty
-            } else {
-            }
-          })
-          // eslint-disable-next-line no-unused-vars
-          const para = {
             QwithList: arr
           }
->>>>>>> 869d48dbf3fda4f91a44b5b033f267b0a56c90c1
           _this.$message({
             message: '请耐心等待导入成功',
             type: 'success'
           })
           window.location.reload()
-<<<<<<< HEAD
         };
         reader.readAsArrayBuffer(f)
       };
-=======
-        }
-        reader.readAsArrayBuffer(f)
-      }
->>>>>>> 869d48dbf3fda4f91a44b5b033f267b0a56c90c1
       if (rABS) {
         reader.readAsArrayBuffer(f)
       } else {
@@ -613,9 +476,5 @@ export default {
 </script>
 
 <style scoped>
-<<<<<<< HEAD
-@import "./asset.scss";
-=======
-   @import "./asset.scss"
->>>>>>> 869d48dbf3fda4f91a44b5b033f267b0a56c90c1
+@import './asset.scss';
 </style>
