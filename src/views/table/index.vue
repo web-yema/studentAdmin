@@ -401,13 +401,13 @@ export default {
       if (this.searchShow === 1) {
         // 处于搜索情况下
         if (
-          this.search.serName == '' &&
-            this.search.serStudy == '' &&
-            this.search.serMajor == '' &&
-            this.search.serClasses == '' &&
+          this.search.serName === '' &&
+            this.search.serStudy === '' &&
+            this.search.serMajor === '' &&
+            this.search.serClasses === '' &&
             this.search.serchengji === '' &&
-            this.search.sercityCenter == '' &&
-            this.search.serFailss == ''
+            this.search.sercityCenter === '' &&
+            this.search.serFailss === ''
         ) {
           this.$message.error('搜索不能全部为空!')
           this.excelshow = false // 不在则不显示导入框
@@ -440,9 +440,9 @@ export default {
             '挂科次数'
           ]
           const filterVal = [
-            'upxuehao',
+            'studentID',
             'name',
-            'upjiguan',
+            'nativeplace',
             'sex',
             'age',
             'study',
