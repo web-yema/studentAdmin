@@ -8,38 +8,47 @@
       </el-table-column>
       <el-table-column label="权限" prop="power">
         <template slot-scope="scope">
-          <div v-show="isUpdate!==scope.row._id">{{ scope.row.power }}</div>
-            <el-select v-model="value" v-show="isUpdate===scope.row._id" placeholder="请选择">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
+          <div v-show="isUpdate !== scope.row._id">{{ scope.row.power }}</div>
+          <el-select
+            v-show="isUpdate === scope.row._id"
+            v-model="value"
+            placeholder="请选择"
+          >
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
           </el-select>
         </template>
       </el-table-column>
       <el-table-column align="right">
         <template slot-scope="scope">
           <el-button
-            v-show="isUpdate===scope.row._id"
+            v-show="isUpdate === scope.row._id"
             size="mini"
             type="primary"
             @click="updateClassCancel()"
           >取消</el-button>
           <el-button
-            v-show="isUpdate===scope.row._id"
+            v-show="isUpdate === scope.row._id"
             size="mini"
             type="success"
             @click="updateClassSucess(scope.row._id)"
           >确定</el-button>
           <el-button
-            v-show="isUpdate!==scope.row._id"
+            v-show="isUpdate !== scope.row._id"
             size="mini"
             type="primary"
             @click="updateClass(scope.row)"
           >修改</el-button>
-          <el-button v-show="isUpdate!==scope.row._id" size="mini" type="danger" @click="handleDelete(scope.row._id)">销毁</el-button>
+          <el-button
+            v-show="isUpdate !== scope.row._id"
+            size="mini"
+            type="danger"
+            @click="handleDelete(scope.row._id)"
+          >销毁</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -60,17 +69,17 @@ export default {
         power: ''
       },
       // 修改权限
-      options:[
+      options: [
         {
           value: '2',
           label: '管理员'
-        }, {
+        },
+        {
           value: '3',
           label: '普通用户'
         }
       ],
       value: ''
-
     }
   },
   mounted() {
@@ -110,8 +119,7 @@ export default {
             message: data.msg,
             type: 'error'
           })
-        })
-        .catch(error => {
+        }).catch(error => {
           this.$message({
             type: 'info',
             message: '已取消删除'
@@ -123,7 +131,7 @@ export default {
       this.update.power = row.power
       this.isUpdate = row._id
       if (this.update.power === '管理员') {
-        this.value = "2"
+        this.value = '2'
       } else if (this.update.power === '普通用户') {
         this.value = '3'
       }
@@ -138,7 +146,7 @@ export default {
       if (this.update.power === '') {
         return this.$message.error('更新信息中不能为空')
       }
-      const { data } = await updateAdminPass({_id:id,power:this.value})
+      const { data } = await updateAdminPass({ _id: id, power: this.value })
       if (data.code === 2002) {
         this.$message.success(data.msg)
         this.updateClassCancel()
@@ -151,5 +159,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

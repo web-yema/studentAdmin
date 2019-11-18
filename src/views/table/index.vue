@@ -183,14 +183,14 @@
       :loading="exportLodding"
       type="success"
       round
+      v-if="power"
       style="position:fixed;right:5px;bottom:20px;"
       @click="outExcel"
-      v-if="power"
     >导出当页excel
     </el-button>
   </div>
   </div>
-</div>
+  </div>
 </template>
 
 <script>
@@ -289,12 +289,12 @@ export default {
   },
   // vuex 权限
   computed: {
-    ...mapGetters(["roles"])
+    ...mapGetters(['roles'])
   },
   // '3' 代表的普通用户，普通用户登录会将操作按钮隐藏
   created() {
     if (this.roles.includes('3')) {
-      this.power = false;
+      this.power = false
     }
   },
   mounted() {

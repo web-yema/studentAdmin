@@ -61,7 +61,7 @@ export const constantRoutes = [
         path: '/yourprofile',
         name: 'Yourprofile',
         component: () => import('@/layout/components/yourprofile/index'),
-        meta: { title: 'ourprofile' },
+        meta: { title: '个人中心' },
         hidden: true
       }
     ]
@@ -251,7 +251,7 @@ export const asyncRoutes = [
 ]
 
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
+  mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
 })

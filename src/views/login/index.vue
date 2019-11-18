@@ -1,68 +1,74 @@
 <template>
   <div class="login-container">
-    <canvas ref="canvas"></canvas>
+    <canvas ref="canvas" />
     <div class="login-containe-form">
-        <el-form ref="loginForm" 
-             :model="loginForm" 
-             :rules="loginRules" 
-             class="login-form" 
-             auto-complete="on" 
-             label-position="left">
+      <el-form
+        ref="loginForm"
+        :model="loginForm"
+        :rules="loginRules"
+        class="login-form"
+        auto-complete="on"
+        label-position="left"
+      >
+        <div class="title-container">
+          <h3 class="title">数字媒体学院-学生管理系统</h3>
+        </div>
 
-      <div class="title-container">
-        <h3 class="title">数字媒体学院-学生管理系统</h3>
-      </div>
+        <el-form-item prop="username">
+          <span class="svg-container">
+            <svg-icon icon-class="user" />
+          </span>
+          <el-input
+            ref="username"
+            v-model="loginForm.username"
+            placeholder="用户名"
+            name="username"
+            type="text"
+            tabindex="1"
+            auto-complete="on"
+          />
+        </el-form-item>
 
-      <el-form-item prop="username">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
-        <el-input
-          ref="username"
-          v-model="loginForm.username"
-          placeholder="用户名"
-          name="username"
-          type="text"
-          tabindex="1"
-          auto-complete="on"
-        />
-      </el-form-item>
-
-      <el-form-item prop="password">
-        <span class="svg-container">
-          <svg-icon icon-class="password" />
-        </span>
-        <el-input
-          :key="passwordType"
-          ref="password"
-          v-model="loginForm.password"
-          :type="passwordType"
-          placeholder="密码"
-          name="password"
-          tabindex="2"
-          auto-complete="on"
-          @keyup.enter.native="handleLogin"
-        />
-        <span class="show-pwd" @click="showPwd">
-          <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-        </span>
-      </el-form-item>
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;"  @click.native.prevent="handleLogin">登录</el-button>
-    </el-form>
+        <el-form-item prop="password">
+          <span class="svg-container">
+            <svg-icon icon-class="password" />
+          </span>
+          <el-input
+            :key="passwordType"
+            ref="password"
+            v-model="loginForm.password"
+            :type="passwordType"
+            placeholder="密码"
+            name="password"
+            tabindex="2"
+            auto-complete="on"
+            @keyup.enter.native="handleLogin"
+          />
+          <span class="show-pwd" @click="showPwd">
+            <svg-icon
+              :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
+            />
+          </span>
+        </el-form-item>
+        <el-button
+          :loading="loading"
+          type="primary"
+          style="width:100%;margin-bottom:30px;"
+          @click.native.prevent="handleLogin"
+        >登录</el-button>
+      </el-form>
     </div>
     <CopyrightNotice />
   </div>
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
-import { log } from 'util';
 import CopyrightNotice from '@/components/CopyrightNotice/index'
 import '@/assets/css/style.css'
 import branch from '@/assets/js/script.js'
 export default {
   name: 'Login',
-  components:{
+  components: {
     CopyrightNotice
   },
   data() {
@@ -84,19 +90,20 @@ export default {
       loginForm: {
         username: '',
         password: '',
-        loginFlag:''
+        loginFlag: ''
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        username: [
+          { required: true, trigger: 'blur', validator: validateUsername }
+        ],
+        password: [
+          { required: true, trigger: 'blur', validator: validatePassword }
+        ]
       },
       loading: false,
       passwordType: 'password',
       redirect: undefined
     }
-  },
-  mounted(){
-    branch(this.$refs.canvas)
   },
   watch: {
     $route: {
@@ -105,7 +112,9 @@ export default {
       },
       immediate: true
     }
-
+  },
+  mounted() {
+    branch(this.$refs.canvas)
   },
   methods: {
     // 显示密码
@@ -124,12 +133,15 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
-          this.$router.push({ path: this.redirect || '/' })
-          this.loading = false
-          }).catch(() => {
-            this.loading = false
-          })
+          this.$store
+            .dispatch('user/login', this.loginForm)
+            .then(() => {
+              this.$router.push({ path: this.redirect || '/' })
+              this.loading = false
+            })
+            .catch(() => {
+              this.loading = false
+            })
         } else {
           return false
         }
@@ -143,8 +155,8 @@ export default {
 /* 修复input 背景不协调 和光标变色 */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
-$bg:#283443;
-$light_gray:#fff;
+$bg: #283443;
+$light_gray: #fff;
 $cursor: #fff;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
@@ -187,9 +199,9 @@ $cursor: #fff;
 </style>
 
 <style lang="scss" scoped>
-$bg:#2d3a4b;
-$dark_gray:#889aa4;
-$light_gray:#eee;
+$bg: #2d3a4b;
+$dark_gray: #889aa4;
+$light_gray: #eee;
 
 .login-container {
   min-height: 100%;
@@ -234,7 +246,7 @@ $light_gray:#eee;
       color: $light_gray;
       margin: 0px auto 40px auto;
       text-align: center;
-      font-family: 华文行楷;
+      font-family: Microsoft Yahei !important;
     }
   }
 
@@ -248,10 +260,10 @@ $light_gray:#eee;
     user-select: none;
   }
 }
-.login-container .login-form{
+.login-container .login-form {
   padding-top: 0px;
 }
-.login-containe-form{
+.login-containe-form {
   position: absolute;
   top: 50%;
   left: 50%;
