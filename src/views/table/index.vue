@@ -1,5 +1,3 @@
-/* eslint-disable vue/no-parsing-error */
-/* eslint-disable vue/valid-template-root */
 <template>
   <div>
     <!-- 查询模块 -->
@@ -191,7 +189,7 @@
     </el-button>
   </div>
   </div>
-</div>
+  </div>
 </template>
 
 <script>
@@ -325,25 +323,6 @@ export default {
       const { data } = await getMajor()
       for (let i = 0; i < data.data.length; i++) {
         this.upmajors.push({
-<<<<<<< HEAD
-        value: data.data[i].majorname
-      })
-    }
-  },
-  // 获取班级
-  async Classs() {
-    const { data } = await getClass()
-    for (let i = 0; i < data.data.length; i++) {
-      this.upclasses.push({
-      value: data.data[i].classname
-    })
-  }
-},
-  // 获取市场部
-  async CityCenters() {
-    const { data } = await getMarketing()
-    for (let i = 0; i < data.data.length; i++) {
-=======
           value: data.data[i].majorname
         })
       }
@@ -361,7 +340,6 @@ export default {
     async CityCenters() {
       const { data } = await getMarketing()
       for (let i = 0; i < data.data.length; i++) {
->>>>>>> ly
         this.upcityCenters.push({
           value: data.data[i].marketname
         })
@@ -421,13 +399,13 @@ export default {
       if (this.searchShow === 1) {
         // 处于搜索情况下
         if (
-          this.search.serName == '' &&
-            this.search.serStudy == '' &&
-            this.search.serMajor == '' &&
-            this.search.serClasses == '' &&
+          this.search.serName === '' &&
+            this.search.serStudy === '' &&
+            this.search.serMajor === '' &&
+            this.search.serClasses === '' &&
             this.search.serchengji === '' &&
-            this.search.sercityCenter == '' &&
-            this.search.serFailss == ''
+            this.search.sercityCenter === '' &&
+            this.search.serFailss === ''
         ) {
           this.$message.error('搜索不能全部为空!')
           this.excelshow = false // 不在则不显示导入框
@@ -460,9 +438,9 @@ export default {
             '挂科次数'
           ]
           const filterVal = [
-            'upxuehao',
+            'studentID',
             'name',
-            'upjiguan',
+            'nativeplace',
             'sex',
             'age',
             'study',
