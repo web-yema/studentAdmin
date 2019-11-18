@@ -1,3 +1,5 @@
+/* eslint-disable vue/no-parsing-error */
+/* eslint-disable vue/valid-template-root */
 <template>
   <div>
     <!-- 查询模块 -->
@@ -25,8 +27,10 @@
           <el-option v-for="item in upcityCenters" :key="item.value" size="mini" :value="item.value" />
         </el-select>
       </li>
-      <li>
-        <el-input v-model="search.serchengji" size="mini" placeholder="当前成绩" /> 
+      <li class="chengji">
+        <el-input v-model="search.serchengji.$gte" type="number" min="0" max="39" size="mini" placeholder=">0" />
+        <span>-</span>
+        <el-input v-model="search.serchengji.$lte" type="number" min="1" max="40" size="mini" placeholder="<40" />
       </li>
       <li>
         <el-input v-model="search.sergraduation" size="mini" placeholder="还差成绩" />
@@ -45,6 +49,17 @@
       :data="tableData"
       style="width: 150%"
     >
+      <el-table-column label="学号">
+        <template slot-scope="scope">
+          <el-input
+            v-if="scope.$index===updateShow"
+            v-model="studentID"
+            size="mini"
+            placeholder="请输入内容"
+          />
+          <div v-else>{{ tableData[scope.$index].studentID }}</div>
+        </template>
+      </el-table-column>
       <el-table-column label="姓名">
         <template slot-scope="scope">
           <el-input
@@ -54,6 +69,17 @@
             placeholder="请输入内容"
           />
           <div v-else>{{ tableData[scope.$index].name }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="籍贯">
+        <template slot-scope="scope">
+          <el-input
+            v-if="scope.$index===updateShow"
+            v-model="nativeplace"
+            size="mini"
+            placeholder="请输入内容"
+          />
+          <div v-else>{{ tableData[scope.$index].nativeplace }}</div>
         </template>
       </el-table-column>
       <el-table-column label="性别">
@@ -116,7 +142,7 @@
             size="mini"
             placeholder="请输入内容"
           />
-          <div style="text-align:center" v-else>{{ tableData[scope.$index].chengji }}</div> 
+          <div v-else style="text-align:center">{{ tableData[scope.$index].chengji }}</div>
         </template>
       </el-table-column>
       <el-table-column label="还差成绩">
@@ -127,10 +153,10 @@
             size="mini"
             placeholder="请输入内容"
           />
-          <div style="text-align:center" v-else>{{ tableData[scope.$index].graduation }}</div>
+          <div v-else style="text-align:center">{{ tableData[scope.$index].graduation }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="挂科次数/次">
+      <el-table-column label="挂科次数">
         <template slot-scope="scope">
           <el-input
             v-if="scope.$index===updateShow"
@@ -138,7 +164,7 @@
             size="mini"
             placeholder="请输入内容"
           />
-          <div style="text-align:center" v-else>{{ tableData[scope.$index].failss }}</div>
+          <div v-else style="text-align:center">{{ tableData[scope.$index].failss }}</div>
         </template>
       </el-table-column>
       <el-table-column align="right">
@@ -151,19 +177,19 @@
         </template>
       </el-table-column>
     </el-table>
-     <!-- 分页模块 -->
-      <Pageoption style="position:fixed;left:205px;  top:520px;" :total="total" :pageSize="pageSize" :currentPage="currentPage" @getcurrentPage="getcurrentPage"/>
-      <!-- 导出excel表 -->
-      <el-button
-        size="mini"
-        :loading="exportLodding"
-        type="success"
-        round
-        @click="outExcel"
-        style="position:fixed;right:5px;  top:550px;"
-      >导出当页excel
-      </el-button>
-    </div>
+    <!-- 分页模块 -->
+    <Pageoption style="position:fixed;left:205px;  top:520px;" :total="total" :page-size="pageSize" :current-page="currentPage" @getcurrentPage="getcurrentPage" />
+    <!-- 导出excel表 -->
+    <el-button
+      size="mini"
+      :loading="exportLodding"
+      type="success"
+      round
+      style="position:fixed;right:5px;  top:550px;"
+      @click="outExcel"
+    >导出当页excel
+    </el-button>
+  </div>
   </div>
 </div>
 </template>
@@ -175,7 +201,7 @@ import {
   getPage, // 分页和学生
   getMajor, // 获取所有专业
   getMarketing, // 获取所有市场部
-  getClass, // 获取所有班级
+  getClass // 获取所有班级
 } from '../../api/api.js'
 
 // 引入vuex
@@ -185,12 +211,13 @@ import {
 import Pageoption from '../../components/Pagination'
 
 // 引入excel依赖文件
-import UploadExcelComponent from "../../components/UploadExcel/index";
+import UploadExcelComponent from '../../components/UploadExcel/index'
 
 export default {
   name: 'Table',
   components: {
     Pageoption,
+    // eslint-disable-next-line vue/no-unused-components
     UploadExcelComponent
   },
   data() {
@@ -199,7 +226,7 @@ export default {
       tableData: [], // 所有学生数据
       searchShow: 1, // 搜索模块是否显示 不为1就是不显示
       //  ·················································· 分页数据
-      selectflag:false, // 标识, 用来给查询使用 
+      selectflag: false, // 标识, 用来给查询使用
       total: 1, // 数据总条数，默认给1
       pageSize: 7, // 每页展示条数 用来让total进行切割，算出来一共的页数
       currentPage: 1, // 当前在第几页,默认在第一页
@@ -211,7 +238,10 @@ export default {
         serMajor: '', // 专业
         serClasses: '', // 班级
         sercityCenter: '', // 市场部
-        serchengji: '', // 当前成绩
+        serchengji: {
+          $gte: 0, // 当前成绩 (>3,只是比喻,具体多少根据情况定)
+          $lte: 40 // 当前成绩 (>15,只是比喻,具体多少根据情况定)
+        },
         sergraduation: '', // 还差成绩
         serFailss: '' // 挂科次数
       },
@@ -228,11 +258,11 @@ export default {
         }
       ],
       // 专业选项
-      upmajors: [], 
+      upmajors: [],
       // 班级选项
-      upclasses: [], 
+      upclasses: [],
       // 市场部选项
-      upcityCenters: [], 
+      upcityCenters: [],
       //  搜索挂科次数选项
       searFail: [
         {
@@ -249,43 +279,43 @@ export default {
         }
       ],
       // 学生的下标
-      index: 0, 
+      index: 0,
       // 学生的id值
-      id: '' ,
+      id: '',
       // 查询到的对象
-      objselect:{}
+      objselect: {}
     }
   },
   mounted() {
     // 分页加学生接口调用
-    this.getPage(this.currentPage) 
+    this.getPage(this.currentPage)
     // 专业接口调用
-    this.Majors() 
+    this.Majors()
     // 班级接口调用
-    this.Classs() 
+    this.Classs()
     // 市场部接口调用
     this.CityCenters()
   },
   methods: {
-    async selectallstud(page,obj) {
+    async selectallstud(page, obj) {
       const searchSuc = await selectAllstud(page, obj)
-        this.tableData = searchSuc.data.data
-        this.currentPage = page
-        this.total = searchSuc.data.total
+      this.tableData = searchSuc.data.data
+      this.currentPage = page
+      this.total = searchSuc.data.total
     },
-    //调用子组件传过来的事件
+    // 调用子组件传过来的事件
     getcurrentPage(currentPage) {
       this.currentPage = currentPage
       // 如果selectflag为true就调用查询函数
-      if(this.selectflag) {
-        this.selectallstud(currentPage,this.objselect)
+      if (this.selectflag) {
+        this.selectallstud(currentPage, this.objselect)
         // 否则就调用获取学生加分页接口
-      }else{
+      } else {
         this.getPage(currentPage)
       }
     },
     // 分页加学生接口调用
-      async getPage(page) {
+    async getPage(page) {
       const { data } = await getPage(page)
       this.tableData = data.data
       this.total = data.total
@@ -295,6 +325,7 @@ export default {
       const { data } = await getMajor()
       for (let i = 0; i < data.data.length; i++) {
         this.upmajors.push({
+<<<<<<< HEAD
         value: data.data[i].majorname
       })
     }
@@ -312,16 +343,35 @@ export default {
   async CityCenters() {
     const { data } = await getMarketing()
     for (let i = 0; i < data.data.length; i++) {
+=======
+          value: data.data[i].majorname
+        })
+      }
+    },
+    // 获取班级
+    async Classs() {
+      const { data } = await getClass()
+      for (let i = 0; i < data.data.length; i++) {
+        this.upclasses.push({
+          value: data.data[i].classname
+        })
+      }
+    },
+    // 获取市场部
+    async CityCenters() {
+      const { data } = await getMarketing()
+      for (let i = 0; i < data.data.length; i++) {
+>>>>>>> ly
         this.upcityCenters.push({
-        value: data.data[i].marketname
-      })
-    }
-  },
-  // 查询函数(确定按钮)
-  async searchAll() {
-    this.selectflag = true
-    if (
-      this.search.serName === '' &&
+          value: data.data[i].marketname
+        })
+      }
+    },
+    // 查询函数(确定按钮)
+    async searchAll() {
+      this.selectflag = true
+      if (
+        this.search.serName === '' &&
       this.search.serStudy === '' &&
       this.search.serMajor === '' &&
       this.search.serClasses === '' &&
@@ -329,118 +379,123 @@ export default {
       this.search.serchengji === '' &&
       this.search.sergraduation === '' &&
       this.search.serFailss === ''
-    ) {
+      ) {
         this.$message.error('搜索不能全部为空!')
         return false
       }
       if (/.*[\u4e00-\u9fa5]+.*$/.test(this.search.serchengji)) {
-          // 判断不带汉字的正则
-          this.$message.error('成绩不要带单位!')
-          return false
+        // 判断不带汉字的正则
+        this.$message.error('成绩不要带单位!')
+        return false
       } else {
         const obj = {}
         for (const key in this.search) {
           if (this.search.hasOwnProperty(key)) {
             if (this.search[key] !== '') {
               obj[key.slice(3).toLowerCase()] = this.search[key]
+            }
           }
         }
-      }
-      this.objselect = obj
-      this.selectallstud(1,obj)
+        this.objselect = obj
+        this.selectallstud(1, this.objselect)
       }
     },
     // 清空搜索框
     async searchQ() {
-        this.selectflag = false
-        this.search.serName = ''
-        this.search.serStudy = ''
-        this.search.serMajor = ''
-        this.search.serClasses = ''
-        this.search.sercityCenter = ''
-        this.search.serchengji = ''
-        this.search.sergraduation = ''
-        this.search.serFailss = ''
-        const allList = await getPage(1)
-        this.tableData = allList.data.data
-        this.total = allList.data.total
-        // 返回的时候默认展示第一页的数据
-        this.currentPage = 1
-      },
-      // 导出Excel
-      outExcel() {
-        if (this.searchShow === 1) {
-          //处于搜索情况下
-          if (
-            this.search.serName == "" &&
-            this.search.serStudy == "" &&
-            this.search.serMajor == "" &&
-            this.search.serClasses == "" &&
-            this.search.sercityCenter == "" &&
-            this.search.serchengji == "" &&
-            this.search.serFailss == ""
-          ) {
-            this.$message.error("搜索不能全部为空");
-            this.excelshow = false; //不在则不显示导入框
-            return false;
-          } else if (this.daochuexcel) {
-            this.$message.error("请完成搜索后再进行导出");
-          } else {
-            this.exportExcel();
-          }
+      this.selectflag = false
+      this.search.serName = ''
+      this.search.serStudy = ''
+      this.search.serMajor = ''
+      this.search.serClasses = ''
+      this.search.sercityCenter = ''
+      this.search.sergraduation = ''
+      this.search.serFailss = ''
+      const allList = await getPage(1)
+      this.tableData = allList.data.data
+      this.total = allList.data.total
+      // 返回的时候默认展示第一页的数据
+      this.currentPage = 1
+    },
+    // 导出Excel
+    outExcel() {
+      if (this.searchShow === 1) {
+        // 处于搜索情况下
+        if (
+          this.search.serName == '' &&
+            this.search.serStudy == '' &&
+            this.search.serMajor == '' &&
+            this.search.serClasses == '' &&
+            this.search.serchengji === '' &&
+            this.search.sercityCenter == '' &&
+            this.search.serFailss == ''
+        ) {
+          this.$message.error('搜索不能全部为空!')
+          this.excelshow = false // 不在则不显示导入框
+          return false
+        } else if (this.daochuexcel) {
+          this.$message.error('请完成搜索后再进行导出!')
         } else {
-          this.exportExcel();
+          this.exportExcel()
         }
-      },
-      // 导出函数
-      exportExcel() {
-        this.exportLodding = true
+      } else {
+        this.exportExcel()
+      }
+    },
+    // 导出函数
+    exportExcel() {
+      this.exportLodding = true
         import('../../excel/Export2Excel.js').then(excel => {
-            const tHeader = [
-            "姓名",
-            "性别",
-            "年龄",
-            "学制",
-            "专业",
-            "班级",
-            "市场部",
-            "成绩",
-            "挂科次数"
+          const tHeader = [
+            '学号',
+            '姓名',
+            '籍贯',
+            '性别',
+            '年龄',
+            '学制',
+            '专业',
+            '班级',
+            '市场部',
+            '当前成绩',
+            '还差成绩',
+            '挂科次数'
           ]
-            const filterVal = [
-            "name",
-            "sex",
-            "age",
-            "study",
-            "major",
-            "classes",
-            "citycenter",
-            "chengji",
-            "failss"
+          const filterVal = [
+            'upxuehao',
+            'name',
+            'upjiguan',
+            'sex',
+            'age',
+            'study',
+            'major',
+            'classes',
+            'citycenter',
+            'chengji',
+            'graduation',
+            'failss'
           ]
           const data = this.formatJson(filterVal, this.tableData)
-            excel.export_json_to_excel({
+          excel.export_json_to_excel({
             header: tHeader,
             data,
-            filename: "学生信息",
+            filename: '学生信息',
             autoWidth: true,
-            bookType: "xlsx"
+            bookType: 'xlsx'
           })
           this.exportLodding = false
         })
-      },
-      formatJson(filterVal, jsonData) {
-        return jsonData.map(v =>
-           filterVal.map(j => {
-            return v[j]
-          })
-        )
-      }
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v =>
+        filterVal.map(j => {
+          return v[j]
+        })
+      )
     }
   }
+}
 </script>
 
-<style scoped>
+<style>
 .searchbox-bs-002 {
   width: 100%;
   display: flex;
@@ -452,5 +507,20 @@ export default {
   margin-top: 15px;
   margin-bottom: 15px;
   list-style: none;
+}
+.chengji{
+  display:flex;
+}
+.chengji span{
+  display:inline-block;
+  margin:5px 0 0 0;
+}
+.chengji .el-input__inner{
+  padding:0 0 0 0;
+}
+.cell div{
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
 }
 </style>

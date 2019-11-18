@@ -5,8 +5,26 @@
       <div
         style="margin-left:15px;width:70%;display:flex;justify-content: space-between;margin-top:20px;"
       >
+        <div>学号：</div>
+        <el-input v-model="xuehao" size="mini" placeholder="学号" />
+      </div>
+      <div
+        style="margin-left:15px;width:70%;display:flex;justify-content: space-between;margin-top:20px;"
+      >
         <div>姓名：</div>
         <el-input v-model="newName" size="mini" placeholder="姓名" />
+      </div>
+      <div
+        style="margin-left:15px;width:70%;display:flex;justify-content: space-between;margin-top:20px;"
+      >
+        <div>籍贯：</div>
+        <el-cascader
+          ref="cascaderAddr"
+          v-model="jiguan"
+          style="width:35%;height:28px;margin-right:355px;"
+          :options="options"
+          placeholder="请选择籍贯"
+        />
       </div>
       <div style="margin-left:15px;margin-top:30px;">
         <!-- 性别模块 -->
@@ -18,14 +36,27 @@
         style="margin-left:15px;width:70%;display:flex;justify-content: space-between;margin-top:30px;"
       >
         <div>年龄：</div>
-        <el-input-number v-model="newAge" style="width:20%;height:28px;margin-right:460px;" :step="1" step-strictly :min="1" :max="100" label="当前成绩" />
+        <el-input-number
+          v-model="newAge"
+          style="width:20%;height:28px;margin-right:460px;"
+          :step="1"
+          step-strictly
+          :min="1"
+          :max="100"
+          label="当前成绩"
+        />
       </div>
       <div
         style="margin-left:15px;width:70%;display:flex;justify-content: space-between;margin-top:30px;"
       >
         <div>学制：</div>
         <el-select v-model="study" size="mini" placeholder="学制">
-          <el-option v-for="item in studys" :key="item.value" size="mini" :value="item.value" />
+          <el-option
+            v-for="item in studys"
+            :key="item.value"
+            size="mini"
+            :value="item.value"
+          />
         </el-select>
       </div>
       <div
@@ -33,7 +64,12 @@
       >
         <div>专业：</div>
         <el-select v-model="major" size="mini" placeholder="专业">
-          <el-option v-for="item in majors" :key="item.value" size="mini" :value="item.value" />
+          <el-option
+            v-for="item in majors"
+            :key="item.value"
+            size="mini"
+            :value="item.value"
+          />
         </el-select>
       </div>
       <div
@@ -41,7 +77,12 @@
       >
         <div>班级：</div>
         <el-select v-model="newclass" size="mini" placeholder="班级">
-          <el-option v-for="item in classs" :key="item.value" size="mini" :value="item.value" />
+          <el-option
+            v-for="item in classs"
+            :key="item.value"
+            size="mini"
+            :value="item.value"
+          />
         </el-select>
       </div>
       <div
@@ -49,20 +90,41 @@
       >
         <div>市场部:</div>
         <el-select v-model="cityCenter" size="mini" placeholder="市场部">
-          <el-option v-for="item in cityCenters" :key="item.value" size="mini" :value="item.value" />
+          <el-option
+            v-for="item in cityCenters"
+            :key="item.value"
+            size="mini"
+            :value="item.value"
+          />
         </el-select>
       </div>
       <div
         style="margin-left:15px;width:70%;display:flex;justify-content: space-between;margin-top:30px;"
       >
         <div>当前成绩：</div>
-        <el-input-number v-model="chengji" style="width:20%;height:28px;margin-right:460px;" :step="1" step-strictly :min="0" :max="40" label="当前成绩" />
+        <el-input-number
+          v-model="chengji"
+          style="width:20%;height:28px;margin-right:460px;"
+          :step="1"
+          step-strictly
+          :min="0"
+          :max="40"
+          label="当前成绩"
+        />
       </div>
       <div
         style="margin-left:15px;width:70%;display:flex;justify-content: space-between;margin-top:30px;"
       >
         <div>还差成绩：</div>
-        <el-input-number v-model="Stillbad" style="width:20%;height:28px;margin-right:460px;" :step="1" step-strictly :min="0" :max="40" label="还差成绩" />
+        <el-input-number
+          v-model="Stillbad"
+          style="width:20%;height:28px;margin-right:460px;"
+          :step="1"
+          step-strictly
+          :min="0"
+          :max="40"
+          label="还差成绩"
+        />
       </div>
       <div
         style="margin-left:15px;width:70%;display:flex;justify-content: space-between;margin-top:30px;"
@@ -90,12 +152,18 @@
 // 引入接口函数
 import { getMajor, getMarketing, getClass, getStudent } from '@/api/api'
 
+// 引入地区js文件
+// eslint-disable-next-line no-unused-vars
+import City from '../../assets/Ctiy/citys.json'
+
 export default {
   data() {
     return {
       addshow: true, // 添加模块是否显示
+      xuehao: '', // 学号
+      jiguan: [], // 籍贯
       newName: '', // 姓名
-      sex: '', // 性别单选框
+      sex: '男', // 性别单选框
       newAge: '', // 年龄
       study: '', // 学制选项
       major: '', // 专业选项
@@ -122,13 +190,16 @@ export default {
       // 班级选项
       classs: [],
       // 市场部选项
-      cityCenters: []
+      cityCenters: [],
+      // 地区选项
+      options: []
     }
   },
   mounted() {
-    this.Majors()// 专业接口调用
-    this.Classs()// 班级接口调用
-    this.CityCenters()// 市场部调用
+    this.Majors() // 专业接口调用
+    this.Classs() // 班级接口调用
+    this.CityCenters() // 市场部调用
+    this.options = City // 地区调用
   },
   methods: {
     async Majors() {
@@ -171,7 +242,9 @@ export default {
         citycenter: this.cityCenter,
         chengji: this.chengji,
         graduation: this.Stillbad,
-        failss: this.Fail
+        failss: this.Fail,
+        studentID: this.xuehao,
+        nativeplace: this.jiguan
       }
       if (/.*[\u4e00-\u9fa5]+.*$/.test(this.chengji)) {
         // 判断不带汉字的正则
@@ -182,6 +255,8 @@ export default {
         this.$message.error('挂科次数不必带单位!')
         return false
       } else {
+        // 获取到引入的json文件中的label值,然后转换成字符串,在把默认的逗号去掉
+        obj.nativeplace = this.$refs['cascaderAddr'].currentLabels.join('')
         const success = await getStudent(obj)
         if (success.data.code === 201) {
           this.$message.error(success.data.msg)
@@ -196,6 +271,8 @@ export default {
           this.chengji = ''
           this.Stillbad = ''
           this.Fail = ''
+          this.xuehao = ''
+          this.jiguan = []
           this.$confirm(`${success.data.msg},是否跳转至学生列表页`, '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
@@ -228,6 +305,8 @@ export default {
       this.chengji = ''
       this.Stillbad = ''
       this.Fail = ''
+      this.xuehao = ''
+      this.jiguan = []
     }
   }
 }
@@ -235,12 +314,12 @@ export default {
 <style scoped>
 .demo-input-size {
   width: 100%;
-  height: 650px;
+  height: 750px;
   margin-top: 15px;
 }
 .demo-input-smallsize {
   width: 1000px;
-  height: 650px;
+  height: 750px;
   margin: 0 auto;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   padding-top: 30px;
@@ -255,4 +334,3 @@ export default {
   width: 600px;
 }
 </style>
-
