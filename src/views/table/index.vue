@@ -176,14 +176,14 @@
       </el-table-column>
     </el-table>
     <!-- 分页模块 -->
-    <Pageoption style="position:fixed;left:205px;  top:520px;" :total="total" :page-size="pageSize" :current-page="currentPage" @getcurrentPage="getcurrentPage" />
+    <Pageoption style="position:fixed;left:205px;bottom:20px;" :total="total" :page-size="pageSize" :current-page="currentPage" @getcurrentPage="getcurrentPage" />
     <!-- 导出excel表 -->
     <el-button
       size="mini"
       :loading="exportLodding"
       type="success"
       round
-      style="position:fixed;right:5px;  top:550px;"
+      style="position:fixed;right:5px;bottom:20px;"
       @click="outExcel"
     >导出当页excel
     </el-button>
