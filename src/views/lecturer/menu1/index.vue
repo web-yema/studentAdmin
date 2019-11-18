@@ -109,6 +109,7 @@ export default {
       jointime: '', // 入职时间
       upmajor: '', // 职位
       major: '', // 专业
+      power: true, // 权限问题
       options: [{
         value: '全部讲师',
         label: '全部讲师'
