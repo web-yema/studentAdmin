@@ -66,7 +66,7 @@ export default {
       const { redirect, path } = item
       if (redirect) {
         this.$router.push(redirect)
-        return;
+        return false
       }
       this.$router.push(this.pathCompile(path))
     }
