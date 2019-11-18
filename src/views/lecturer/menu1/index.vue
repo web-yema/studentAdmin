@@ -66,13 +66,13 @@
           <div v-else>{{ tableData[scope.$index].position }}</div>
         </template>
       </el-table-column>
-      <el-table-column align="center">
+      <el-table-column align="center" v-if="power">
         <template slot="header" slot-scope="">操作</template>
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="open(scope)">修改</el-button>
         </template>
       </el-table-column>
-      <el-table-column align="right">
+      <el-table-column align="right" v-if="power">
         <template slot-scope="scope">
           <el-button size="mini" type="danger" style="margin-top:3px;" @click="deleteOne(scope)">删除</el-button>
         </template>
@@ -88,6 +88,8 @@
 import { getTeacherAll, updateTeacher, deleteTeacher } from '../../../api/headAll'
 // 分页模块
 import pageCount from '../../../components/Pagination/index'
+//
+import { mapGetters } from 'vuex'
 export default {
   components: {
     pageCount
@@ -120,11 +122,19 @@ export default {
       value: '全部讲师'
     }
   },
+  computed: {
+    ...mapGetters(['roles'])
+  },
+  created() {
+    if (this.roles.includes('3')) {
+      this.power = false
+    }
+  },
   mounted() {
     this.getTeacherAlls(this.currentPage)
   },
   methods: {
-    //调用子组件传过来的事件
+    // 调用子组件传过来的事件
     getcurrentPage(currentPage) {
       this.currentPage = currentPage
       this.getTeacherAlls(currentPage)
@@ -145,8 +155,13 @@ export default {
     // 获取全部讲师
     async getTeacherAlls(page) {
       const { data } = await getTeacherAll(page)
-      this.tableData = data.data
-      this.total = data.total
+      if (data.code === 202) {
+        this.currentPage = this.currentPage - 1
+        this.getTeacherAlls(this.currentPage)
+      } else {
+        this.tableData = data.data
+        this.total = data.total
+      }
     },
     // 修改讲师信息
     open(scope) {
@@ -155,7 +170,7 @@ export default {
         cancelButtonText: '取消'
       }).then(async({ value }) => {
         // 如果value和之前一样，或填入空格，提示用户您没有做任何更改
-        if (value === this.tableData[scope.$index].upmajor || value.trim() === '') {
+        if (value === this.tableData[scope.$index].position || value.trim() === '') {
           this.$message.error('您没有做任何更改!')
           return false
         }

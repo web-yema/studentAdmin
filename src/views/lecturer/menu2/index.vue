@@ -35,7 +35,7 @@
         <el-form-item label="入职时间" required>
           <el-col :span="11">
             <el-form-item prop="time">
-              <el-date-picker v-model="ruleForm.time" type="date" placeholder="日期" style="width: 100%;" />
+              <el-date-picker v-model="ruleForm.time" align="right" type="date" placeholder="选择日期" :picker-options="pickerOptions" />
             </el-form-item>
           </el-col>
         </el-form-item>
@@ -53,13 +53,19 @@ import { addTeacher, getMajor } from '../../../api/headAll'
 export default {
   data() {
     return {
+      // 入职时间
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > Date.now()
+        }
+      },
       ruleForm: {
         name: '', // 姓名
         age: 1, // 年龄
         college: '', // 学院
         time: '', // 入职时间
         job: '', // 职业
-        sex: '' // 性别
+        sex: '男' // 性别
       },
       major: [], // 专业
       rules: {
@@ -113,12 +119,13 @@ export default {
         position: this.ruleForm.job,
         major: this.ruleForm.major
       }
-      // 获取所有讲师
-      const { data } = await addTeacher(person)
       // 判断如果所填项是否为空或为空格，提示用户提交信息中存在空项
       if (person.lecturername.trim() === '' || person.lecturersex === '' || person.college === '' || person.major === '' || person.lecturerage === '' || person.entryDate === '' || person.position.trim() === '') {
         return this.$message.error('提交信息中存在空项!')
-      } else if (data.code === 200) {
+      }
+      // 获取所有讲师
+      const { data } = await addTeacher(person)
+      if (data.code === 200) {
         // 判度code码如果为200，提示用户添加成功，并清空信息
         this.$message.success(data.message)
         this.$refs[formName].resetFields()

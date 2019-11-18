@@ -1,11 +1,9 @@
 import Axios from 'axios'
 
 // 获取所有班主任和分页
-export const getHeadAll = (page, id) => {
-  console.log(id)
+export const getHeadAll = (page) => {
   return Axios.post('http://132.232.89.22:8080/headTeacherPage', {
-    page: page,
-    _id: id
+    page: page
   })
 }
 

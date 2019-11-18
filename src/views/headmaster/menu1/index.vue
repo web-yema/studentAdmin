@@ -54,20 +54,20 @@
           <div v-else>{{ tableData[scope.$index].position }}</div>
         </template>
       </el-table-column>
-      <el-table-column align="center">
+      <el-table-column align="center" v-if="power">
         <template slot="header" slot-scope="">操作</template>
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="open(scope)">修改</el-button>
         </template>
       </el-table-column>
-      <el-table-column align="right">
+      <el-table-column align="right" v-if="power">
         <template slot-scope="scope">
           <el-button size="mini" type="danger" style="margin-top:3px;" @click="deleteOne(scope)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
     <!-- 分页模块 -->
-    <pageCount style="position:fixed;left:205px;  top:520px;" :total="total" :pageSize="pageSize" :currentPage="currentPage" @getcurrentPage="getcurrentPage"/>
+    <pageCount style="position:fixed;left:205px;  top:520px;" :total="total" :pageSize="pageSize" :currentPage="currentPage" @getcurrentPage="getcurrentPage" />
   </div>
 </template>
 
@@ -77,6 +77,9 @@ import { getHeadAll, updateHead, deleteHead } from '../../../api/headAll'
 
 // 引入分页模块
 import pageCount from '../../../components/Pagination/index'
+
+//
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -98,11 +101,19 @@ export default {
       upmajor: '' // 职位
     }
   },
+  computed: {
+    ...mapGetters(['roles'])
+  },
+  created() {
+    if (this.roles.includes('3')) {
+      this.power = false
+    }
+  },
   mounted() {
     this.getHeadAlls(this.currentPage)
   },
   methods: {
-    //调用子组件传过来的事件
+    // 调用子组件传过来的事件
     getcurrentPage(currentPage) {
       this.currentPage = currentPage
       this.getHeadAlls(currentPage)
@@ -110,8 +121,13 @@ export default {
     // 获取所有班主任
     async getHeadAlls(page) {
       const { data } = await getHeadAll(page)
-      this.tableData = data.data
-      this.total = data.total
+      if (data.code === 202) {
+        this.currentPage = this.currentPage - 1
+        this.getHeadAlls(this.currentPage)
+      } else {
+        this.tableData = data.data
+        this.total = data.total
+      }
     },
     // 修改班主任信息
     open(scope) {
@@ -120,7 +136,7 @@ export default {
         cancelButtonText: '取消'
       }).then(async({ value }) => {
         // 判断如果value值和之前相同，或是填入空格，提示用户您没有做任何更改
-        if (value === this.tableData[scope.$index].upmajor || value.trim() === '') {
+        if (value === this.tableData[scope.$index].position || value.trim() === '') {
           this.$message.error('您没有做任何更改!')
           return false
         }
