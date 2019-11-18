@@ -185,6 +185,7 @@
       round
       style="position:fixed;right:5px;  top:550px;"
       @click="outExcel"
+      v-if="power"
     >导出当页excel
     </el-button>
   </div>
@@ -203,7 +204,7 @@ import {
 } from '../../api/api.js'
 
 // 引入vuex
-// import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 
 // 引入分页模板
 import Pageoption from '../../components/Pagination'
@@ -281,7 +282,19 @@ export default {
       // 学生的id值
       id: '',
       // 查询到的对象
-      objselect: {}
+      objselect: {},
+      // 操作按钮权限
+      power: true
+    }
+  },
+  // vuex 权限
+  computed: {
+    ...mapGetters(["roles"])
+  },
+  // '3' 代表的普通用户，普通用户登录会将操作按钮隐藏
+  created() {
+    if (this.roles.includes('3')) {
+      this.power = false;
     }
   },
   mounted() {

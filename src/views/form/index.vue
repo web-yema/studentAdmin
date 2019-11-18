@@ -47,8 +47,9 @@
         <el-table-column
           label="操作"
           min-width="180"
+          v-if="power"
         >
-          <template slot-scope="scope">
+          <template slot-scope="scope" >
             <el-button type="primary" size="mini" @click="update(scope.$index, scope.row)">修 改</el-button>
             <el-button type="danger" size="mini" @click="remove(scope.row,scope.row._id)">删 除</el-button>
           </template>
@@ -134,6 +135,8 @@
 <script>
 // 引入接口函数
 import { getClass, delClass, updateClass, allstudent, getUpdate } from '../../api/api.js'
+// 引入vuex权限
+import { mapGetters  } from 'vuex'
 export default {
   data() {
     return {
@@ -180,7 +183,18 @@ export default {
       changeStuClass: '', // 转移选择班级
       zyStuId: '', // 学生id
       multipleSelection: '',
-      currentRow: null
+      currentRow: null,
+      power: true // 操作按钮权限
+    }
+  },
+  // vuex 权限
+  computed: {
+    ...mapGetters(['roles'])
+  },
+  // '3' 代表的普通用户，普通用户登录会将操作按钮隐藏
+  created() {
+    if(this.roles.includes('3')){
+      this.power = false
     }
   },
   async mounted() {

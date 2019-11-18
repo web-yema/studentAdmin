@@ -98,7 +98,8 @@ export default {
       sex: '', // 性别
       age: '', // 年龄
       jointime: '', // 入职时间
-      upmajor: '' // 职位
+      upmajor: '', // 职位
+      power: true
     }
   },
   computed: {
