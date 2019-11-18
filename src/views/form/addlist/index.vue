@@ -1,19 +1,35 @@
 <template>
   <div>
     <div class="add_class_s">
-      <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
+      <el-form
+        ref="ruleForm"
+        :model="ruleForm"
+        :rules="rules"
+        label-width="100px"
+        class="demo-ruleForm"
+      >
         <el-form-item label="班级名称" prop="classname">
           <el-input v-model="ruleForm.classname" />
         </el-form-item>
         <el-form-item label="选择专业" prop="major">
           <el-select v-model="ruleForm.major" placeholder="选择专业">
-            <el-option v-for="site in getMajor" :label='site.majorname' :value='site.majorname' />
+            <el-option
+              v-for="site in getMajor"
+              :key="site.value"
+              :label="site.majorname"
+              :value="site.majorname"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="创建时间" required>
           <el-col :span="11">
             <el-form-item prop="createDate">
-              <el-date-picker v-model="ruleForm.createDate" type="date" placeholder="选择日期" style="width: 100%;" />
+              <el-date-picker
+                v-model="ruleForm.createDate"
+                type="date"
+                placeholder="选择日期"
+                style="width: 100%;"
+              />
             </el-form-item>
           </el-col>
         </el-form-item>
@@ -24,7 +40,9 @@
           <el-input v-model="ruleForm.headteacher" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" size="mini" @click="submitForm('ruleForm')">立即创建</el-button>
+          <el-button type="primary" size="mini" @click="submitForm('ruleForm')">
+            立即创建
+          </el-button>
           <el-button size="mini" @click="resetForm('ruleForm')">重置</el-button>
         </el-form-item>
       </el-form>
@@ -37,7 +55,7 @@ export default {
   data() {
     return {
       createClass: [], // 创建班级数据
-      getMajor:[],
+      getMajor: [],
       ruleForm: {
         classname: '',
         major: '',
@@ -51,17 +69,22 @@ export default {
           { min: 5, max: 7, message: '班级名称不规范', trigger: 'blur' }
         ],
         createDate: [
-          { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+          {
+            type: 'date',
+            required: true,
+            message: '请选择日期',
+            trigger: 'change'
+          }
         ]
       },
-      path:"/form/index"
+      path: '/form/index'
     }
   },
-  async mounted() { 
+  async mounted() {
     const { data } = await getMajor()
     this.getMajor = data.data
   },
-  methods: {  
+  methods: {
     submitForm(formName) {
       this.$refs[formName].validate(async valid => {
         if (valid) {
@@ -85,14 +108,14 @@ export default {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning',
-            size:"mini"
-          }).then(() => {
-            this.$router.push({
-              path: this.path, // 跳转路由
+            size: 'mini'
+          })
+            .then(() => {
+              this.$router.push({
+                path: this.path // 跳转路由
+              })
             })
-          }).catch(() => {
-                    
-          });
+            .catch(() => {})
         } else {
           this.$message({
             type: 'info',
@@ -109,5 +132,5 @@ export default {
 }
 </script>
 <style scoped>
- @import "./asset.scss";
+@import './asset.scss';
 </style>

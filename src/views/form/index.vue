@@ -11,6 +11,7 @@
     </el-select>
 
     <div class="table_div">
+<<<<<<< HEAD
       <el-table v-loading="listLoading" :data="classes" style="width: 100%">
         <el-table-column prop="classname" label="班级名称" />
         <el-table-column prop="createDate" label="创建日期" />
@@ -18,6 +19,36 @@
         <el-table-column prop="lecturer" label="讲师" />
         <el-table-column prop="headteacher" label="班主任" />
         <el-table-column label="班级成员">
+=======
+      <el-table
+        v-loading="listLoading"
+        :data="classes"
+        style="width: 100%"
+      >
+        <el-table-column
+          prop="classname"
+          label="班级名称"
+        />
+        <el-table-column
+          prop="createDate"
+          label="创建日期"
+        />
+        <el-table-column
+          prop="major"
+          label="专业"
+        />
+        <el-table-column
+          prop="lecturer"
+          label="讲师"
+        />
+        <el-table-column
+          prop="headteacher"
+          label="班主任"
+        />
+        <el-table-column
+          label="班级成员"
+        >
+>>>>>>> 869d48dbf3fda4f91a44b5b033f267b0a56c90c1
           <template slot-scope="scope">
             <span class="go_student" @click="member(scope.row)">详 情</span>
           </template>
@@ -30,6 +61,7 @@
         </el-table-column>
       </el-table>
       <!-- 分页 -->
+<<<<<<< HEAD
 
       <el-dialog title="修改操作" :visible.sync="show" width="30%">
         <el-form
@@ -39,6 +71,14 @@
           label-width="100px"
           class="demo-ruleForm"
         >
+=======
+      <el-dialog
+        title="修改操作"
+        :visible.sync="show"
+        width="30%"
+      >
+        <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
+>>>>>>> 869d48dbf3fda4f91a44b5b033f267b0a56c90c1
           <el-form-item label="讲师" prop="lecturer">
             <el-input v-model="ruleForm.lecturer" />
           </el-form-item>
@@ -63,6 +103,7 @@
       <el-table
         ref="multipleTable"
         highlight-current-row
+<<<<<<< HEAD
         class="allstutab"
         :data="all"
         height="300"
@@ -70,11 +111,30 @@
         @current-change="handleCurrentChange"
       >
         <el-table-column prop="name" label="姓名">
+=======
+        style="width: 100%"
+        class="allstutab"
+        :data="all"
+        height="300"
+        @current-change="handleCurrentChange"
+      >
+        <el-table-column
+          prop="name"
+          label="姓名"
+        >
+>>>>>>> 869d48dbf3fda4f91a44b5b033f267b0a56c90c1
           <template slot-scope="scope">
             <div style="height:100%">{{ scope.row.name }}</div>
           </template>
         </el-table-column>
+<<<<<<< HEAD
         <el-table-column prop="chengji" label="成绩">
+=======
+        <el-table-column
+          prop="chengji"
+          label="成绩"
+        >
+>>>>>>> 869d48dbf3fda4f91a44b5b033f267b0a56c90c1
           <template slot-scope="scope">
             <div>{{ scope.row.chengji }}</div>
           </template>
@@ -83,6 +143,7 @@
       <p class="allp">转移到</p>
 
       <div style="position:relative">
+<<<<<<< HEAD
         <el-select
           v-model="value1"
           style="padding-left:10px"
@@ -90,6 +151,9 @@
           placeholder="请选择"
           @change="changeClass"
         >
+=======
+        <el-select v-model="value1" style="padding-left:10px" filterable placeholder="请选择" @change="changeClass">
+>>>>>>> 869d48dbf3fda4f91a44b5b033f267b0a56c90c1
           <el-option
             v-for="item in classes"
             :key="item._id"
@@ -98,17 +162,26 @@
             :disabled="item.disabled"
           />
         </el-select>
+<<<<<<< HEAD
         <br >
         <el-button
           style="margin:0px 10px;width:92%;position:absolute;bottom:0;"
           type="primary"
           @click="zyStus"
         >转移</el-button>
+=======
+        <br>
+        <el-button style="margin:0px 10px;width:92%;position:absolute;bottom:0;" type="primary" @click="zyStus">转移</el-button>
+>>>>>>> 869d48dbf3fda4f91a44b5b033f267b0a56c90c1
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button size="small" @click="zyStu = false">关 闭</el-button>
       </span>
     </el-dialog>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 869d48dbf3fda4f91a44b5b033f267b0a56c90c1
   </div>
 </template>
 
@@ -132,6 +205,7 @@ export default {
       classstudents: [],
       expands: [], // 要展开的行，数值的元素是row的key值
       xzmajor: '', // 选择专业
+<<<<<<< HEAD
       options: [
         {
           value: '全部班级',
@@ -146,6 +220,18 @@ export default {
           label: '视觉设计'
         }
       ],
+=======
+      options: [{
+        value: '全部班级',
+        label: '全部班级'
+      }, {
+        value: 'WEB架构',
+        label: 'WEB架构'
+      }, {
+        value: '视觉设计',
+        label: '视觉设计'
+      }],
+>>>>>>> 869d48dbf3fda4f91a44b5b033f267b0a56c90c1
       value: '全部班级',
       value1: '全部班级',
       path: '/form/classstudent',
@@ -212,6 +298,17 @@ export default {
           confirmButtonText: '转移',
           cancelButtonText: '取消',
           type: 'warning'
+<<<<<<< HEAD
+=======
+        }).then(async res => {
+          this.zyStu = true
+        // eslint-disable-next-line handle-callback-err
+        }).catch(err => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+>>>>>>> 869d48dbf3fda4f91a44b5b033f267b0a56c90c1
         })
           .then(async res => {
             this.zyStu = true
@@ -250,12 +347,20 @@ export default {
             })
             // eslint-disable-next-line handle-callback-err
           })
+<<<<<<< HEAD
           // eslint-disable-next-line handle-callback-err
           .catch(err => {
             this.$message({
               type: 'info',
               message: '已取消删除'
             })
+=======
+        // eslint-disable-next-line handle-callback-err
+        }).catch(err => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+>>>>>>> 869d48dbf3fda4f91a44b5b033f267b0a56c90c1
           })
       }
     },
@@ -375,7 +480,11 @@ export default {
           var num = this.all.indexOf(this.zyStuId)
           this.all.splice(num, 1)
           this.$message.success('转移成功！')
+<<<<<<< HEAD
           this.zyStuId = '';
+=======
+          this.zyStuId = ''
+>>>>>>> 869d48dbf3fda4f91a44b5b033f267b0a56c90c1
         }
       }
       this.op_click(this.xzmajor)
