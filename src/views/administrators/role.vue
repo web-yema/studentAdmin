@@ -9,12 +9,14 @@
       <el-table-column label="权限" prop="power">
         <template slot-scope="scope">
           <div v-show="isUpdate!==scope.row._id">{{ scope.row.power }}</div>
-          <el-input
-            v-show="isUpdate===scope.row._id"
-            v-model="update.power"
-            size="mini"
-            style="width:70%"
-          />
+            <el-select v-model="value" v-show="isUpdate===scope.row._id" placeholder="请选择">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+          </el-select>
         </template>
       </el-table-column>
       <el-table-column align="right">
@@ -49,7 +51,6 @@ import { getAllAdmin, delAdmin } from '@/api/user'
 import { updateAdminPass } from '@/api/api'
 
 export default {
-  inject: ['reload'],
   data() {
     return {
       listLoading: true, // 加载状态
@@ -57,27 +58,23 @@ export default {
       tableData: [], // 所有用户
       update: {
         power: ''
-      }
+      },
+      // 修改权限
+      options:[
+        {
+          value: '2',
+          label: '管理员'
+        }, {
+          value: '3',
+          label: '普通用户'
+        }
+      ],
+      value: ''
 
     }
   },
-  async mounted() {
-    const { data } = await getAllAdmin()
-    this.tableData = data.data
-    if (data.code === 200) {
-      this.listLoading = false
-    }
-    for (let i = 0; i < this.tableData.length; i++) {
-      let tableDatas = this.tableData[i].power
-      if (tableDatas === 1) {
-        tableDatas = '超级管理员'
-      } else if (tableDatas === 2) {
-        tableDatas = '管理员'
-      } else if (tableDatas === 3) {
-        tableDatas = '普通用户'
-      }
-      this.tableData[i].power = tableDatas
-    }
+  mounted() {
+    this.handlegetHeadTeacher()
   },
   methods: {
     async handlegetHeadTeacher() {
@@ -85,6 +82,15 @@ export default {
       this.tableData = data.data
       if (data.code === 200) {
         this.listLoading = false
+      }
+      for (let i = 0; i < this.tableData.length; i++) {
+        let tableDatas = this.tableData[i].power
+        if (tableDatas === '2') {
+          tableDatas = '管理员'
+        } else if (tableDatas === '3') {
+          tableDatas = '普通用户'
+        }
+        this.tableData[i].power = tableDatas
       }
     },
     // 删除一项
@@ -116,7 +122,11 @@ export default {
     updateClass(row, scope) {
       this.update.power = row.power
       this.isUpdate = row._id
-      console.log(this.update.power)
+      if (this.update.power === '管理员') {
+        this.value = "2"
+      } else if (this.update.power === '普通用户') {
+        this.value = '3'
+      }
     },
     // 取消修改
     updateClassCancel() {
@@ -128,18 +138,11 @@ export default {
       if (this.update.power === '') {
         return this.$message.error('更新信息中不能为空')
       }
-      console.log(this.update.power)
-      if (this.update.power === '管理员') {
-        this.update.power = 2
-      } else if (this.update.power === '普通用户') {
-        this.update.power = 3
-      }
-      const { data } = await updateAdminPass(this.update)
+      const { data } = await updateAdminPass({_id:id,power:this.value})
       if (data.code === 2002) {
         this.$message.success(data.msg)
         this.updateClassCancel()
         this.handlegetHeadTeacher()
-        this.reload()
       } else {
         this.$message.error(data.msg)
       }

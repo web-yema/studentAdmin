@@ -149,7 +149,6 @@ export default {
             }, 3000)
           }
         } else {
-          console.log('提交错误！！')
           return false
         }
       })

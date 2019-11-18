@@ -131,7 +131,6 @@ export default {
             this.loading = false
           })
         } else {
-          console.log('提交错误！！')
           return false
         }
       })
