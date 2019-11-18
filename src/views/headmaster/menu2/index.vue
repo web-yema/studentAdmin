@@ -12,7 +12,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="年龄" prop="age">
-          <el-input v-model="ruleForm.age" />
+          <el-input-number v-model="ruleForm.age" :min="1" :max="100" label="请输入年龄" />
         </el-form-item>
         <el-form-item label="学院" prop="college">
           <el-select v-model="ruleForm.college" placeholder="请选择学院">
@@ -30,7 +30,7 @@
         <el-form-item label="入职时间" required>
           <el-col :span="11">
             <el-form-item prop="time">
-              <el-date-picker v-model="ruleForm.time" type="date" placeholder="日期" style="width: 100%;" />
+              <el-date-picker v-model="ruleForm.time" align="right" type="date" placeholder="选择日期" :picker-options="pickerOptions" />
             </el-form-item>
           </el-col>
         </el-form-item>
@@ -48,13 +48,18 @@ import { addHead } from '../../../api/headAll'
 export default {
   data() {
     return {
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > Date.now();
+        }
+      },
       ruleForm: {
         name: '', // 姓名
-        age: '', // 年龄
+        age: 1, // 年龄
         college: '', // 学院
         time: '', // 入职时间
         job: '', // 职位
-        sex: '' // 性别
+        sex: '男' // 性别
       },
       rules: {
         // 姓名
@@ -63,8 +68,7 @@ export default {
         ],
         // 年龄
         age: [
-          { required: true, message: '请输入年龄', trigger: 'blur' },
-          { type: Number(), message: '请输入数字', trigger: 'blur' }
+          { required: true, message: '请输入年龄', trigger: 'change' }
         ],
         // 学院
         college: [
@@ -101,11 +105,13 @@ export default {
         entryDate: this.btn(),
         position: this.ruleForm.job
       }
-      const { data } = await addHead(person)
       // 判断如果填入信息有一项为空，提示用户提交信息中存在空项
       if (person.headname.trim() === '' || person.headsex === '' || person.college === '' || person.headage === '' || person.entryDate === '' || person.position.trim() === '') {
-        return this.$message.error('提交信息中存在空项!')
-      } else if (data.code === 200) {
+        this.$message.error('提交信息中存在空项!')
+        return false
+      }
+      const { data } = await addHead(person)
+      if (data.code === 200) {
         // 如果code码为200，提示用户添加成功，并清空信息
         this.$message.success(data.message)
         this.$refs[formName].resetFields()

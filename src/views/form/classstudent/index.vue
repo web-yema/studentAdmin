@@ -8,11 +8,7 @@
         style="width: 100%"
         @selection-change="selsChange"
       >
-        <el-table-column
-          :reserve-selection="true"
-          type="selection"
-          width="55"
-        />
+        <el-table-column :reserve-selection="true" type="selection" width="55" />
         <el-table-column prop="classes" label="班级" />
         <el-table-column prop="name" label="姓名" />
         <el-table-column prop="sex" label="性别" />
@@ -25,27 +21,16 @@
         <el-table-column prop="study" label="学制" />
         <el-table-column prop="nativeplace" label="籍贯" />
         <el-table-column prop="studentID" label="学号" />
-        <el-table-column label="操作" min-width="180" v-if="power">
+        <el-table-column label="操作" v-if="power" min-width="180">
           <template slot-scope="scope">
-            <el-button
-              type="primary"
-              size="mini"
-              @click="update(scope.$index, scope.row)"
-            >修改</el-button>
-            <el-button
-type="danger"
-size="mini" @click="remove(scope.row._id)">删除</el-button>
+            <el-button type="primary" size="mini" @click="update(scope.$index, scope.row)">修改</el-button>
+            <el-button type="danger" size="mini" @click="remove(scope.row._id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
       <!-- 修改 -->
       <el-dialog title="修改操作" :visible.sync="show" width="30%">
-        <el-form
-          ref="ruleForm"
-          :model="ruleForm"
-          label-width="100px"
-          class="demo-ruleForm"
-        >
+        <el-form ref="ruleForm" :model="ruleForm" label-width="100px" class="demo-ruleForm">
           <el-form-item label="班级" prop="classes">
             <el-input v-model="ruleForm.classes" />
           </el-form-item>
@@ -73,41 +58,27 @@ size="mini" @click="remove(scope.row._id)">删除</el-button>
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button size="small" @click="secede('ruleForm')">取 消</el-button>
-          <el-button
-type="primary"
-size="small" @click="submitForm()">修 改</el-button>
+          <el-button type="primary" size="small" @click="submitForm()">修 改</el-button>
         </span>
       </el-dialog>
     </div>
 
-    <div style="position:fixed;bottom:20px;margin-left:20px;" v-if="power">
+    <div v-if="power" style="position:fixed;bottom:20px;margin-left:20px;">
       <!-- 批量删除 -->
       <template>
-        <el-button
-          style="margin-top:10px"
-          type="danger"
-          size="small"
-          @click="soamdelstudent()"
-        >批量删除</el-button>
+        <el-button style="margin-top:10px" type="danger" size="small" @click="soamdelstudent()">批量删除</el-button>
       </template>
       <!-- 批量修改 -->
       <template>
-        <el-button
-style="margin-top:10px"
-type="success" size="small">批量修改</el-button>
+        <el-button style="margin-top:10px" type="success" size="small">批量修改</el-button>
       </template>
       <!-- 添加 -->
       <template>
-        <el-button
-          style="margin-top:10px"
-          type="primary"
-          size="small"
-          @click="addstudent()"
-        >添加学生</el-button>
+        <el-button style="margin-top:10px" type="primary" size="small" @click="addstudent()">添加学生</el-button>
       </template>
     </div>
 
-    <div style="position:fixed;right:50px;bottom:20px;" v-if="power">
+    <div v-if="power" style="position:fixed;right:50px;bottom:20px;">
       <!-- 导出 -->
       <el-button
         size="mini"
@@ -115,18 +86,10 @@ type="success" size="small">批量修改</el-button>
         round
         :loading="downloadLoading"
         @click="handleDownload"
-      >
-        导出当页excel
-      </el-button>
+      >导出当页excel</el-button>
       <!-- 导入 -->
       <label class="fileinp">
-        <input
-          type="button"
-          class="btn"
-          value="导入excel"
-          round
-          @click="handleInter"
-        >
+        <input type="button" class="btn" value="导入excel" round @click="handleInter" >
         <input
           type="file"
           class="fileinpd"
@@ -148,11 +111,11 @@ import {
   // eslint-disable-next-line no-unused-vars
   addallStudent,
   getExcel
-} from '../../../api/api.js'
+} from '../../../api/api.js';
 // eslint-disable-next-line no-unused-vars
-import UploadExcel from '../../../components/UploadExcel/index'
+import UploadExcel from '../../../components/UploadExcel/index';
 // 引入vuex 权限
-import { mapGetters} from 'vuex'
+import { mapGetters } from 'vuex';
 export default {
   data() {
     return {
@@ -181,13 +144,13 @@ export default {
       power: true // 操作按钮权限
     }
   },
-  // vuex 权限  
+  // vuex 权限
   computed: {
     ...mapGetters(['roles'])
   },
   // '3' 代表的普通用户，普通用户登录会将操作按钮隐藏
   created() {
-    if(this.roles.includes('3')){
+    if (this.roles.includes('3')) {
       this.power = false
     }
   },
@@ -401,7 +364,7 @@ export default {
       var reader = new FileReader()
       // if (!FileReader.prototype.readAsBinaryString) {
       FileReader.prototype.readAsBinaryString = function(f) {
-        var binary = ''
+        var binary = '';
         var rABS = false // 是否将文件读取为二进制字符串
         // eslint-disable-next-line no-unused-vars
         var pt = this
@@ -476,5 +439,5 @@ export default {
 </script>
 
 <style scoped>
-@import './asset.scss';
+@import "./asset.scss";
 </style>
