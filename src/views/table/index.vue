@@ -230,9 +230,6 @@
 </template>
 
 <script>
-<<<<<<< HEAD
-import { getList } from '@/api/table'
-=======
 // 引入接口函数
 import {
   getUpdate, // 修改学生信息
@@ -250,7 +247,6 @@ import { mapGetters } from "vuex";
 
 import UploadExcelComponent from '../../components/UploadExcel/index'
 
->>>>>>> f29887c0981d9415b15f9c6e22496267f99f7fb0
 export default {
   name: 'UploadExcel',
   components: {
