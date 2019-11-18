@@ -1,30 +1,33 @@
 <template>
-  <div style="width=:100%; height:100px;text-align:center;">
-    <el-pagination
-      style="width=:90%; height:100px;margin:25px auto;"
-      :current-page="currentPage"
-      :page-size="pageSize"
-      background
-      layout="prev, pager, next"
-      :total="total"
-      @current-change="current_change"
-    />
-  </div>
+    <div style="width=:100%; height:100px;text-align:center;">
+      <el-pagination
+        style="width=:90%; height:100px;margin:25px auto;"
+        :current-page="currentPage"
+        :page-size="pageSize"
+        background
+        layout="prev, pager, next"
+        :total="total1"
+        @current-change="current_change"
+      />
+    </div>
 </template>
 
 <script>
-
 export default {
-  name: 'Pagination',
+  name:'Pagination',
   props: {
     total: Number,
     pageSize: Number,
-    currentPage: Number,
-    tableData: Array
+    currentPage: Number
   },
   data() {
     return {
-
+      total1: this.total
+    }
+  },
+  watch: {
+    total(newValue) {
+      this.total1 = newValue
     }
   },
   methods: {
@@ -36,7 +39,3 @@ export default {
   }
 }
 </script>
-
-<style>
-
-</style>
