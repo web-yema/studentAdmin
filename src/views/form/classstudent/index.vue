@@ -25,7 +25,7 @@
         <el-table-column prop="study" label="学制" />
         <el-table-column prop="nativeplace" label="籍贯" />
         <el-table-column prop="studentID" label="学号" />
-        <el-table-column label="操作" min-width="180">
+        <el-table-column label="操作" min-width="180" v-if="power">
           <template slot-scope="scope">
             <el-button
               type="primary"
@@ -80,7 +80,7 @@ size="small" @click="submitForm()">修 改</el-button>
       </el-dialog>
     </div>
 
-    <div style="position:fixed;bottom:20px;margin-left:20px;">
+    <div style="position:fixed;bottom:20px;margin-left:20px;" v-if="power">
       <!-- 批量删除 -->
       <template>
         <el-button
@@ -107,7 +107,7 @@ type="success" size="small">批量修改</el-button>
       </template>
     </div>
 
-    <div style="position:fixed;right:50px;bottom:20px;">
+    <div style="position:fixed;right:50px;bottom:20px;" v-if="power">
       <!-- 导出 -->
       <el-button
         size="mini"
@@ -151,6 +151,8 @@ import {
 } from '../../../api/api.js'
 // eslint-disable-next-line no-unused-vars
 import UploadExcel from '../../../components/UploadExcel/index'
+// 引入vuex 权限
+import { mapGetters} from 'vuex'
 export default {
   data() {
     return {
@@ -175,7 +177,18 @@ export default {
       path: '/example/tree',
       sels: [], // 选中的值显示
       checkeds: [], // 批量删除选中id
-      updateShow: 100000 // 最大匹配的值
+      updateShow: 100000, // 最大匹配的值
+      power: true // 操作按钮权限
+    }
+  },
+  // vuex 权限  
+  computed: {
+    ...mapGetters(['roles'])
+  },
+  // '3' 代表的普通用户，普通用户登录会将操作按钮隐藏
+  created() {
+    if(this.roles.includes('3')){
+      this.power = false
     }
   },
   async mounted() {
