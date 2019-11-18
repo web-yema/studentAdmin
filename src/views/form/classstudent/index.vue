@@ -1,6 +1,6 @@
 <template>
   <div class="top_option">
-    
+
     <!-- 列表 -->
     <div class="table_divs">
       <el-table
@@ -12,8 +12,8 @@
         <el-table-column
           :reserve-selection="true"
           type="selection"
-          width="55">
-        </el-table-column>
+          width="55"
+        />
         <el-table-column
           prop="classes"
           label="班级"
@@ -76,19 +76,20 @@
       <el-dialog
         title="修改操作"
         :visible.sync="show"
-        width="30%">
-        <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+        width="30%"
+      >
+        <el-form ref="ruleForm" :model="ruleForm" label-width="100px" class="demo-ruleForm">
           <el-form-item label="班级" prop="classes">
-            <el-input v-model="ruleForm.classes"></el-input>
+            <el-input v-model="ruleForm.classes" />
           </el-form-item>
           <el-form-item label="已有成绩" prop="chengji">
-            <el-input oninput = "value=value.replace(/[^\d.]/g,'')" maxlength="2" v-model="ruleForm.chengji"></el-input>
+            <el-input v-model="ruleForm.chengji" oninput="value=value.replace(/[^\d.]/g,'')" maxlength="2" />
           </el-form-item>
           <el-form-item label="还差成绩" prop="graduation">
-            <el-input oninput = "value=value.replace(/[^\d.]/g,'')" maxlength="2" v-model="ruleForm.graduation"></el-input>
+            <el-input v-model="ruleForm.graduation" oninput="value=value.replace(/[^\d.]/g,'')" maxlength="2" />
           </el-form-item>
           <el-form-item label="挂科次数" prop="failss">
-            <el-input oninput = "value=value.replace(/[^\d.]/g,'')" maxlength="2" v-model="ruleForm.failss"></el-input>
+            <el-input v-model="ruleForm.failss" oninput="value=value.replace(/[^\d.]/g,'')" maxlength="2" />
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -101,27 +102,27 @@
     <div style="position:fixed;bottom:20px;margin-left:20px;">
       <!-- 批量删除 -->
       <template>
-        <el-button style="margin-top:10px" type="danger" size="small" @click="soamdelstudent()" :disabled="this.sels.length === 0">批量删除</el-button>
+        <el-button style="margin-top:10px" type="danger" size="small" @click="soamdelstudent()">批量删除</el-button>
       </template>
       <!-- 批量修改 -->
       <template>
-        <el-button style="margin-top:10px" type="success" size="small" @click="" :disabled="this.sels.length === 0">批量修改</el-button>
+        <el-button style="margin-top:10px" type="success" size="small">批量修改</el-button>
       </template>
       <!-- 添加 -->
       <template>
         <el-button style="margin-top:10px" type="primary" size="small" @click="addstudent()">添加学生</el-button>
       </template>
     </div>
-    
+
     <div style="position:fixed;right:50px;bottom:20px;">
       <!-- 导出 -->
-      <el-button size="mini" type="success" round @click="handleDownload" :loading="downloadLoading">
-          导出当页excel
+      <el-button size="mini" type="success" round :loading="downloadLoading" @click="handleDownload">
+        导出当页excel
       </el-button>
       <!-- 导入 -->
       <label class="fileinp">
-              <input type="button" class="btn" value="导入excel" round @click="handleInter" />
-              <input type="file" class="fileinpd" @change="importfxx(this)" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
+        <input type="button" class="btn" value="导入excel" round @click="handleInter">
+        <input type="file" class="fileinpd" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" @change="importfxx(this)">
       </label>
     </div>
   </div>
@@ -129,33 +130,35 @@
 
 <script>
 // 引入接口函数
+// eslint-disable-next-line no-unused-vars
 import { allstudent, updateAllstud, delallStudent, addallStudent, getExcel } from '../../../api/api.js'
+// eslint-disable-next-line no-unused-vars
 import UploadExcel from '../../../components/UploadExcel/index'
 export default {
   data() {
     return {
       listLoading: true,
-      downloadLoading:false,
-      downloadLoading2:false,
+      downloadLoading: false,
+      downloadLoading2: false,
       show: false, // 弹窗
       classes: [], // 获取所有班级
-      allstudent:[], //获取所有学生
-      classstudents:[],
-      getClass:[],
-      all:[], //获取班级学生
-      createClass:[], //导入
+      allstudent: [], // 获取所有学生
+      classstudents: [],
+      getClass: [],
+      all: [], // 获取班级学生
+      createClass: [], // 导入
       ruleForm: {
-        classes:"",
-        chengji:"",
-        graduation:"",
-        failss:"",
-        id:""
+        classes: '',
+        chengji: '',
+        graduation: '',
+        failss: '',
+        id: ''
       },
-      rowlist:[], //修改旧值
-      path:"/example/tree",
-      sels: [],//选中的值显示
-      checkeds:[], //批量删除选中id
-      updateShow:100000 //最大匹配的值
+      rowlist: [], // 修改旧值
+      path: '/example/tree',
+      sels: [], // 选中的值显示
+      checkeds: [], // 批量删除选中id
+      updateShow: 100000 // 最大匹配的值
     }
   },
   async mounted() {
@@ -163,16 +166,17 @@ export default {
     this.allstudent = data.data
     this.listLoading = false
     // 接收存储数据
-    this.getClass = JSON.parse(localStorage.getItem('data'));
-      for(var i = 0;i<this.allstudent.length;i++){
-        if(this.getClass === this.allstudent[i].classes){
-          this.classstudents.push(this.allstudent[i])
-        }
+    this.getClass = JSON.parse(localStorage.getItem('data'))
+    for (var i = 0; i < this.allstudent.length; i++) {
+      if (this.getClass === this.allstudent[i].classes) {
+        this.classstudents.push(this.allstudent[i])
       }
-      this.all = this.classstudents
-      this.classstudents = []
-      console.log(this.all)
-    if(this.all == ""){
+    }
+    this.all = this.classstudents
+    this.classstudents = []
+    console.log(this.all)
+    // eslint-disable-next-line eqeqeq
+    if (this.all == '') {
       return false
     }
   },
@@ -180,8 +184,8 @@ export default {
     async getStudata() {
       const { data } = await allstudent()
       this.all = data.data
-      for(var i = 0;i<this.allstudent.length;i++){
-        if(this.getClass === this.allstudent[i].classes){
+      for (var i = 0; i < this.allstudent.length; i++) {
+        if (this.getClass === this.allstudent[i].classes) {
           this.classstudents.push(this.allstudent[i])
         }
       }
@@ -213,6 +217,7 @@ export default {
           message: data.msg,
           type: 'error'
         })
+      // eslint-disable-next-line handle-callback-err
       }).catch(err => {
         this.$message({
           type: 'info',
@@ -223,58 +228,56 @@ export default {
     // 修改
     update(index, row) {
       console.log(row)
-      this.rowlist = row;
-      this.show = true;
-      this.ruleForm.classes = row.classes;
-      this.ruleForm.chengji = row.chengji;
-      this.ruleForm.graduation = row.graduation;
-      this.ruleForm.failss = row.failss;
-      this.ruleForm.id = row._id;
+      this.rowlist = row
+      this.show = true
+      this.ruleForm.classes = row.classes
+      this.ruleForm.chengji = row.chengji
+      this.ruleForm.graduation = row.graduation
+      this.ruleForm.failss = row.failss
+      this.ruleForm.id = row._id
     },
     // 确定修改
     async submitForm() {
       // 默认值
-      let obj = {
-        classes:this.ruleForm.classes,
-        chengji:this.ruleForm.chengji,
-        graduation:this.ruleForm.graduation,
-        failss:this.ruleForm.failss
+      const obj = {
+        classes: this.ruleForm.classes,
+        chengji: this.ruleForm.chengji,
+        graduation: this.ruleForm.graduation,
+        failss: this.ruleForm.failss
       }
-      let ID = this.ruleForm.id
-      let { data } = await updateAllstud(ID,obj)
+      const ID = this.ruleForm.id
+      const { data } = await updateAllstud(ID, obj)
       // 判断值是否改变
-      if(
+      if (
         obj.classes === this.rowlist.classes &&
         obj.chengji === this.rowlist.chengji &&
         obj.graduation === this.rowlist.graduation &&
         obj.failss === this.rowlist.failss
-      ){
+      ) {
         this.$message.info('没有任何修改')
-        this.show = false;
-      }
-      else if (data.code === 200) {
-        this.$message.success("修改成功")
-        this.show = false;
-      }
-      else {
-        this.$message.error(data.msg);
-        return false;
+        this.show = false
+      } else if (data.code === 200) {
+        this.$message.success('修改成功')
+        this.show = false
+      } else {
+        this.$message.error(data.msg)
+        return false
       }
     },
     // 取消修改
     secede(formName) {
-      this.$refs[formName].resetFields();
+      this.$refs[formName].resetFields()
       this.$message({
         type: 'info',
         message: '已取消修改'
 
       })
-      this.show = false;
+      this.show = false
     },
     // 添加
-    addstudent(){
+    addstudent() {
       this.$router.push({
-        path: this.path, // 跳转路由
+        path: this.path // 跳转路由
       })
     },
     // 批量删除
@@ -291,12 +294,12 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(()=>{
+      }).then(() => {
         delallStudent(this.checkeds).then(res => {
           console.log(res.data)
-          if (res.data.code === 201){
+          if (res.data.code === 201) {
             this.$message.error(res.data.msg)
-          }else{
+          } else {
             this.$message({
               message: res.data.msg,
               type: 'success'
@@ -308,17 +311,17 @@ export default {
     handleDownload() {
       this.downloadLoading = true
       import('../../../excel/Export2Excel.js').then(excel => {
-          const tHeader = ['班级', '姓名', '性别', '年龄', '专业',"市场部","已有成绩","还差成绩","挂科次数","学制","籍贯","学号"]  //excel 表头
-          const filterVal = ["classes","name","sex","age","major","citycenter","chengji","graduation","failss","study","nativeplace","studentID"]  //获取的数据字段名
-          const list = this.all   //所要生成Excel数据源
-          const data = this.formatJson(filterVal, list)
-          excel.export_json_to_excel({
-              header: tHeader,
-              data,
-              filename: this.filename,
-              autoWidth: this.autoWidth
-          })
-          this.downloadLoading = false
+        const tHeader = ['班级', '姓名', '性别', '年龄', '专业', '市场部', '已有成绩', '还差成绩', '挂科次数', '学制', '籍贯', '学号'] // excel 表头
+        const filterVal = ['classes', 'name', 'sex', 'age', 'major', 'citycenter', 'chengji', 'graduation', 'failss', 'study', 'nativeplace', 'studentID'] // 获取的数据字段名
+        const list = this.all // 所要生成Excel数据源
+        const data = this.formatJson(filterVal, list)
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: this.filename,
+          autoWidth: this.autoWidth
+        })
+        this.downloadLoading = false
       })
     },
     formatJson(filterVal, jsonData) {
@@ -328,88 +331,94 @@ export default {
         })
       )
     },
-    handleInter(){
+    handleInter() {
       this.downloadLoading2 = true
     },
     importfxx(obj) {
-      let _this = this;
-      let inputDOM = this.$refs.inputer;
+      const _this = this
+      // eslint-disable-next-line no-unused-vars
+      const inputDOM = this.$refs.inputer
       // 通过DOM取文件数据
-      this.file = event.currentTarget.files[0];
-      var rABS = false; //是否将文件读取为二进制字符串
-      var f = this.file;
-      var reader = new FileReader();
-      //if (!FileReader.prototype.readAsBinaryString) {
+      this.file = event.currentTarget.files[0]
+      var rABS = false // 是否将文件读取为二进制字符串
+      var f = this.file
+      var reader = new FileReader()
+      // if (!FileReader.prototype.readAsBinaryString) {
       FileReader.prototype.readAsBinaryString = function(f) {
-          var binary = "";
-          var rABS = false; //是否将文件读取为二进制字符串
-          var pt = this;
-          var wb; //读取完成的数据
-          var outdata;
-          var reader = new FileReader();
-          reader.onload = function(e) {
-              var bytes = new Uint8Array(reader.result);
-              var length = bytes.byteLength;
-              for(var i = 0; i < length; i++) {
-                  binary += String.fromCharCode(bytes[i]);
-              }
-              var XLSX = require('xlsx');
-              if(rABS) {
-                  wb = XLSX.read(btoa(fixdata(binary)), { //手动转化
-                      type: 'base64'
-                  });
-              } else {
-                  wb = XLSX.read(binary, {
-                      type: 'binary'
-                  });
-              }
-              outdata = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);//outdata就是你想要的东西
-              this.da = [...outdata]
-              let arr = []
-              this.da.map(v => {
-                  let obj = {}
-                  obj.classes = v.班级
-                  obj.name = v.姓名
-                  obj.sex = v.性别
-                  obj.age = v.年龄
-                  obj.major = v.专业
-                  obj.citycenter = v.市场部
-                  obj.chengji = v.已有成绩
-                  obj.graduation = v.还差成绩
-                  obj.failss = v.挂科次数
-                  obj.study = v.学制
-                  obj.nativeplace = v.籍贯
-                  obj.studentID = v.学号
-                  arr.push(obj)
-              })
-              console.log(arr)
-              getExcel(arr).then(res => {
-                if (res.data.code === 201) {
-
-                } else {
-                }
-              })
-              let para = {
-                  withList: arr
-              }
-              _this.$message({
-                  message: '请耐心等待导入成功',
-                  type: 'success'
-              });
-              window.location.reload()
+        var binary = ''
+        var rABS = false // 是否将文件读取为二进制字符串
+        // eslint-disable-next-line no-unused-vars
+        var pt = this
+        var wb // 读取完成的数据
+        var outdata
+        var reader = new FileReader()
+        reader.onload = function(e) {
+          var bytes = new Uint8Array(reader.result)
+          var length = bytes.byteLength
+          for (var i = 0; i < length; i++) {
+            binary += String.fromCharCode(bytes[i])
           }
-          reader.readAsArrayBuffer(f);
+          var XLSX = require('xlsx')
+          if (rABS) {
+            // eslint-disable-next-line no-undef
+            wb = XLSX.read(btoa(fixdata(binary)), { // 手动转化
+              type: 'base64'
+            })
+          } else {
+            wb = XLSX.read(binary, {
+              type: 'binary'
+            })
+          }
+          outdata = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]) // outdata就是你想要的东西
+          this.da = [...outdata]
+          const arr = []
+          this.da.map(v => {
+            const obj = {}
+            obj.classes = v.班级
+            obj.name = v.姓名
+            obj.sex = v.性别
+            obj.age = v.年龄
+            obj.major = v.专业
+            obj.citycenter = v.市场部
+            obj.chengji = v.已有成绩
+            obj.graduation = v.还差成绩
+            obj.failss = v.挂科次数
+            obj.study = v.学制
+            obj.nativeplace = v.籍贯
+            obj.studentID = v.学号
+            arr.push(obj)
+          })
+          console.log(arr)
+          getExcel(arr).then(res => {
+            // eslint-disable-next-line no-empty
+            if (res.data.code === 201) {
+
+              // eslint-disable-next-line no-empty
+            } else {
+            }
+          })
+          // eslint-disable-next-line no-unused-vars
+          const para = {
+            QwithList: arr
+          }
+          _this.$message({
+            message: '请耐心等待导入成功',
+            type: 'success'
+          })
+          window.location.reload()
+        }
+        reader.readAsArrayBuffer(f)
       }
-      if(rABS) {
-          reader.readAsArrayBuffer(f);
+      if (rABS) {
+        reader.readAsArrayBuffer(f)
       } else {
-          reader.readAsBinaryString(f);
+        reader.readAsBinaryString(f)
       }
-    },
+    }
   }
 }
 </script>
 
 <style scoped>
-   @import "./asset.scss"; 
+   @import "./asset.scss"
 </style>
