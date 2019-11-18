@@ -99,7 +99,11 @@ export default {
       age: '', // 年龄
       jointime: '', // 入职时间
       upmajor: '', // 职位
+<<<<<<< HEAD
       power: true // 权限问题
+=======
+      power: true
+>>>>>>> ljg
     }
   },
   computed: {
