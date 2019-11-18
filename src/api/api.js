@@ -78,11 +78,11 @@ export const allstudent = () => {
   return Axios.get('http://132.232.89.22:8080/allstudent')
 }
 // 修改学生
-export const updateAllstud = (obj, id) => {
+export const updateAllstud = (id, obj) => {
   // eslint-disable-next-line no-undef
   return Axios.post('http://132.232.89.22:8080/updateAllstud', {
-    obj: obj,
-    id: id
+    id: id,
+    obj: obj
   })
 }
 // 添加学生

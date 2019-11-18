@@ -1,34 +1,5 @@
 <template>
   <div class="top_option">
-    <!-- 查询 -->
-    <div class="optionclass">
-      <el-form :inline="true" :data="onSubmit" :model="searchStudentdata" class="demo-form-inline">
-        <el-form-item style="width:10.48%" label="">
-          <el-input v-model="searchStudentdata.classes" :disabled="true" placeholder="班级名称" />
-        </el-form-item>
-        <el-form-item style="width:12.25%" label="">
-          <el-input v-model="searchStudentdata.name" placeholder="姓名" />
-        </el-form-item>
-        <el-form-item style="width:12.25%" label="">
-          <el-input v-model="searchStudentdata.age" placeholder="年龄" />
-        </el-form-item>
-        <el-form-item style="width:12.25%" label="">
-          <el-input v-model="searchStudentdata.chengji" placeholder="已有成绩" />
-        </el-form-item>
-        <el-form-item style="width:12.25%" label="">
-          <el-input v-model="searchStudentdata.graduation" placeholder="还差成绩" />
-        </el-form-item>
-        <el-form-item style="width:12.25%" label="">
-          <el-input v-model="searchStudentdata.failss" placeholder="挂科次数" />
-        </el-form-item>
-        <el-form-item style="width:12.25%" label="">
-          <el-input v-model="searchStudentdata.study" placeholder="学制" />
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" size="mini" @click="onSubmit">查询</el-button>
-        </el-form-item>
-      </el-form>
-    </div>
     <!-- 列表 -->
     <div class="table_divs">
       <el-table
@@ -38,104 +9,161 @@
         @selection-change="selsChange"
       >
         <el-table-column
+          :reserve-selection="true"
           type="selection"
           width="55"
         />
-        <el-table-column
-          prop="classes"
-          label="班级"
-        />
-        <el-table-column
-          prop="name"
-          label="姓名"
-        />
-        <el-table-column
-          prop="sex"
-          label="性别"
-        />
-        <el-table-column
-          prop="age"
-          label="年龄"
-        />
-        <el-table-column
-          prop="major"
-          label="专业"
-        />
-        <el-table-column
-          prop="chengji"
-          label="已有成绩"
-        />
-        <el-table-column
-          prop="graduation"
-          label="还差成绩"
-        />
-        <el-table-column
-          prop="failss"
-          label="挂科次数"
-        />
-        <el-table-column
-          prop="study"
-          label="学制"
-        />
-        <el-table-column
-          label="操作"
-          min-width="180"
-        >
+        <el-table-column prop="classes" label="班级" />
+        <el-table-column prop="name" label="姓名" />
+        <el-table-column prop="sex" label="性别" />
+        <el-table-column prop="age" label="年龄" />
+        <el-table-column prop="major" label="专业" />
+        <el-table-column prop="citycenter" label="市场部" />
+        <el-table-column prop="chengji" label="已有成绩" />
+        <el-table-column prop="graduation" label="还差成绩" />
+        <el-table-column prop="failss" label="挂科次数" />
+        <el-table-column prop="study" label="学制" />
+        <el-table-column prop="nativeplace" label="籍贯" />
+        <el-table-column prop="studentID" label="学号" />
+        <el-table-column label="操作" min-width="180">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="update(scope.$index, scope.row)">修改</el-button>
-            <el-button type="danger" size="mini" @click="remove(scope.row._id)">删除</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="update(scope.$index, scope.row)"
+            >修改</el-button>
+            <el-button
+type="danger"
+size="mini" @click="remove(scope.row._id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
       <!-- 修改 -->
-      <el-dialog
-        title="修改操作"
-        :visible.sync="show"
-        width="30%"
-      >
-        <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
+      <el-dialog title="修改操作" :visible.sync="show" width="30%">
+        <el-form
+          ref="ruleForm"
+          :model="ruleForm"
+          label-width="100px"
+          class="demo-ruleForm"
+        >
           <el-form-item label="班级" prop="classes">
             <el-input v-model="ruleForm.classes" />
           </el-form-item>
           <el-form-item label="已有成绩" prop="chengji">
-            <el-input v-model="ruleForm.chengji" />
+            <el-input
+              v-model="ruleForm.chengji"
+              oninput="value=value.replace(/[^\d.]/g,'')"
+              maxlength="2"
+            />
           </el-form-item>
           <el-form-item label="还差成绩" prop="graduation">
-            <el-input v-model="ruleForm.graduation" />
+            <el-input
+              v-model="ruleForm.graduation"
+              oninput="value=value.replace(/[^\d.]/g,'')"
+              maxlength="2"
+            />
           </el-form-item>
           <el-form-item label="挂科次数" prop="failss">
-            <el-input v-model="ruleForm.failss" />
+            <el-input
+              v-model="ruleForm.failss"
+              oninput="value=value.replace(/[^\d.]/g,'')"
+              maxlength="2"
+            />
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button size="small" @click="secede('ruleForm')">取 消</el-button>
-          <el-button type="primary" size="small" @click="submitForm()">修 改</el-button>
+          <el-button
+type="primary"
+size="small" @click="submitForm()">修 改</el-button>
         </span>
       </el-dialog>
     </div>
-    <!-- 批量删除 -->
-    <template>
-      <el-button style="margin-top:10px" type="danger" size="small" :disabled="this.sels.length === 0" @click="soamdelstudent()">批量删除</el-button>
-    </template>
-    <!-- 添加 -->
-    <template>
-      <el-button style="margin-top:10px" type="primary" size="small" @click="addstudent()">添加学生</el-button>
-    </template>
+
+    <div style="position:fixed;bottom:20px;margin-left:20px;">
+      <!-- 批量删除 -->
+      <template>
+        <el-button
+          style="margin-top:10px"
+          type="danger"
+          size="small"
+          @click="soamdelstudent()"
+        >批量删除</el-button>
+      </template>
+      <!-- 批量修改 -->
+      <template>
+        <el-button
+style="margin-top:10px"
+type="success" size="small">批量修改</el-button>
+      </template>
+      <!-- 添加 -->
+      <template>
+        <el-button
+          style="margin-top:10px"
+          type="primary"
+          size="small"
+          @click="addstudent()"
+        >添加学生</el-button>
+      </template>
+    </div>
+
+    <div style="position:fixed;right:50px;bottom:20px;">
+      <!-- 导出 -->
+      <el-button
+        size="mini"
+        type="success"
+        round
+        :loading="downloadLoading"
+        @click="handleDownload"
+      >
+        导出当页excel
+      </el-button>
+      <!-- 导入 -->
+      <label class="fileinp">
+        <input
+          type="button"
+          class="btn"
+          value="导入excel"
+          round
+          @click="handleInter"
+        >
+        <input
+          type="file"
+          class="fileinpd"
+          accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+          @change="importfxx(this)"
+        >
+      </label>
+    </div>
   </div>
 </template>
 
 <script>
 // 引入接口函数
-import { allstudent, updateAllstud, delallStudent } from '../../../api/api.js'
+// eslint-disable-next-line no-unused-vars
+import {
+  allstudent,
+  updateAllstud,
+  delallStudent,
+  // eslint-disable-next-line no-unused-vars
+  addallStudent,
+  getExcel
+} from '../../../api/api.js'
+// eslint-disable-next-line no-unused-vars
+import UploadExcel from '../../../components/UploadExcel/index'
 export default {
   data() {
     return {
       listLoading: true,
+      downloadLoading: false,
+      downloadLoading2: false,
       show: false, // 弹窗
       classes: [], // 获取所有班级
       allstudent: [], // 获取所有学生
       classstudents: [],
+      getClass: [],
       all: [], // 获取班级学生
+      createClass: [], // 导入
       ruleForm: {
         classes: '',
         chengji: '',
@@ -143,39 +171,11 @@ export default {
         failss: '',
         id: ''
       },
-      rules: {
-        classes: [
-          { required: true, message: '请输入班级', trigger: 'blur' },
-          { min: 5, max: 5, message: '输入错误', trigger: 'blur' }
-        ],
-        chengji: [
-          { required: true, message: '请输入已有成绩', trigger: 'blur' },
-          { min: 1, max: 5, message: '输入错误', trigger: 'blur' }
-        ],
-        graduation: [
-          { required: true, message: '请输入还差成绩', trigger: 'blur' },
-          { min: 1, max: 5, message: '输入错误', trigger: 'blur' }
-        ],
-        failss: [
-          { required: true, message: '请输入挂科次数', trigger: 'blur' },
-          { min: 1, max: 3, message: '输入错误', trigger: 'blur' }
-        ]
-      },
       rowlist: [], // 修改旧值
-      search: '', // 查询
-      formInline: {
-        classname: '',
-        createDate: '',
-        major: '',
-        lecturer: '',
-        headteacher: ''
-      },
-      searchStudentdata: {
-        classname: ''
-
-      },
       path: '/example/tree',
-      sels: []// 选中的值显示
+      sels: [], // 选中的值显示
+      checkeds: [], // 批量删除选中id
+      updateShow: 100000 // 最大匹配的值
     }
   },
   async mounted() {
@@ -183,16 +183,32 @@ export default {
     this.allstudent = data.data
     this.listLoading = false
     // 接收存储数据
-    this.all = JSON.parse(localStorage.getItem('data'))
-    if (this.all === '') {
+    this.getClass = JSON.parse(localStorage.getItem('data'))
+    for (var i = 0; i < this.allstudent.length; i++) {
+      if (this.getClass === this.allstudent[i].classes) {
+        this.classstudents.push(this.allstudent[i])
+      }
+    }
+    this.all = this.classstudents
+    this.classstudents = []
+    console.log(this.all)
+    // eslint-disable-next-line eqeqeq
+    if (this.all == '') {
       return false
     }
-    this.searchStudentdata.classes = this.all[0].classes
-    console.log(this.all)
   },
   methods: {
     async getStudata() {
-      this.all = JSON.parse(localStorage.getItem('data'))
+      const { data } = await allstudent()
+      this.all = data.data
+      for (var i = 0; i < this.allstudent.length; i++) {
+        if (this.getClass === this.allstudent[i].classes) {
+          this.classstudents.push(this.allstudent[i])
+        }
+      }
+      this.all = this.classstudents
+      this.classstudents = []
+      // console.log(this.all)
     },
     // 删除学生
     remove(id) {
@@ -200,34 +216,36 @@ export default {
       const h = this.$createElement
       this.$msgbox({
         title: '提示',
-        message: h('p', null, [
-          h('span', null, '您确定要移除这个学生吗？')
-        ]),
+        message: h('p', null, [h('span', null, '您确定要移除这个学生吗？')]),
         showCancelButton: true,
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(async res => {
-        const { data } = await delallStudent(id)
-        console.log(data)
-        if (data.code === 200) {
-          this.getStudata()
-          return this.$message.success(data.msg)
-        }
-        this.$message({
-          message: data.msg,
-          type: 'error'
-        })
-      }).catch(error => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
       })
+        .then(async res => {
+          const { data } = await delallStudent(id)
+          console.log(data)
+          if (data.code === 200) {
+            this.getStudata()
+            return this.$message.success(data.msg)
+          }
+          this.$message({
+            message: data.msg,
+            type: 'error'
+          })
+          // eslint-disable-next-line handle-callback-err
+        })
+        // eslint-disable-next-line handle-callback-err
+        .catch(err => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
     },
     // 修改
     update(index, row) {
-      // console.log(row)
+      console.log(row)
       this.rowlist = row
       this.show = true
       this.ruleForm.classes = row.classes
@@ -246,11 +264,7 @@ export default {
         failss: this.ruleForm.failss
       }
       const ID = this.ruleForm.id
-      console.log(ID)
-      // console.log(obj)
-      // console.log(this.rowlist)
-      const { data } = await updateAllstud(obj, ID)
-      console.log(data.code)
+      const { data } = await updateAllstud(ID, obj)
       // 判断值是否改变
       if (
         obj.classes === this.rowlist.classes &&
@@ -258,11 +272,9 @@ export default {
         obj.graduation === this.rowlist.graduation &&
         obj.failss === this.rowlist.failss
       ) {
-        this.$message.success('没有任何修改')
+        this.$message.info('没有任何修改')
         this.show = false
       } else if (data.code === 200) {
-        console.log(obj)
-        this.getStudata()
         this.$message.success('修改成功')
         this.show = false
       } else {
@@ -276,13 +288,8 @@ export default {
       this.$message({
         type: 'info',
         message: '已取消修改'
-
       })
       this.show = false
-    },
-    // 查询
-    onSubmit() {
-      console.log('submit!')
     },
     // 添加
     addstudent() {
@@ -290,32 +297,171 @@ export default {
         path: this.path // 跳转路由
       })
     },
+    // 批量删除
     selsChange(sels) {
       this.sels = sels
+      const all_Id = []
+      for (let i = 0; i < sels.length; i++) {
+        all_Id.push(sels[i]._id)
+      }
+      this.checkeds = all_Id
     },
     soamdelstudent() {
-      const path = this.sels.map(item => item.path).join()// 获取所有选中行的path组成的字符串，以逗号分隔
-      console.log(path)
-      this.$confirm('此操作将永久删除该文件及其子文件, 是否继续?', '提示', {
+      this.$confirm('此操作将永久删除这几项, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.all({ paths: path }).then(result => {
-          const { data } = result
-          console.log('批量删除')
-          const flag = this.$config.executeResult(data)
-          if (flag) {
-            this.$message.success('ok')
-            this.$emit('reloadTree')
+        delallStudent(this.checkeds).then(res => {
+          console.log(res.data)
+          if (res.data.code === 201) {
+            this.$message.error(res.data.msg)
+          } else {
+            this.$message({
+              message: res.data.msg,
+              type: 'success'
+            })
           }
         })
       })
+    },
+    handleDownload() {
+      this.downloadLoading = true
+      import('../../../excel/Export2Excel.js').then(excel => {
+        const tHeader = [
+          '班级',
+          '姓名',
+          '性别',
+          '年龄',
+          '专业',
+          '市场部',
+          '已有成绩',
+          '还差成绩',
+          '挂科次数',
+          '学制',
+          '籍贯',
+          '学号'
+        ] // excel 表头
+        const filterVal = [
+          'classes',
+          'name',
+          'sex',
+          'age',
+          'major',
+          'citycenter',
+          'chengji',
+          'graduation',
+          'failss',
+          'study',
+          'nativeplace',
+          'studentID'
+        ] // 获取的数据字段名
+        const list = this.all // 所要生成Excel数据源
+        const data = this.formatJson(filterVal, list)
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: this.filename,
+          autoWidth: this.autoWidth
+        })
+        this.downloadLoading = false
+      })
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v =>
+        filterVal.map(j => {
+          return v[j]
+        })
+      )
+    },
+    handleInter() {
+      this.downloadLoading2 = true
+    },
+    importfxx(obj) {
+      const _this = this
+      // eslint-disable-next-line no-unused-vars
+      const inputDOM = this.$refs.inputer
+      // 通过DOM取文件数据
+      this.file = event.currentTarget.files[0]
+      var rABS = false // 是否将文件读取为二进制字符串
+      var f = this.file
+      var reader = new FileReader()
+      // if (!FileReader.prototype.readAsBinaryString) {
+      FileReader.prototype.readAsBinaryString = function(f) {
+        var binary = ''
+        var rABS = false // 是否将文件读取为二进制字符串
+        // eslint-disable-next-line no-unused-vars
+        var pt = this
+        var wb // 读取完成的数据
+        var outdata
+        var reader = new FileReader()
+        reader.onload = function(e) {
+          var bytes = new Uint8Array(reader.result)
+          var length = bytes.byteLength
+          for (var i = 0; i < length; i++) {
+            binary += String.fromCharCode(bytes[i])
+          }
+          var XLSX = require('xlsx')
+          if (rABS) {
+            // eslint-disable-next-line no-undef
+            wb = XLSX.read(btoa(fixdata(binary)), {
+              // 手动转化
+              type: 'base64'
+            })
+          } else {
+            wb = XLSX.read(binary, {
+              type: 'binary'
+            })
+          }
+          outdata = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]) // outdata就是你想要的东西
+          this.da = [...outdata]
+          const arr = []
+          this.da.map(v => {
+            const obj = {}
+            obj.classes = v.班级
+            obj.name = v.姓名
+            obj.sex = v.性别
+            obj.age = v.年龄
+            obj.major = v.专业
+            obj.citycenter = v.市场部
+            obj.chengji = v.已有成绩
+            obj.graduation = v.还差成绩
+            obj.failss = v.挂科次数
+            obj.study = v.学制
+            obj.nativeplace = v.籍贯
+            obj.studentID = v.学号
+            arr.push(obj)
+          })
+          console.log(arr)
+          getExcel(arr).then(res => {
+            // eslint-disable-next-line no-empty
+            if (res.data.code === 201) {
+              // eslint-disable-next-line no-empty
+            } else {
+            }
+          })
+          // eslint-disable-next-line no-unused-vars
+          const para = {
+            QwithList: arr
+          }
+          _this.$message({
+            message: '请耐心等待导入成功',
+            type: 'success'
+          })
+          window.location.reload()
+        };
+        reader.readAsArrayBuffer(f)
+      };
+      if (rABS) {
+        reader.readAsArrayBuffer(f)
+      } else {
+        reader.readAsBinaryString(f)
+      }
     }
   }
 }
 </script>
 
 <style scoped>
-   @import "./asset.scss";
+@import './asset.scss';
 </style>
