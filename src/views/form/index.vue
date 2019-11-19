@@ -1,6 +1,5 @@
 <template>
   <div class="top_option">
-
     <el-select v-model="value" class="why_select" @change="op_click">
       <el-option
         v-for="item in options"
@@ -12,56 +11,33 @@
     </el-select>
 
     <div class="table_div">
-      <el-table
-        v-loading="listLoading"
-        :data="classes"
-        style="width: 100%"
-      >
-        <el-table-column
-          prop="classname"
-          label="班级名称"
-        />
-        <el-table-column
-          prop="createDate"
-          label="创建日期"
-        />
-        <el-table-column
-          prop="major"
-          label="专业"
-        />
-        <el-table-column
-          prop="lecturer"
-          label="讲师"
-        />
-        <el-table-column
-          prop="headteacher"
-          label="班主任"
-        />
-        <el-table-column
-          label="班级成员"
-        >
+      <el-table v-loading="listLoading" :data="classes" style="width: 100%">
+        <el-table-column prop="classname" label="班级名称" />
+        <el-table-column prop="createDate" label="创建日期" />
+        <el-table-column prop="major" label="专业" />
+        <el-table-column prop="lecturer" label="讲师" />
+        <el-table-column prop="headteacher" label="班主任" />
+        <el-table-column label="班级成员">
           <template slot-scope="scope">
             <span class="go_student" @click="member(scope.row)">详 情</span>
           </template>
         </el-table-column>
-        <el-table-column
-          label="操作"
-          min-width="180"
-          v-if="power"
-        >
-          <template slot-scope="scope" >
+        <el-table-column v-if="power" label="操作" min-width="180">
+          <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="update(scope.$index, scope.row)">修 改</el-button>
             <el-button type="danger" size="mini" @click="remove(scope.row,scope.row._id)">删 除</el-button>
           </template>
         </el-table-column>
       </el-table>
       <!-- 分页 -->
-      <el-dialog
-        title="修改操作"
-        :visible.sync="show"
-        width="30%"
-      >
-        <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
+      <el-dialog title="修改操作" :visible.sync="show" width="30%">
+        <el-form
+          ref="ruleForm"
+          :model="ruleForm"
+          :rules="rules"
+          label-width="100px"
+          class="demo-ruleForm"
+        >
           <el-form-item label="讲师" prop="lecturer">
             <el-input v-model="ruleForm.lecturer" />
           </el-form-item>
@@ -92,18 +68,12 @@
         height="300"
         @current-change="handleCurrentChange"
       >
-        <el-table-column
-          prop="name"
-          label="姓名"
-        >
+        <el-table-column prop="name" label="姓名">
           <template slot-scope="scope">
             <div style="height:100%">{{ scope.row.name }}</div>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="chengji"
-          label="成绩"
-        >
+        <el-table-column prop="chengji" label="成绩">
           <template slot-scope="scope">
             <div>{{ scope.row.chengji }}</div>
           </template>
@@ -112,7 +82,13 @@
       <p class="allp">转移到</p>
 
       <div style="position:relative">
-        <el-select v-model="value1" style="padding-left:10px" filterable placeholder="请选择" @change="changeClass">
+        <el-select
+          v-model="value1"
+          style="padding-left:10px"
+          filterable
+          placeholder="请选择"
+          @change="changeClass"
+        >
           <el-option
             v-for="item in classes"
             :key="item._id"
@@ -121,22 +97,31 @@
             :disabled="item.disabled"
           />
         </el-select>
-        <br>
-        <el-button style="margin:0px 10px;width:92%;position:absolute;bottom:0;" type="primary" @click="zyStus">转移</el-button>
+        <br >
+        <el-button
+          style="margin:0px 10px;width:92%;position:absolute;bottom:0;"
+          type="primary"
+          @click="zyStus"
+        >转移</el-button>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button size="small" @click="zyStu = false">关 闭</el-button>
       </span>
     </el-dialog>
-
   </div>
 </template>
 
 <script>
 // 引入接口函数
-import { getClass, delClass, updateClass, allstudent, getUpdate } from '../../api/api.js'
+import {
+  getClass,
+  delClass,
+  updateClass,
+  allstudent,
+  getUpdate
+} from '../../api/api.js';
 // 引入vuex权限
-import { mapGetters  } from 'vuex'
+import { mapGetters } from 'vuex';
 export default {
   data() {
     return {
@@ -148,16 +133,20 @@ export default {
       classstudents: [],
       expands: [], // 要展开的行，数值的元素是row的key值
       xzmajor: '', // 选择专业
-      options: [{
-        value: '全部班级',
-        label: '全部班级'
-      }, {
-        value: 'WEB架构',
-        label: 'WEB架构'
-      }, {
-        value: '视觉设计',
-        label: '视觉设计'
-      }],
+      options: [
+        {
+          value: '全部班级',
+          label: '全部班级'
+        },
+        {
+          value: 'WEB架构',
+          label: 'WEB架构'
+        },
+        {
+          value: '视觉设计',
+          label: '视觉设计'
+        }
+      ],
       value: '全部班级',
       value1: '全部班级',
       path: '/form/classstudent',
@@ -193,7 +182,7 @@ export default {
   },
   // '3' 代表的普通用户，普通用户登录会将操作按钮隐藏
   created() {
-    if(this.roles.includes('3')){
+    if (this.roles.includes('3')) {
       this.power = false
     }
   },
@@ -223,61 +212,59 @@ export default {
       this.allstudent = classstudents
       localStorage.setItem('datas', JSON.stringify(this.allstudent))
       this.all = JSON.parse(localStorage.getItem('datas'))
-      console.log(this.all)
       // 判断班里是否有学生
       if (this.all[0]) {
         // 若有学生，转移学生
         const h = this.$createElement
         this.$msgbox({
           title: '提示',
-          message: h('p', null, [
-            h('span', null, '删除班级前请先转移学生')
-          ]),
+          message: h('p', null, [h('span', null, '删除班级前请先转移学生')]),
           showCancelButton: true,
           confirmButtonText: '转移',
           cancelButtonText: '取消',
           type: 'warning'
-        }).then(async res => {
-          this.zyStu = true
-        // eslint-disable-next-line handle-callback-err
-        }).catch(err => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
         })
+          .then(async res => {
+            this.zyStu = true
+            // eslint-disable-next-line handle-callback-err
+          })
+          // eslint-disable-next-line handle-callback-err
+          .catch(err => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            })
+          })
         this.classstudents = []
       } else {
         // 若没有学生,直接删除
         const h = this.$createElement
         this.$msgbox({
           title: '提示',
-          message: h('p', null, [
-            h('span', null, '您确定要移除这个班吗？')
-          ]),
+          message: h('p', null, [h('span', null, '您确定要移除这个班吗？')]),
           showCancelButton: true,
           confirmButtonText: '删除',
           cancelButtonText: '取消',
           type: 'warning'
-        }).then(async res => {
-          const { data } = await delClass(id)
-          console.log(data)
-          if (data.code === 200) {
-            this.handlegetHeadTeacher()
-            this.op_click(this.xzmajor)
-            return this.$message.success(data.msg)
-          }
-          this.$message({
-            message: data.msg,
-            type: 'error'
-          })
-        // eslint-disable-next-line handle-callback-err
-        }).catch(err => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
         })
+          .then(async res => {
+            const { data } = await delClass(id)
+            if (data.code === 200) {
+              this.handlegetHeadTeacher()
+              return this.$message.success(data.msg)
+            }
+            this.$message({
+              message: data.msg,
+              type: 'error'
+            })
+            // eslint-disable-next-line handle-callback-err
+          })
+          .catch(err => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            })
+          })
       }
     },
     // 班级成员
@@ -300,11 +287,9 @@ export default {
         }
       }
       this.classes = list
-      console.log(this.classes)
     },
     // 修改
     update(index, row) {
-      console.log(row)
       this.rowlist = row
       this.show = true
       this.ruleForm.lecturer = row.lecturer
@@ -318,7 +303,6 @@ export default {
         lecturer: this.ruleForm.lecturer,
         headteacher: this.ruleForm.headteacher
       }
-      console.log(obj)
       const { data } = await updateClass(obj)
       if (
         obj.lecturer === this.rowlist.lecturer &&
@@ -334,7 +318,6 @@ export default {
         this.$message.error(data.msg)
         return false
       }
-      this.op_click(this.xzmajor)
     },
     // 取消修改
     secede(formName) {
@@ -354,13 +337,11 @@ export default {
     },
     // 表格项
     handleCurrentChange(rows) {
-      console.log(rows)
       this.zyStuId = rows
     },
     // 选择的班级
     changeClass(vel) {
       this.changeStuClass = vel
-      console.log(this.classes)
     },
     // 点击转移
     async zyStus() {
@@ -396,16 +377,14 @@ export default {
           var num = this.all.indexOf(this.zyStuId)
           this.all.splice(num, 1)
           this.$message.success('转移成功！')
-          this.zyStuId = ''
+          this.zyStuId = '';
         }
       }
-      this.op_click(this.xzmajor)
     }
   }
 }
 </script>
 
 <style scoped>
-   @import "./asset.scss";
+@import "./asset.scss";
 </style>
-
