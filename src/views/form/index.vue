@@ -167,7 +167,6 @@ export default {
     // 获取全部专业进行筛选
     const allmajor = await getMajor()
     this.getMajor = allmajor.data.data
-    console.log(this.getMajor)
     this.listLoading = false
   },
   methods: {
