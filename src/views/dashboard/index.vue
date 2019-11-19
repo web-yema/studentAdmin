@@ -1,98 +1,113 @@
-// 首页
+<!-- 首页 -->
 <template>
   <div class="dashboard-container">
-    <div>
-      <el-row :gutter="40" class="panel-group">
-        <!-- 学生人数 -->
-        <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-          <div class="card-panel" @click="handleSetLineChartData('newVisitis')">
-            <div class="card-panel-icon-wrapper icon-people">
-              <svg-icon icon-class="peoples" class-name="card-panel-icon" />
-            </div>
-            <div class="card-panel-description">
-              <div class="card-panel-text">学生人数</div>
-              <count-to :start-val="0" :end-val="allstudent" :duration="2600" class="card-panel-num" />
-            </div>
+    <el-row :gutter="40" class="panel-group">
+      <!-- 学生人数 -->
+      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+        <div class="card-panel" @click="handleSetLineChartData('newVisitis')">
+          <div class="card-panel-icon-wrapper icon-people">
+            <svg-icon icon-class="peoples" class-name="card-panel-icon" />
           </div>
-        </el-col>
-        <!-- 班级 -->
-        <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-          <div class="card-panel" @click="handleSetLineChartData('messages')">
-            <div class="card-panel-icon-wrapper icon-message">
-              <svg-icon icon-class="message" class-name="card-panel-icon" />
-            </div>
-            <div class="card-panel-description">
-              <div class="card-panel-text">班级</div>
-              <count-to :start-val="0" :end-val="getClass" :duration="3000" class="card-panel-num" />
-            </div>
+          <div class="card-panel-description">
+            <div class="card-panel-text">学生人数</div>
+            <count-to
+              :start-val="0"
+              :end-val="allstudent"
+              :duration="2600"
+              class="card-panel-num"
+            />
           </div>
-        </el-col>
-        <!-- 班主任 -->
-        <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-          <div class="card-panel" @click="handleSetLineChartData('purchases')">
-            <div class="card-panel-icon-wrapper icon-money">
-              <svg-icon icon-class="money" class-name="card-panel-icon" />
-            </div>
-            <div class="card-panel-description">
-              <div class="card-panel-text">班主任</div>
-              <count-to :start-val="0" :end-val="9280" :duration="3200" class="card-panel-num" />
-            </div>
+        </div>
+      </el-col>
+      <!-- 班级 -->
+      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+        <div class="card-panel" @click="handleSetLineChartData('messages')">
+          <div class="card-panel-icon-wrapper icon-message">
+            <svg-icon icon-class="message" class-name="card-panel-icon" />
           </div>
-        </el-col>
-        <!-- 购物 -->
-        <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-          <div class="card-panel" @click="handleSetLineChartData('shoppings')">
-            <div class="card-panel-icon-wrapper icon-shopping">
-              <svg-icon icon-class="shopping" class-name="card-panel-icon" />
-            </div>
-            <div class="card-panel-description">
-              <div class="card-panel-text">购物</div>
-              <count-to :start-val="0" :end-val="13600" :duration="3600" class="card-panel-num" />
-            </div>
+          <div class="card-panel-description">
+            <div class="card-panel-text">班级</div>
+            <count-to
+              :start-val="0"
+              :end-val="getClass"
+              :duration="3000"
+              class="card-panel-num"
+            />
           </div>
-        </el-col>
-      </el-row>
-      <el-row style="background:#fff;padding:16px 16px 0;">
-        <EcharsZhu />
-      </el-row>
-    </div>
+        </div>
+      </el-col>
+      <!-- 班主任 -->
+      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+        <div class="card-panel" @click="handleSetLineChartData('purchases')">
+          <div class="card-panel-icon-wrapper icon-money">
+            <svg-icon icon-class="money" class-name="card-panel-icon" />
+          </div>
+          <div class="card-panel-description">
+            <div class="card-panel-text">班主任</div>
+            <count-to
+              :start-val="0"
+              :end-val="9280"
+              :duration="3200"
+              class="card-panel-num"
+            />
+          </div>
+        </div>
+      </el-col>
+      <!-- 购物 -->
+      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+        <div class="card-panel" @click="handleSetLineChartData('shoppings')">
+          <div class="card-panel-icon-wrapper icon-shopping">
+            <svg-icon icon-class="shopping" class-name="card-panel-icon" />
+          </div>
+          <div class="card-panel-description">
+            <div class="card-panel-text">购物</div>
+            <count-to
+              :start-val="0"
+              :end-val="13600"
+              :duration="3600"
+              class="card-panel-num"
+            />
+          </div>
+        </div>
+      </el-col>
+    </el-row>
+    <el-row style="background:#fff;padding:16px 16px 0;">
+      <EcharsZhu :chart-data="lineChartData" />
+    </el-row>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import CountTo from "vue-count-to";
-import { allstudent,getClass } from "@/api/api";
-import EcharsZhu from "./echars/echarszhu";
+import CountTo from 'vue-count-to';
+import { allstudent, getClass } from '@/api/api';
+import EcharsZhu from './echars/echarszhu';
+
+const lineChartData = {
+  newVisitis: {
+    webData: [60, 80, 100, 120, 161, 134, 144, 120, 105, 160, 165, 170],
+    uiData: [30, 60, 75, 82, 91, 154, 165, 170, 162, 140, 145, 160]
+  }
+};
 export default {
   name: 'Dashboard',
   components: { CountTo, EcharsZhu },
   data() {
     return {
       allstudent: 0,
-      getClass:0
+      getClass: 0,
+      lineChartData: lineChartData.newVisitis
     };
   },
   async mounted() {
     // 获取学生总人数
-    let { data } = await allstudent();
+    const { data } = await allstudent();
     this.allstudent = data.data.length;
     // 获取班级数量
-    let  Class = await getClass();
+    const Class = await getClass();
     this.getClass = Class.data.data.length;
     // 获取班主任总数量
-  },
-   methods: {
-    handleSetLineChartData(type) {
-      this.$emit('handleSetLineChartData', type)
-    }
-  },
-  computed: {
-    ...mapGetters([
-      'name'
-    ])
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
