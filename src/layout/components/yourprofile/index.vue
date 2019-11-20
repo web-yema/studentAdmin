@@ -3,11 +3,11 @@
     <div class="personalCenter-left">
       <!-- 用户头像 -->
       <div class="demo-type">
-        <img :src="avatar" class="avatar">
+        <img :src="avatar" class="avatar" >
         <el-upload
           action="http://132.232.89.22:8080/uploadAvatar"
           class="avatar-uploader"
-          :data="{id}"
+          :data="{ id }"
           :show-file-list="false"
           name="files"
           :on-success="handleAvatarSuccess"
@@ -22,7 +22,9 @@
       <div class="personalCenter-name">{{ name }}</div>
       <!-- 修改密码 -->
       <div class="modify-password">
-        <el-button type="text" @click="dialogFormVisible = true">修改密码</el-button>
+        <el-button
+type="text"
+@click="dialogFormVisible = true">修改密码</el-button>
         <el-dialog title="修改密码" :visible.sync="dialogFormVisible">
           <el-form
             ref="ruleForm"
@@ -36,15 +38,30 @@
               <el-input v-model="ruleForm.age" type="password" />
             </el-form-item>
             <el-form-item label="新密码" prop="pass">
-              <el-input v-model="ruleForm.pass" type="password" autocomplete="off" />
+              <el-input
+                v-model="ruleForm.pass"
+                type="password"
+                autocomplete="off"
+              />
             </el-form-item>
             <el-form-item label="确认密码" prop="checkPass">
-              <el-input v-model="ruleForm.checkPass" type="password" autocomplete="off" />
+              <el-input
+                v-model="ruleForm.checkPass"
+                type="password"
+                autocomplete="off"
+              />
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="submitForm('ruleForm')">确定</el-button>
+              <el-button
+type="primary"
+@click="submitForm('ruleForm')">确定</el-button>
               <!-- <el-button @click="resetForm('ruleForm')">重置</el-button> -->
-              <el-button @click="dialogFormVisible = false;resetForm('ruleForm')">取 消</el-button>
+              <el-button
+                @click="
+                  dialogFormVisible = false;
+                  resetForm('ruleForm');
+                "
+              >取 消</el-button>
             </el-form-item>
           </el-form>
         </el-dialog>
@@ -52,7 +69,7 @@
     </div>
     <!-- 占位 -->
     <div class="exhibition">
-      <img :src="avatar" class="avatar">
+      <img :src="avatar" class="avatar" >
     </div>
   </div>
 </template>
@@ -75,22 +92,21 @@ export default {
       var regularpassword = /(?=.*?[a-zA-Z])(?=.*?[0-9])[a-zA-Z0-9]{8,16}$/
       if (value === this.ruleForm.age) {
         callback(new Error('新密码不能与原密码相同!'))
-      } else if (value === "") {
-        callback(new Error("请输入密码"));
-      } else if(!regularpassword.test(value) ){
-        callback(new Error("格式为：数字+英文且不能小于8位不能大于16位"));
-      } else{
-        if (this.ruleForm.checkPass !== "") {
-          this.$refs.ruleForm.validateField("checkPass");
+      } else if (value === '') {
+        callback(new Error('请输入密码'))
+      } else if (!regularpassword.test(value)) {
+        callback(new Error('格式为：数字+英文且不能小于8位不能大于16位'))
+      } else {
+        if (this.ruleForm.checkPass !== '') {
+          this.$refs.ruleForm.validateField('checkPass')
         }
-        callback();
+        callback()
       }
     }
     // 确认密码
     var validatePass2 = (rule, value, callback) => {
-
-      if (value === "") {
-        callback(new Error("请再次输入密码"));
+      if (value === '') {
+        callback(new Error('请再次输入密码'))
       } else if (value !== this.ruleForm.pass) {
         callback(new Error('两次输入密码不一致!'))
       } else {
@@ -187,7 +203,7 @@ export default {
   height: 560px;
   // background-color: red;
   margin: 20px;
-  .personalCenter-left{
+  .personalCenter-left {
     width: 30%;
     height: 100%;
     float: left;
@@ -203,23 +219,23 @@ export default {
         height: 100%;
         border-radius: 50%;
       }
-      .avatar-uploader{
+      .avatar-uploader {
         display: none;
         width: 100%;
         height: 27px;
         position: absolute;
         top: 94px;
-        background:#304156;
+        background: #304156;
         z-index: 100;
         opacity: 0.8;
-        .modify{
+        .modify {
           width: 100%;
           margin-left: 20px;
           color: rgb(191, 203, 217);
         }
       }
     }
-    .demo-type:hover .avatar-uploader{
+    .demo-type:hover .avatar-uploader {
       display: block;
     }
     .personalCenter-name {
@@ -234,12 +250,12 @@ export default {
       text-align: center;
     }
   }
-  .exhibition{
+  .exhibition {
     width: 60%;
     height: 99%;
     float: left;
     margin: 3px 0;
-    img{
+    img {
       width: 100%;
       height: 100%;
     }
