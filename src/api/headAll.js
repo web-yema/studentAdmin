@@ -15,10 +15,10 @@ export const addHead = (person) => {
 }
 
 // 修改班主任信息
-export const updateHead = (id, upmajor) => {
+export const updateHead = (id, name) => {
   return Axios.post('http://132.232.89.22:8080/updateHeadTeacher', {
     _id: id,
-    position: upmajor
+    headname: name
   })
 }
 
@@ -44,10 +44,10 @@ export const addTeacher = (person) => {
 }
 
 // 修改讲师信息
-export const updateTeacher = (id, upmajor) => {
+export const updateTeacher = (id, name) => {
   return Axios.post('http://132.232.89.22:8080/updateLecturer', {
     _id: id,
-    position: upmajor
+    lecturername: name
   })
 }
 
@@ -64,8 +64,17 @@ export const getMarketAll = () => {
 }
 
 // 添加市场部
-export const addMarket = (marketname) => {
-  return Axios.post('http://132.232.89.22:8080/addMarket', marketname)
+export const addMarket = (market) => {
+  return Axios.post('http://132.232.89.22:8080/addMarket', {
+    marketname: market
+  })
+}
+
+// 删除市场部
+export const deleteMarket = (delMarkets) => {
+  return Axios.post('http://132.232.89.22:8080/delMarket', {
+    _id: delMarkets
+  })
 }
 
 // 获取专业
@@ -74,6 +83,8 @@ export const getMajor = () => {
 }
 
 // 添加专业
-export const addMajor = (majorname) => {
-  return Axios.post('http://132.232.89.22:8080/addMajor', majorname)
+export const addMajor = (major) => {
+  return Axios.post('http://132.232.89.22:8080/addMajor', {
+    majorname: major
+  })
 }
