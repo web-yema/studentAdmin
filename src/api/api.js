@@ -1,6 +1,6 @@
 import Axios from 'axios'
 // 修改密码
-export function updateAdminPass(obj) {
+export function updateAdminPass (obj) {
   return Axios.post('http://132.232.89.22:8080/updateAdminPass', obj)
   // eslint-disable-next-line no-unused-vars
 }
@@ -33,6 +33,12 @@ export const getMarketing = () => {
 // 获取分页和学生
 export const getPage = (page) => {
   return Axios.post('http://132.232.89.22:8080/allstudentPage', {
+    page: page
+  })
+}
+// 获取分页和班级
+export const classPage = (page) => {
+  return Axios.post('http://132.232.89.22:8080/classPage', {
     page: page
   })
 }

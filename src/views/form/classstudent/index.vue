@@ -2,6 +2,7 @@
   <div class="top_option">
     <!-- 列表 -->
     <div class="table_divs">
+<<<<<<< HEAD
       <el-table
         v-loading="listLoading"
         :data="all"
@@ -13,6 +14,10 @@
           type="selection"
           width="55"
         />
+=======
+      <el-table v-loading="listLoading" :data="all" :row-key="getRowKey" style="width: 100%" @selection-change="selsChange">
+        <el-table-column :reserve-selection="true" type="selection" width="55" />
+>>>>>>> 42a6d47b5dced9a90cfdafd3b0c4889a9da4cac2
         <el-table-column prop="classes" label="班级" />
         <el-table-column prop="name" label="姓名" />
         <el-table-column prop="sex" label="性别" />
@@ -27,6 +32,7 @@
         <el-table-column prop="studentID" label="学号" />
         <el-table-column v-if="power" label="操作" min-width="180">
           <template slot-scope="scope">
+<<<<<<< HEAD
             <el-button
               type="primary"
               size="mini"
@@ -35,6 +41,10 @@
             <el-button
 type="danger"
 size="mini" @click="remove(scope.row._id)">删除</el-button>
+=======
+            <el-button type="primary" size="mini" @click="update(scope.$index, scope.row)">修改</el-button>
+            <el-button type="danger" size="mini">删除</el-button>
+>>>>>>> 42a6d47b5dced9a90cfdafd3b0c4889a9da4cac2
           </template>
         </el-table-column>
       </el-table>
@@ -50,25 +60,13 @@ size="mini" @click="remove(scope.row._id)">删除</el-button>
             <el-input v-model="ruleForm.classes" />
           </el-form-item>
           <el-form-item label="已有成绩" prop="chengji">
-            <el-input
-              v-model="ruleForm.chengji"
-              oninput="value=value.replace(/[^\d.]/g,'')"
-              maxlength="2"
-            />
+            <el-input v-model="ruleForm.chengji" oninput="value=value.replace(/[^\d.]/g,'')" maxlength="2" />
           </el-form-item>
           <el-form-item label="还差成绩" prop="graduation">
-            <el-input
-              v-model="ruleForm.graduation"
-              oninput="value=value.replace(/[^\d.]/g,'')"
-              maxlength="2"
-            />
+            <el-input v-model="ruleForm.graduation" oninput="value=value.replace(/[^\d.]/g,'')" maxlength="2" />
           </el-form-item>
           <el-form-item label="挂科次数" prop="failss">
-            <el-input
-              v-model="ruleForm.failss"
-              oninput="value=value.replace(/[^\d.]/g,'')"
-              maxlength="2"
-            />
+            <el-input v-model="ruleForm.failss" oninput="value=value.replace(/[^\d.]/g,'')" maxlength="2" />
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -79,11 +77,15 @@ size="small" @click="submitForm()">修 改</el-button>
         </span>
       </el-dialog>
     </div>
+<<<<<<< HEAD
 
     <div
       v-if="power"
       style="position:fixed;bottom:20px;margin-left:20px;z-index:1000;"
     >
+=======
+    <div v-if="power" style="position:fixed;bottom:100px;margin-left:10px;">
+>>>>>>> 42a6d47b5dced9a90cfdafd3b0c4889a9da4cac2
       <!-- 批量删除 -->
       <template>
         <el-button
@@ -115,15 +117,10 @@ type="success" size="small">批量修改</el-button>
       style="position:fixed;right:50px;bottom:20px;z-index:1000;"
     >
       <!-- 导出 -->
-      <el-button
-        size="mini"
-        type="success"
-        round
-        :loading="downloadLoading"
-        @click="handleDownload"
-      >导出当页excel</el-button>
+      <el-button size="mini" type="success" round :loading="downloadLoading" @click="handleDownload">导出当页excel</el-button>
       <!-- 导入 -->
       <label class="fileinp">
+<<<<<<< HEAD
         <input
           type="button"
           class="btn"
@@ -137,8 +134,13 @@ type="success" size="small">批量修改</el-button>
           accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
           @change="importfxx(this)"
         >
+=======
+        <input type="button" class="btn" value="导入excel" round @click="handleInter">
+        <input type="file" class="fileinpd" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" @change="importfxx(this)">
+>>>>>>> 42a6d47b5dced9a90cfdafd3b0c4889a9da4cac2
       </label>
     </div>
+    <pageCount style="position:fixed;left:205px;bottom:20px;" :total="total" :page-size="pageSize" :current-page="currentPage" @getcurrentPage="getcurrentPage" />
   </div>
 </template>
 
@@ -146,18 +148,32 @@ type="success" size="small">批量修改</el-button>
 // 引入接口函数
 // eslint-disable-next-line no-unused-vars
 import {
+  // eslint-disable-next-line no-unused-vars
+  getPage, // 学生分页
   allstudent,
   updateAllstud,
-  delallStudent,
+  // eslint-disable-next-line no-unused-vars
+  delAllStudent,
   // eslint-disable-next-line no-unused-vars
   addallStudent,
   getExcel
 } from '../../../api/api.js'
+<<<<<<< HEAD
 // eslint-disable-next-line no-unused-vars
+=======
+// 分页模块
+// eslint-disable-next-line no-unused-vars
+import pageCount from '../../../components/Pagination/index'
+// Excel模块
+// eslint-disable-next-line no-unused-vars
+>>>>>>> 42a6d47b5dced9a90cfdafd3b0c4889a9da4cac2
 import UploadExcel from '../../../components/UploadExcel/index'
 // 引入vuex 权限
 import { mapGetters } from 'vuex'
 export default {
+  components: {
+    pageCount
+  },
   data() {
     return {
       listLoading: true,
@@ -182,6 +198,9 @@ export default {
       sels: [], // 选中的值显示
       checkeds: [], // 批量删除选中id
       updateShow: 100000, // 最大匹配的值
+      total: 1, // 数据总条数，默认给1
+      pageSize: 6, // 数据的总条数，默认是6条
+      currentPage: 1, // 总页数，默认是第1页
       power: true // 操作按钮权限
     }
   },
@@ -196,6 +215,10 @@ export default {
     }
   },
   async mounted() {
+<<<<<<< HEAD
+=======
+    this.getPage(this.currentPage)
+>>>>>>> 42a6d47b5dced9a90cfdafd3b0c4889a9da4cac2
     const { data } = await allstudent()
     this.allstudent = data.data
     this.listLoading = false
@@ -214,6 +237,10 @@ export default {
     }
   },
   methods: {
+    // 保存选中的数据id,row-key就是要指定一个key标识这一行的数据
+    getRowKey(row) {
+      return row.id
+    },
     async getStudata() {
       const { data } = await allstudent()
       this.all = data.data
@@ -237,7 +264,11 @@ export default {
         type: 'warning'
       })
         .then(async res => {
+<<<<<<< HEAD
           const { data } = await delallStudent(id)
+=======
+          const { data } = await delAllStudent(id)
+>>>>>>> 42a6d47b5dced9a90cfdafd3b0c4889a9da4cac2
           if (data.code === 200) {
             this.getStudata()
             return this.$message.success(data.msg)
@@ -324,7 +355,11 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
+<<<<<<< HEAD
         delallStudent(this.checkeds).then(res => {
+=======
+        delAllStudent(this.checkeds).then(res => {
+>>>>>>> 42a6d47b5dced9a90cfdafd3b0c4889a9da4cac2
           if (res.data.code === 201) {
             this.$message.error(res.data.msg)
           } else {
@@ -459,14 +494,31 @@ export default {
             type: 'success'
           })
           window.location.reload()
+<<<<<<< HEAD
         };
         reader.readAsArrayBuffer(f)
       };
+=======
+        }
+        reader.readAsArrayBuffer(f)
+      }
+>>>>>>> 42a6d47b5dced9a90cfdafd3b0c4889a9da4cac2
       if (rABS) {
         reader.readAsArrayBuffer(f)
       } else {
         reader.readAsBinaryString(f)
       }
+    },
+    // 调用子组件传过来的事件
+    getcurrentPage(currentPage) {
+      this.currentPage = currentPage
+      this.getPage(currentPage)
+    },
+    // 分页加学生接口调用
+    async getPage(page) {
+      const { data } = await getPage(page)
+      this.all = data.data
+      this.total = data.total
     }
   }
 }

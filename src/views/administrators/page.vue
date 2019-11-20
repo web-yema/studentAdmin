@@ -136,6 +136,7 @@ export default {
           }
           const { data } = await register(this.ruleForm)
           if (data.code === '200') {
+            // eslint-disable-next-line no-sequences
             (this.dialogVisible = true),
             (this.message.message1 = data.message1)
             this.message.message2 = data.message2
