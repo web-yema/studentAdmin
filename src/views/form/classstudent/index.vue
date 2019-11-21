@@ -2,17 +2,8 @@
   <div class="top_option">
     <!-- 列表 -->
     <div class="table_divs">
-      <el-table
-        v-loading="listLoading"
-        :data="all"
-        style="width: 100%"
-        @selection-change="selsChange"
-      >
-        <el-table-column
-          :reserve-selection="true"
-          type="selection"
-          width="55"
-        />
+      <el-table v-loading="listLoading" :data="all" style="width: 100%" @selection-change="selsChange">
+        <el-table-column :reserve-selection="true" type="selection" width="55" />
         <el-table-column prop="classes" label="班级" />
         <el-table-column prop="name" label="姓名" />
         <el-table-column prop="sex" label="性别" />
@@ -27,23 +18,14 @@
         <el-table-column prop="studentID" label="学号" />
         <el-table-column v-if="power" label="操作" min-width="180">
           <template slot-scope="scope">
-            <el-button
-              type="primary"
-              size="mini"
-              @click="update(scope.$index, scope.row)"
-            >修改</el-button>
-            <el-button type="danger" size="mini" @click="remove(scope.row._id)">删除</el-button>
+            <el-button type="primary" size="mini" @click="update(scope.$index, scope.row)">修改</el-button>
+            <el-button type="danger" size="mini" @click="remove(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
       <!-- 修改 -->
       <el-dialog title="修改操作" :visible.sync="show" width="30%">
-        <el-form
-          ref="ruleForm"
-          :model="ruleForm"
-          label-width="100px"
-          class="demo-ruleForm"
-        >
+        <el-form ref="ruleForm" :model="ruleForm" label-width="100px" class="demo-ruleForm">
           <el-form-item label="班级" prop="classes">
             <el-input v-model="ruleForm.classes" />
           </el-form-item>
@@ -59,63 +41,36 @@
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button size="small" @click="secede('ruleForm')">取 消</el-button>
-          <el-button type="primary" size="small" @click="submitForm()">修 改</el-button>
+          <el-button v-if="xgshow" type="primary" size="small" @click="submitForm()">修 改</el-button>
+          <el-button v-if="plxgshow" type="primary" size="small" @click="plsubmitForm()">修 改</el-button>
         </span>
       </el-dialog>
     </div>
-
-    <div
-      v-if="power"
-      style="position:fixed;bottom:20px;margin-left:20px;z-index:1000;"
-    >
+    <div v-if="power" style="position:fixed;bottom:100px;margin-left:10px;z-index:1000">
       <!-- 批量删除 -->
       <template>
-        <el-button
-          style="margin-top:10px"
-          type="danger"
-          size="small"
-          @click="soamdelstudent()"
-        >批量删除</el-button>
+        <el-button style="margin-top:10px" type="danger" size="small" :disabled="this.sels.length === 0" @click="soamdelstudent()">批量删除</el-button>
       </template>
       <!-- 批量修改 -->
       <template>
-        <el-button style="margin-top:10px" type="success" size="small">批量修改</el-button>
+        <el-button style="margin-top:10px" type="success" size="small" :disabled="this.sels.length === 0" @click="updatesomestudent()">批量修改</el-button>
       </template>
       <!-- 添加 -->
       <template>
-        <el-button
-          style="margin-top:10px"
-          type="primary"
-          size="small"
-          @click="addstudent()"
-        >添加学生</el-button>
+        <el-button style="margin-top:10px" type="primary" size="small" @click="addstudent()">添加学生</el-button>
       </template>
     </div>
 
-    <div
-      v-if="power"
-      style="position:fixed;right:50px;bottom:20px;z-index:1000;"
-    >
+    <div v-if="power" style="position:fixed;right:50px;bottom:20px;z-index:1000;">
       <!-- 导出 -->
       <el-button size="mini" type="success" round :loading="downloadLoading" @click="handleDownload">导出当页excel</el-button>
       <!-- 导入 -->
       <label class="fileinp">
-        <input
-          type="button"
-          class="btn"
-          value="导入excel"
-          round
-          @click="handleInter"
-        >
-        <input
-          type="file"
-          class="fileinpd"
-          accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-          @change="importfxx(this)"
-        >
+        <input type="button" class="btn" value="导入excel" round @click="handleInter">
+        <input type="file" class="fileinpd" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" @change="importfxx(this)">
       </label>
     </div>
-    <pageCount style="position:fixed;left:205px;bottom:20px;" :total="total" :page-size="pageSize" :current-page="currentPage" @getcurrentPage="getcurrentPage" />
+    <pageCount style="position:fixed;left:205px;bottom:20px;z-index:1000" :total="total" :page-size="pageSize" :current-page="currentPage" @getcurrentPage="getcurrentPage" />
   </div>
 </template>
 
@@ -131,9 +86,12 @@ import {
   delAllStudent,
   // eslint-disable-next-line no-unused-vars
   addallStudent,
+  updateStudent, // 批量修改
   getExcel
 } from '../../../api/api.js'
-// eslint-disable-next-line no-unused-vars
+// 分页模块
+import pageCount from '../../../components/Pagination/index'
+// Excel模块
 import UploadExcel from '../../../components/UploadExcel/index'
 // 引入vuex 权限
 import { mapGetters } from 'vuex'
@@ -141,8 +99,10 @@ export default {
   components: {
     pageCount
   },
-  data() {
+  data () {
     return {
+      xgshow: false,
+      plxgshow: false,
       listLoading: true,
       downloadLoading: false,
       downloadLoading2: false,
@@ -175,13 +135,18 @@ export default {
   computed: {
     ...mapGetters(['roles'])
   },
+  watch: {
+    'allstudent': function (newVal) {
+      this.all = newVal
+    }
+  },
   // '3' 代表的普通用户，普通用户登录会将操作按钮隐藏
-  created() {
+  created () {
     if (this.roles.includes('3')) {
       this.power = false
     }
   },
-  async mounted() {
+  async mounted () {
     const { data } = await allstudent()
     this.allstudent = data.data
     this.listLoading = false
@@ -194,6 +159,7 @@ export default {
     }
     this.all = this.classstudents
     this.classstudents = []
+    this.sliceJg(this.all)
     // eslint-disable-next-line eqeqeq
     if (this.all == '') {
       return false
@@ -201,22 +167,14 @@ export default {
   },
   methods: {
     // 保存选中的数据id,row-key就是要指定一个key标识这一行的数据
-    getRowKey(row) {
+    getRowKey (row) {
       return row.id
     },
-    async getStudata() {
-      const { data } = await allstudent()
-      this.all = data.data
-      for (var i = 0; i < this.allstudent.length; i++) {
-        if (this.getClass === this.allstudent[i].classes) {
-          this.classstudents.push(this.allstudent[i])
-        }
-      }
-      this.all = this.classstudents
-      this.classstudents = []
-    },
+    // async getStudata() {
+
+    // },
     // 删除学生
-    remove(id) {
+    remove (row) {
       const h = this.$createElement
       this.$msgbox({
         title: '提示',
@@ -227,14 +185,17 @@ export default {
         type: 'warning'
       })
         .then(async res => {
-          const { data } = await delallStudent(id)
-          if (data.code === 200) {
-            this.getStudata()
-            return this.$message.success(data.msg)
-          }
-          this.$message({
-            message: data.msg,
-            type: 'error'
+          delAllStudent(row._id).then(async res => {
+            if (res.data.code === 201) {
+              this.$message.error(res.data.msg)
+            } else {
+              const { data } = await allstudent()
+              this.allstudent = data.data
+              this.$message({
+                message: res.data.msg,
+                type: 'success'
+              })
+            }
           })
           // eslint-disable-next-line handle-callback-err
         })
@@ -247,7 +208,9 @@ export default {
         })
     },
     // 修改
-    update(index, row) {
+    update (index, row) {
+      this.xgshow = true
+      this.plxgshow = false
       this.rowlist = row
       this.show = true
       this.ruleForm.classes = row.classes
@@ -257,7 +220,7 @@ export default {
       this.ruleForm.id = row._id
     },
     // 确定修改
-    async submitForm() {
+    async submitForm () {
       // 默认值
       const obj = {
         classes: this.ruleForm.classes,
@@ -279,13 +242,15 @@ export default {
       } else if (data.code === 200) {
         this.$message.success('修改成功')
         this.show = false
+        const { data } = await allstudent()
+        this.allstudent = data.data
       } else {
         this.$message.error(data.msg)
         return false
       }
     },
     // 取消修改
-    secede(formName) {
+    secede (formName) {
       this.$refs[formName].resetFields()
       this.$message({
         type: 'info',
@@ -294,13 +259,13 @@ export default {
       this.show = false
     },
     // 添加
-    addstudent() {
+    addstudent () {
       this.$router.push({
         path: this.path // 跳转路由
       })
     },
-    // 批量删除
-    selsChange(sels) {
+    // 选择项
+    selsChange (sels) {
       this.sels = sels
       const all_Id = []
       for (let i = 0; i < sels.length; i++) {
@@ -308,16 +273,55 @@ export default {
       }
       this.checkeds = all_Id
     },
-    soamdelstudent() {
+    // 批量修改
+    updatesomestudent () {
+      this.show = true
+      this.xgshow = false
+      this.plxgshow = true
+    },
+    // 确定批量修改
+    async plsubmitForm () {
+      const obj = {
+        classes: this.ruleForm.classes,
+        chengji: this.ruleForm.chengji,
+        graduation: this.ruleForm.graduation,
+        failss: this.ruleForm.failss
+      }
+      if (obj.classes === '') {
+        delete obj.classes
+      }
+      if (obj.chengji === '') {
+        delete obj.chengji
+      }
+      if (obj.graduation === '') {
+        delete obj.graduation
+      }
+      if (obj.failss === '') {
+        delete obj.failss
+      }
+      const { data } = await updateStudent(this.checkeds, obj)
+      if (data.code === 200) {
+        this.$message.success('修改成功')
+        this.show = false
+        const { data } = await allstudent()
+        this.allstudent = data.data
+      } else {
+        this.$message.error(data.msg)
+      }
+    },
+    // 批量删除
+    soamdelstudent () {
       this.$confirm('此操作将永久删除这几项, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        delallStudent(this.checkeds).then(res => {
+        delAllStudent(this.checkeds).then(async res => {
           if (res.data.code === 201) {
             this.$message.error(res.data.msg)
           } else {
+            const { data } = await allstudent()
+            this.allstudent = data.data
             this.$message({
               message: res.data.msg,
               type: 'success'
@@ -326,7 +330,7 @@ export default {
         })
       })
     },
-    handleDownload() {
+    handleDownload () {
       this.downloadLoading = true
       import('../../../excel/Export2Excel.js').then(excel => {
         const tHeader = [
@@ -368,17 +372,17 @@ export default {
         this.downloadLoading = false
       })
     },
-    formatJson(filterVal, jsonData) {
+    formatJson (filterVal, jsonData) {
       return jsonData.map(v =>
         filterVal.map(j => {
           return v[j]
         })
       )
     },
-    handleInter() {
+    handleInter () {
       this.downloadLoading2 = true
     },
-    importfxx(obj) {
+    importfxx (obj) {
       const _this = this
       // eslint-disable-next-line no-unused-vars
       const inputDOM = this.$refs.inputer
@@ -388,7 +392,7 @@ export default {
       var f = this.file
       var reader = new FileReader()
       // if (!FileReader.prototype.readAsBinaryString) {
-      FileReader.prototype.readAsBinaryString = function(f) {
+      FileReader.prototype.readAsBinaryString = function (f) {
         var binary = ''
         var rABS = false // 是否将文件读取为二进制字符串
         // eslint-disable-next-line no-unused-vars
@@ -396,7 +400,7 @@ export default {
         var wb // 读取完成的数据
         var outdata
         var reader = new FileReader()
-        reader.onload = function(e) {
+        reader.onload = async function (e) {
           var bytes = new Uint8Array(reader.result)
           var length = bytes.byteLength
           for (var i = 0; i < length; i++) {
@@ -448,7 +452,6 @@ export default {
             message: '请耐心等待导入成功',
             type: 'success'
           })
-          window.location.reload()
         }
         reader.readAsArrayBuffer(f)
       }
@@ -459,20 +462,44 @@ export default {
       }
     },
     // 调用子组件传过来的事件
-    getcurrentPage(currentPage) {
+    getcurrentPage (currentPage) {
       this.currentPage = currentPage
       this.getPage(currentPage)
     },
     // 分页加学生接口调用
-    async getPage(page) {
+    async getPage (page) {
       const { data } = await getPage(page)
       this.all = data.data
-      this.total = data.total
+      for (var i = 0; i < this.all.length; i++) {
+        if (this.getClass === this.all[i].classes) {
+          this.classstudents.push(this.all[i])
+        }
+      }
+      this.total = this.all.length
+      this.all = this.classstudents
+      this.classstudents = []
+    },
+    // 切割籍贯函数
+    sliceJg (Array) {
+      // eslint-disable-next-line no-undef
+      for (let i = 0; i < Array.length; i++) {
+        // eslint-disable-next-line no-undef
+        if (
+          Array[i].nativeplace.includes('黑龙江') ||
+          Array[i].nativeplace.includes('内蒙古')
+        ) {
+          // eslint-disable-next-line no-undef
+          Array[i].nativeplace = Array[i].nativeplace.slice(0, 3)
+        } else {
+          Array[i].nativeplace = Array[i].nativeplace.slice(0, 2)
+        }
+      }
+      return Array
     }
   }
 }
 </script>
 
 <style scoped>
-@import './asset.scss';
+@import "./asset.scss";
 </style>

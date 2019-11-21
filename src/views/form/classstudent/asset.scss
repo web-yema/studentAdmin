@@ -1,35 +1,35 @@
-.optionclass{
-  margin-top: 30px; 
-} 
-.table_divs{
+.optionclass {
+  margin-top: 30px;
+}
+.table_divs {
   margin-top: 20px;
 }
-.czbtn{
+.czbtn {
   position: fixed;
   bottom: 20px;
-  z-index: 1000
+  z-index: 1000;
 }
-.fileinp{
+.fileinp {
   position: relative;
 }
-.fileinpd{
+.fileinpd {
   position: absolute;
   left: 0;
   top: 0;
   opacity: 0;
 }
-.btn{
+.btn {
   padding: 8px 10px;
-  background: #67C23A;
-  color: #FFF;
+  background: #67c23a;
+  color: #fff;
   border: none;
   font-size: 12px;
   border-radius: 16px;
   transition: 0.2s;
 }
-.btn:hover{
-  background-color: #85CE61;
+.btn:hover {
+  background-color: #85ce61;
 }
-#text{
+#text {
   color: red;
 }
