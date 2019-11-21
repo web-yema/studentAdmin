@@ -167,7 +167,6 @@ export default {
     // 获取全部专业进行筛选
     const allmajor = await getMajor()
     this.getMajor = allmajor.data.data
-    console.log(this.getMajor)
     this.listLoading = false
   },
   methods: {
@@ -264,16 +263,15 @@ export default {
     // 选择专业
     async op_click (vel) {
       this.xzmajor = vel
-      const { data } = await getClass()
-      this.classes = data.data
-      // 筛选专业
-      var list = []
-      for (var i = 0; i < this.classes.length; i++) {
-        if (this.classes[i].major === vel || vel === '全部班级') {
-          list.push(this.classes[i])
-        }
+      if (this.xzmajor === '全部班级') {
+        // eslint-disable-next-line no-undef
+        const allList = await classPage(this.currentPage)
+        this.classes = allList.data.data
+        this.total = allList.data.total
+      } else {
+        // eslint-disable-next-line no-undef
+        this.classPage(this.currentPage)
       }
-      this.classes = list
     },
     // 修改
     update (index, row) {
@@ -298,8 +296,12 @@ export default {
         this.$message.success('没有任何修改')
         this.show = false
       } else if (data.code === 200) {
-        this.handlegetHeadTeacher()
-        this.value = '全部班级'
+        if (this.xzmajor) {
+          this.op_click(this.xzmajor)
+        } else {
+          this.xzmajor = '全部班级'
+          this.op_click(this.xzmajor)
+        }
         this.$message.success('修改成功')
         this.show = false
       } else {
@@ -376,7 +378,10 @@ export default {
     },
     // 分页加学生接口调用
     async classPage (page) {
-      const { data } = await classPage(page)
+      if (this.xzmajor === '全部班级') {
+        this.xzmajor = ""
+      }
+      const { data } = await classPage(page, this.xzmajor)
       this.classes = data.data
       this.total = data.total
     }

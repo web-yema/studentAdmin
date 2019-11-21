@@ -37,47 +37,24 @@
           <div v-else>{{ tableData[scope.$index].entryDate }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="学院">
-        <template slot-scope="scope">
-          <div v-if="scope.$index===updateShow">
-            <el-select v-model="upmajor" size="mini" placeholder="学院">
-              <el-option size="mini" :value="item.value" />
-            </el-select>
-          </div>
-          <div v-else>{{ tableData[scope.$index].college }}</div>
-        </template>
-      </el-table-column>
       <el-table-column label="专业">
         <template slot-scope="scope">
           <div v-if="scope.$index===updateShow" style="display:flex;">
-            <el-radio v-model="major" label="web">WEB架构</el-radio>
-            <el-radio v-model="major" style="margin-left:-15px;" label="ui">视觉设计</el-radio>
+            <el-radio v-model="major" label="web">web</el-radio>
+            <el-radio v-model="major" style="margin-left:-15px;" label="ui">ui</el-radio>
           </div>
           <div v-else>{{ tableData[scope.$index].major }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="职位">
-        <template slot-scope="scope">
-          <div v-if="scope.$index===updateShow">
-            <el-select v-model="upmajor" size="mini" placeholder="职位">
-              <el-option size="mini" :value="item.value" />
-            </el-select>
-          </div>
-          <div v-else>{{ tableData[scope.$index].position }}</div>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" v-if="power">
+      <el-table-column v-if="power" align="center">
         <template slot="header" slot-scope="">操作</template>
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="open(scope)">修改</el-button>
-        </template>
-      </el-table-column>
-      <el-table-column align="right" v-if="power">
-        <template slot-scope="scope">
           <el-button size="mini" type="danger" style="margin-top:3px;" @click="deleteOne(scope)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
+    <el-button v-if="power" type="primary" class="addLecturer" @click="addLecturers">添加讲师</el-button>
     <!-- 分页模块 -->
     <pageCount style="position:fixed;left:205px;  top:520px;" :total="total" :pageSize="pageSize" :currentPage="currentPage" @getcurrentPage="getcurrentPage" />
   </div>
@@ -107,18 +84,17 @@ export default {
       lecturersex: '', // 性别
       lecturerage: '', // 年龄
       jointime: '', // 入职时间
-      upmajor: '', // 职位
       major: '', // 专业
       power: true, // 权限问题
       options: [{
         value: '全部讲师',
         label: '全部讲师'
       }, {
-        value: 'WEB架构',
-        label: 'WEB架构'
+        value: 'web',
+        label: 'web'
       }, {
-        value: '视觉设计',
-        label: '视觉设计'
+        value: 'ui',
+        label: 'ui'
       }],
       value: '全部讲师'
     }
@@ -135,6 +111,11 @@ export default {
     this.getTeacherAlls(this.currentPage)
   },
   methods: {
+    addLecturers() {
+      this.$router.push({
+        name: 'addLecturers'
+      })
+    },
     // 调用子组件传过来的事件
     getcurrentPage(currentPage) {
       this.currentPage = currentPage
@@ -156,6 +137,7 @@ export default {
     // 获取全部讲师
     async getTeacherAlls(page) {
       const { data } = await getTeacherAll(page)
+      console.log(data)
       if (data.code === 202) {
         this.currentPage = this.currentPage - 1
         this.getTeacherAlls(this.currentPage)
@@ -166,12 +148,12 @@ export default {
     },
     // 修改讲师信息
     open(scope) {
-      this.$prompt('修改班主任职位:', '提示', {
+      this.$prompt('修改班主任姓名:', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(async({ value }) => {
         // 如果value和之前一样，或填入空格，提示用户您没有做任何更改
-        if (value === this.tableData[scope.$index].position || value.trim() === '') {
+        if (value === this.tableData[scope.$index].lecturername || value.trim() === '') {
           this.$message.error('您没有做任何更改!')
           return false
         }
@@ -227,3 +209,14 @@ export default {
   }
 }
 </script>
+
+<style>
+.el-table td, .el-table th{
+  padding: 12px 35px;
+}
+.addLecturer{
+  margin-top: 50px;
+  float: right;
+  margin-right: 45px;
+}
+</style>
