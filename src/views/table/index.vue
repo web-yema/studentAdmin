@@ -90,10 +90,7 @@
         </el-select>
       </li>
       <li style="display:flex;">
-        <el-button
-          size="small"
-          type="success"
-          @click="searchAll">确定</el-button>
+        <el-button size="small" type="success" @click="searchAll">确定</el-button>
         <el-button size="small" type="info" @click="searchQ">清空</el-button>
       </li>
     </div>
@@ -135,10 +132,7 @@
         <template slot-scope="scope">
           <div v-if="scope.$index === updateShow" style="display:flex;">
             <el-radio v-model="upsex" label="男">男</el-radio>
-            <el-radio
-              v-model="upsex"
-              style="margin-left:-15px;"
-              label="女">女</el-radio>
+            <el-radio v-model="upsex" style="margin-left:-15px;" label="女">女</el-radio>
           </div>
           <div v-else>{{ tableData[scope.$index].sex }}</div>
         </template>

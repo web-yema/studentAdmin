@@ -8,7 +8,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-button type="primary" class="addMajor" @click="open" v-if="power">添加专业</el-button>
+    <el-button v-if="power" type="primary" class="addMajor" @click="open">添加专业</el-button>
   </div>
 </template>
 
@@ -52,7 +52,7 @@ export default {
       this.$prompt('请输入专业', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
-      }).then(async ({ value }) => {
+      }).then(async({ value }) => {
         if (value.trim() === '') {
           this.$message.error('提交信息中存在空项!')
           return false
@@ -72,7 +72,7 @@ export default {
         this.$message({
           type: 'info',
           message: '取消输入'
-        })    
+        })
       })
     }
   }
@@ -80,6 +80,9 @@ export default {
 </script>
 
 <style>
+.el-table td, .el-table th{
+  padding: 12px 35px;
+}
 .addMajor{
   margin-top: 50px;
   float: right;

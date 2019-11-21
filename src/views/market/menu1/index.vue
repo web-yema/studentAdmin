@@ -114,6 +114,9 @@ export default {
 </script>
 
 <style>
+.el-table td, .el-table th{
+  padding: 12px 35px;
+}
 .addMarket{
   margin-top: 50px;
   float: right;

@@ -3,7 +3,7 @@
     <div class="personalCenter-left">
       <!-- 用户头像 -->
       <div class="demo-type">
-        <img :src="avatar" class="avatar" >
+        <img :src="avatar" class="avatar">
         <el-upload
           action="http://132.232.89.22:8080/uploadAvatar"
           class="avatar-uploader"
@@ -22,9 +22,7 @@
       <div class="personalCenter-name">{{ name }}</div>
       <!-- 修改密码 -->
       <div class="modify-password">
-        <el-button
-type="text"
-@click="dialogFormVisible = true">修改密码</el-button>
+        <el-button type="text" @click="dialogFormVisible = true">修改密码</el-button>
         <el-dialog title="修改密码" :visible.sync="dialogFormVisible">
           <el-form
             ref="ruleForm"
@@ -52,9 +50,7 @@ type="text"
               />
             </el-form-item>
             <el-form-item>
-              <el-button
-type="primary"
-@click="submitForm('ruleForm')">确定</el-button>
+              <el-button type="primary" @click="submitForm('ruleForm')">确定</el-button>
               <!-- <el-button @click="resetForm('ruleForm')">重置</el-button> -->
               <el-button
                 @click="
@@ -69,7 +65,7 @@ type="primary"
     </div>
     <!-- 占位 -->
     <div class="exhibition">
-      <img :src="avatar" class="avatar" >
+      <img :src="avatar" class="avatar">
     </div>
   </div>
 </template>

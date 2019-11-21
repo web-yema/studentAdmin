@@ -246,7 +246,7 @@ $light_gray: #eee;
       color: $light_gray;
       margin: 0px auto 40px auto;
       text-align: center;
-      font-family: Microsoft Yahei !important;
+      font-family: 华文行楷;
     }
   }
 

@@ -1,28 +1,11 @@
 <template>
-   <vue-particles
-        color="#fff"
-        :particleOpacity="0.7"
-        :particlesNumber="150"
-        shapeType="star"
-        :particleSize="4"
-        linesColor="#fff"
-        :linesWidth="1"
-        :lineLinked="true"
-        :lineOpacity="0.4"
-        :linesDistance="150"
-        :moveSpeed="6"
-        :hoverEffect="true"
-        hoverMode="grab"
-        :clickEffect="true"
-        clickMode="push"
-        class="lizi"
-      >
-      </vue-particles>
+  <vue-particles color="#fff" :particleOpacity="0.7" :particlesNumber="150" shapeType="star" :particleSize="4" linesColor="#fff" :linesWidth="1" :lineLinked="true" :lineOpacity="0.4" :linesDistance="150" :moveSpeed="6" :hoverEffect="true" hoverMode="grab" :clickEffect="true" clickMode="push"
+  class="lizi" />
 </template>
 
 <script>
 export default {
-    name:'background'
+  name: 'background'
 }
 </script>
 

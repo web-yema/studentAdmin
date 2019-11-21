@@ -28,8 +28,7 @@
       </div>
       <div style="margin-left:15px;margin-top:30px;">
         <!-- 性别模块 -->
-        <span
-style="margin-right:50px;margin-top:10px;margin-left:5px;">性别：</span>
+        <span style="margin-right:50px;margin-top:10px;margin-left:5px;">性别：</span>
         <el-radio v-model="sex" label="男">男</el-radio>
         <el-radio v-model="sex" label="女">女</el-radio>
       </div>

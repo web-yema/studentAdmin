@@ -46,7 +46,7 @@
           <div v-else>{{ tableData[scope.$index].major }}</div>
         </template>
       </el-table-column>
-      <el-table-column align="center" v-if="power">
+      <el-table-column v-if="power" align="center">
         <template slot="header" slot-scope="">操作</template>
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="open(scope)">修改</el-button>

@@ -32,9 +32,7 @@
               size="mini"
               @click="update(scope.$index, scope.row)"
             >修改</el-button>
-            <el-button
-type="danger"
-size="mini" @click="remove(scope.row._id)">删除</el-button>
+            <el-button type="danger" size="mini" @click="remove(scope.row._id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -61,9 +59,7 @@ size="mini" @click="remove(scope.row._id)">删除</el-button>
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button size="small" @click="secede('ruleForm')">取 消</el-button>
-          <el-button
-type="primary"
-size="small" @click="submitForm()">修 改</el-button>
+          <el-button type="primary" size="small" @click="submitForm()">修 改</el-button>
         </span>
       </el-dialog>
     </div>
@@ -83,9 +79,7 @@ size="small" @click="submitForm()">修 改</el-button>
       </template>
       <!-- 批量修改 -->
       <template>
-        <el-button
-style="margin-top:10px"
-type="success" size="small">批量修改</el-button>
+        <el-button style="margin-top:10px" type="success" size="small">批量修改</el-button>
       </template>
       <!-- 添加 -->
       <template>
@@ -455,9 +449,9 @@ export default {
             type: 'success'
           })
           window.location.reload()
-        };
+        }
         reader.readAsArrayBuffer(f)
-      };
+      }
       if (rABS) {
         reader.readAsArrayBuffer(f)
       } else {
