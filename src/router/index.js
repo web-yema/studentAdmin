@@ -77,6 +77,13 @@ export const constantRoutes = [
       component: () => import('@/views/dashboard/index'),
       meta: { title: '首页', icon: 'home' }
     }]
+  },
+
+  // 学生查询
+  {
+    path: '/student',
+    component: () => import('@/views/student/index'),
+    hidden: true
   }
 ]
 

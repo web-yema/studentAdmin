@@ -53,9 +53,14 @@
         <el-button
           :loading="loading"
           type="primary"
-          style="width:100%;margin-bottom:30px;"
+          style="width:60%;margin-bottom:30px; margin-right:10px;"
           @click.native.prevent="handleLogin"
         >登录</el-button>
+        <el-button
+          type="primary"
+          style="width: 32%;margin-bottom:30px;"
+          @click.native.prevent="studentEnquiry"
+        >学生查询</el-button>
       </el-form>
     </div>
     <CopyrightNotice />
@@ -146,6 +151,10 @@ export default {
           return false
         }
       })
+    },
+    // 点击进去 学生查询页
+    studentEnquiry() {
+      this.$router.replace('/student')
     }
   }
 }

@@ -91,3 +91,7 @@ export const addallStudent = (data) => {
   return Axios.post('http://132.232.89.22:8080/addallStudent', { data })
 }
 
+// 学生根据学号查询个人信息
+export const selectOneStudent = (data) => {
+  return Axios.post('http://132.232.89.22:8080/selectOneStudent', data)
+}
