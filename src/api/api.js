@@ -37,9 +37,10 @@ export const getPage = (page) => {
   })
 }
 // 获取分页和班级
-export const classPage = (page) => {
+export const classPage = (page, major) => {
   return Axios.post('http://132.232.89.22:8080/classPage', {
-    page: page
+    page: page,
+    major: major
   })
 }
 // 查询学生
@@ -88,7 +89,15 @@ export const updateAllstud = (id, obj) => {
   // eslint-disable-next-line no-undef
   return Axios.post('http://132.232.89.22:8080/updateAllstud', {
     id: id,
-    obj: obj
+    upstud: obj
+  })
+}
+// 批量修改学生
+export const updateStudent = (id, obj) => {
+  // eslint-disable-next-line no-undef
+  return Axios.post('http://132.232.89.22:8080/updateStudent', {
+    ids: id,
+    updateObj: obj
   })
 }
 // 添加学生
