@@ -1,143 +1,89 @@
 <template>
   <div class="top_option">
-    <el-select
-v-model="value"
-               class="why_select"
-               @change="op_click"
->
+    <el-select v-model="value" class="why_select" @change="op_click">
       <el-option
-v-for="item in options"
-                 :key="item.value"
-                 :value="item.value"
-                 :label="item.label"
-                 :disabled="item.disabled"
-/>
+        v-for="item in options"
+        :key="item.value"
+        :value="item.value"
+        :label="item.label"
+        :disabled="item.disabled"
+      />
     </el-select>
 
     <div class="table_div">
-      <el-table
-v-loading="listLoading"
-                :data="classes"
-                style="width: 100%"
->
-        <el-table-column
-prop="classname"
-                         label="班级名称"
-/>
-        <el-table-column
-prop="createDate"
-                         label="创建日期"
-/>
-        <el-table-column
-prop="major"
-                         label="专业"
-/>
-        <el-table-column
-prop="lecturer"
-                         label="讲师"
-/>
-        <el-table-column
-prop="headteacher"
-                         label="班主任"
-/>
+      <el-table v-loading="listLoading" :data="classes" style="width: 100%">
+        <el-table-column prop="classname" label="班级名称" />
+        <el-table-column prop="createDate" label="创建日期" />
+        <el-table-column prop="major" label="专业" />
+        <el-table-column prop="lecturer" label="讲师" />
+        <el-table-column prop="headteacher" label="班主任" />
         <el-table-column label="班级成员">
           <template slot-scope="scope">
-            <span
-class="go_student"
-                  @click="member(scope.row)"
->详 情</span>
+            <span class="go_student" @click="member(scope.row)">详 情</span>
           </template>
         </el-table-column>
-        <el-table-column
-v-if="power"
-                         label="操作"
-                         min-width="180"
->
+        <el-table-column v-if="power" label="操作" min-width="180">
           <template slot-scope="scope">
             <el-button
-type="primary"
-                       size="mini"
-                       @click="update(scope.$index, scope.row)"
->修 改</el-button>
+              type="primary"
+              size="mini"
+              @click="update(scope.$index, scope.row)"
+            >修 改</el-button>
             <el-button
-type="danger"
-                       size="mini"
-                       @click="remove(scope.row, scope.row._id)"
->删 除</el-button>
+              type="danger"
+              size="mini"
+              @click="remove(scope.row, scope.row._id)"
+            >删 除</el-button>
           </template>
         </el-table-column>
       </el-table>
       <!-- 分页 -->
-      <el-dialog
-title="修改操作"
-                 :visible.sync="show"
-                 width="30%"
->
+      <el-dialog title="修改操作" :visible.sync="show" width="30%">
         <el-form
-ref="ruleForm"
-                 :model="ruleForm"
-                 :rules="rules"
-                 label-width="100px"
-                 class="demo-ruleForm"
->
-          <el-form-item
-label="讲师"
-                        prop="lecturer"
->
+          ref="ruleForm"
+          :model="ruleForm"
+          :rules="rules"
+          label-width="100px"
+          class="demo-ruleForm"
+        >
+          <el-form-item label="讲师" prop="lecturer">
             <el-input v-model="ruleForm.lecturer" />
           </el-form-item>
-          <el-form-item
-label="班主任"
-                        prop="headteacher"
->
+          <el-form-item label="班主任" prop="headteacher">
             <el-input v-model="ruleForm.headteacher" />
           </el-form-item>
         </el-form>
-        <span
-slot="footer"
-              class="dialog-footer"
->
+        <span slot="footer" class="dialog-footer">
+          <el-button size="small" @click="secede('ruleForm')">取 消</el-button>
           <el-button
-size="small"
-                     @click="secede('ruleForm')"
->取 消</el-button>
-          <el-button
-size="small"
-                     type="primary"
-                     @click="submitForm()"
->修 改</el-button>
+type="primary"
+size="small" @click="submitForm()">修 改</el-button>
         </span>
       </el-dialog>
     </div>
     <!-- 转移学生 -->
     <el-dialog
-class="allstulog"
-               title="转移学生"
-               :visible.sync="zyStu"
-               width="30%"
-               :before-close="handleClose"
->
+      class="allstulog"
+      title="转移学生"
+      :visible.sync="zyStu"
+      width="30%"
+      :before-close="handleClose"
+    >
       <el-table
-ref="multipleTable"
-                highlight-current-row
-                style="width: 100%"
-                class="allstutab"
-                :data="all"
-                height="300"
-                @current-change="handleCurrentChange"
->
-        <el-table-column
-prop="name"
-                         label="姓名"
->
+        ref="multipleTable"
+        highlight-current-row
+        style="width: 100%"
+        class="allstutab"
+        :data="all"
+        height="300"
+        @current-change="handleCurrentChange"
+      >
+        <el-table-column prop="name" label="姓名">
           <template slot-scope="scope">
             <div style="height:100%">{{ scope.row.name }}</div>
           </template>
         </el-table-column>
-        <el-table-column
-prop="chengji"
-                         label="成绩"
->
+        <el-table-column prop="chengji" label="成绩">
           <template slot-scope="scope">
             <div>{{ scope.row.chengji }}</div>
           </template>
@@ -147,52 +93,63 @@ prop="chengji"
 
       <div style="position:relative">
         <el-select
-v-model="value1"
-                   style="padding-left:10px"
-                   filterable
-                   placeholder="请选择"
-                   @change="changeClass"
->
+          v-model="value1"
+          style="padding-left:10px"
+          filterable
+          placeholder="请选择"
+          @change="changeClass"
+        >
           <el-option
-v-for="item in classes"
-                     :key="item._id"
-                     :label="item.classname"
-                     :value="item.classname"
-                     :disabled="item.disabled"
-/>
+            v-for="item in classes"
+            :key="item._id"
+            :label="item.classname"
+            :value="item.classname"
+            :disabled="item.disabled"
+          />
         </el-select>
-        <br>
+        <br >
         <el-button
-style="margin:0px 10px;width:92%;position:absolute;bottom:0;"
-                   type="primary"
-                   @click="zyStus"
->转移</el-button>
+          style="margin:0px 10px;width:92%;position:absolute;bottom:0;"
+          type="primary"
+          @click="zyStus"
+        >转移</el-button>
       </div>
-      <span
-slot="footer"
-            class="dialog-footer"
->
-        <el-button
-size="small"
-                   @click="zyStu = false"
->关 闭</el-button>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="small" @click="zyStu = false">关 闭</el-button>
       </span>
     </el-dialog>
+    <pageCount
+      style="position:fixed;left:205px;bottom:20px;"
+      :total="total"
+      :page-size="pageSize"
+      :current-page="currentPage"
+      @getcurrentPage="getcurrentPage"
+    />
   </div>
 </template>
 
 <script>
 // 引入接口函数
 import {
-  getClass,
-  delClass,
-  updateClass,
-  allstudent,
-  getUpdate
-} from '../../api/api.js'
+  getClass, // 获取班级
+  delClass, // 删除班级
+  updateClass, // 修改班级信息
+  allstudent, // 所有学生信息
+  getUpdate, // 修改学生信息
+  getMajor, // 所有专业
+  // eslint-disable-next-line no-unused-vars
+  classPage // 班级分页
+} from '../../api/api.js';
+// 引入分页模块
+// eslint-disable-next-line no-unused-vars
+import pageCount from '../../components/Pagination/index';
 // 引入vuex权限
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 export default {
+  components: {
+    // eslint-disable-next-line vue/no-unused-components
+    pageCount
+  },
   data() {
     return {
       zyStu: false,
@@ -209,12 +166,12 @@ export default {
           label: '全部班级'
         },
         {
-          value: 'WEB架构',
-          label: 'WEB架构'
+          value: 'web',
+          label: 'web'
         },
         {
-          value: '视觉设计',
-          label: '视觉设计'
+          value: 'ui',
+          label: 'ui'
         }
       ],
       value: '全部班级',
@@ -243,6 +200,10 @@ export default {
       zyStuId: '', // 学生id
       multipleSelection: '',
       currentRow: null,
+      total: 1, // 数据总条数，默认给1
+      pageSize: 6, // 数据的总条数，默认是6条
+      currentPage: 1, // 总页数，默认是第1页
+      getMajor: [], // 所有专业
       power: true // 操作按钮权限
     }
   },
@@ -257,8 +218,13 @@ export default {
     }
   },
   async mounted() {
+    // 分页加学生接口调用
+    this.classPage(this.currentPage)
     const { data } = await getClass()
     this.classes = data.data
+    // 获取全部专业进行筛选
+    const allmajor = await getMajor()
+    this.getMajor = allmajor.data.data
     this.listLoading = false
   },
   methods: {
@@ -266,7 +232,12 @@ export default {
       const { data } = await getClass()
       this.classes = data.data
       if (data.code === 200) {
+        this.currentPage = this.currentPage - 1
+        this.handlegetHeadTeacher(this.currentPage)
         this.listLoading = false
+      } else {
+        this.classes = data.data
+        this.total = data.total
       }
     },
     // 删除班级
@@ -282,7 +253,6 @@ export default {
       this.allstudent = classstudents
       localStorage.setItem('datas', JSON.stringify(this.allstudent))
       this.all = JSON.parse(localStorage.getItem('datas'))
-      console.log(this.all)
       // 判断班里是否有学生
       if (this.all[0]) {
         // 若有学生，转移学生
@@ -299,6 +269,7 @@ export default {
             this.zyStu = true
             // eslint-disable-next-line handle-callback-err
           })
+          // eslint-disable-next-line handle-callback-err
           .catch(err => {
             this.$message({
               type: 'info',
@@ -319,10 +290,10 @@ export default {
         })
           .then(async res => {
             const { data } = await delClass(id)
-            console.log(data)
             if (data.code === 200) {
+              // eslint-disable-next-line no-unreachable
+              this.value = '全部班级';
               this.handlegetHeadTeacher()
-              this.op_click(this.xzmajor)
               return this.$message.success(data.msg)
             }
             this.$message({
@@ -331,6 +302,7 @@ export default {
             })
             // eslint-disable-next-line handle-callback-err
           })
+          // eslint-disable-next-line handle-callback-err
           .catch(err => {
             this.$message({
               type: 'info',
@@ -349,21 +321,18 @@ export default {
     // 选择专业
     async op_click(vel) {
       this.xzmajor = vel
-      const { data } = await getClass()
-      this.classes = data.data
-      // 筛选专业
-      var list = []
-      for (var i = 0; i < this.classes.length; i++) {
-        if (this.classes[i].major === vel || vel === '全部班级') {
-          list.push(this.classes[i])
-        }
+      if (this.xzmajor === '全部班级') {
+        // eslint-disable-next-line no-undef
+        const allList = await classPage(this.currentPage)
+        this.classes = allList.data.data
+        this.total = allList.data.total
+      } else {
+        // eslint-disable-next-line no-undef
+        this.classPage(this.currentPage)
       }
-      this.classes = list
-      console.log(this.classes)
     },
     // 修改
     update(index, row) {
-      console.log(row)
       this.rowlist = row
       this.show = true
       this.ruleForm.lecturer = row.lecturer
@@ -377,7 +346,6 @@ export default {
         lecturer: this.ruleForm.lecturer,
         headteacher: this.ruleForm.headteacher
       }
-      console.log(obj)
       const { data } = await updateClass(obj)
       if (
         obj.lecturer === this.rowlist.lecturer &&
@@ -386,14 +354,18 @@ export default {
         this.$message.success('没有任何修改')
         this.show = false
       } else if (data.code === 200) {
-        this.handlegetHeadTeacher()
+        if (this.xzmajor) {
+          this.op_click(this.xzmajor)
+        } else {
+          this.xzmajor = '全部班级';
+          this.op_click(this.xzmajor)
+        }
         this.$message.success('修改成功')
         this.show = false
       } else {
         this.$message.error(data.msg)
         return false
       }
-      this.op_click(this.xzmajor)
     },
     // 取消修改
     secede(formName) {
@@ -413,13 +385,11 @@ export default {
     },
     // 表格项
     handleCurrentChange(rows) {
-      console.log(rows)
       this.zyStuId = rows
     },
     // 选择的班级
     changeClass(vel) {
       this.changeStuClass = vel
-      console.log(this.classes)
     },
     // 点击转移
     async zyStus() {
@@ -455,15 +425,28 @@ export default {
           var num = this.all.indexOf(this.zyStuId)
           this.all.splice(num, 1)
           this.$message.success('转移成功！')
-          this.zyStuId = ''
+          this.zyStuId = '';
         }
       }
-      this.op_click(this.xzmajor)
+    },
+    // 调用子组件传过来的事件
+    getcurrentPage(currentPage) {
+      this.currentPage = currentPage
+      this.classPage(currentPage)
+    },
+    // 分页加学生接口调用
+    async classPage(page) {
+      if (this.xzmajor === '全部班级') {
+        this.xzmajor = '';
+      }
+      const { data } = await classPage(page, this.xzmajor)
+      this.classes = data.data
+      this.total = data.total
     }
   }
 }
 </script>
 
 <style scoped>
-@import './asset.scss';
+@import "./asset.scss";
 </style>

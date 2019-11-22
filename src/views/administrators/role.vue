@@ -54,11 +54,11 @@ v-show="isUpdate !== scope.row._id"
                      @click="updateClass(scope.row)"
 >修改</el-button>
           <el-button
-v-show="isUpdate !== scope.row._id"
-                     size="mini"
-                     type="danger"
-                     @click="handleDelete(scope.row._id)"
->销毁</el-button>
+            v-show="isUpdate !== scope.row._id"
+            size="mini"
+            type="danger"
+            @click="handleDelete(scope.row._id)"
+          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -112,6 +112,7 @@ export default {
         this.tableData[i].power = tableDatas
       }
     },
+
     // 删除一项
     handleDelete(id) {
       this.$confirm('此操作将永久删除该项, 是否继续?', '提示', {
@@ -130,6 +131,7 @@ export default {
             type: 'error'
           })
         })
+        // eslint-disable-next-line handle-callback-err
         .catch(error => {
           this.$message({
             type: 'info',

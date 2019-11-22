@@ -1,35 +1,19 @@
 <template>
   <div>
     <div class="add_class_s">
-      <el-form
-        ref="ruleForm"
-        :model="ruleForm"
-        :rules="rules"
-        label-width="100px"
-        class="demo-ruleForm"
-      >
+      <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
         <el-form-item label="班级名称" prop="classname">
           <el-input v-model="ruleForm.classname" />
         </el-form-item>
         <el-form-item label="选择专业" prop="major">
           <el-select v-model="ruleForm.major" placeholder="选择专业">
-            <el-option
-              v-for="site in getMajor"
-              :key="site.value"
-              :label="site.majorname"
-              :value="site.majorname"
-            />
+            <el-option v-for="site in getMajor" :key="site.value" :label="site.majorname" :value="site.majorname" />
           </el-select>
         </el-form-item>
         <el-form-item label="创建时间" required>
           <el-col :span="11">
             <el-form-item prop="createDate">
-              <el-date-picker
-                v-model="ruleForm.createDate"
-                type="date"
-                placeholder="选择日期"
-                style="width: 100%;"
-              />
+              <el-date-picker v-model="ruleForm.createDate" type="date" placeholder="选择日期" style="width: 100%;" />
             </el-form-item>
           </el-col>
         </el-form-item>
@@ -75,6 +59,9 @@ export default {
             message: '请选择日期',
             trigger: 'change'
           }
+        ],
+        major: [
+          { required: true, message: '请选择专业', trigger: 'change' }
         ]
       },
       path: '/form/index'
@@ -115,11 +102,11 @@ export default {
                 path: this.path // 跳转路由
               })
             })
-            .catch(() => {})
+            .catch(() => { })
         } else {
           this.$message({
             type: 'info',
-            message: '创建失败！'
+            message: '输入存在空项！'
           })
           return false
         }
@@ -132,5 +119,5 @@ export default {
 }
 </script>
 <style scoped>
-@import './asset.scss';
+@import "./asset.scss";
 </style>

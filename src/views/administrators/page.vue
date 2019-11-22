@@ -42,9 +42,7 @@
       </el-form-item>
       <!-- 操作按钮 -->
       <el-form-item>
-        <el-button
-type="primary"
-@click="submitForm('ruleForm')">提交</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
         <el-button @click="resetForm('ruleForm')">重置</el-button>
       </el-form-item>
       <!-- 复制 -->
@@ -136,6 +134,7 @@ export default {
           }
           const { data } = await register(this.ruleForm)
           if (data.code === '200') {
+            // eslint-disable-next-line no-sequences
             (this.dialogVisible = true),
             (this.message.message1 = data.message1)
             this.message.message2 = data.message2
