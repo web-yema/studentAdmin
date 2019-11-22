@@ -12,7 +12,7 @@
             <div class="card-panel-text">学生人数</div>
             <count-to
               :start-val="0"
-              :end-val="allstudent"
+              :end-val="getPage"
               :duration="2600"
               class="card-panel-num"
             />
@@ -23,7 +23,7 @@
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
         <div class="card-panel" @click="handleSetLineChartData('messages')">
           <div class="card-panel-icon-wrapper icon-message">
-            <svg-icon icon-class="message" class-name="card-panel-icon" />
+            <svg-icon icon-class="classgl" class-name="card-panel-icon" />
           </div>
           <div class="card-panel-description">
             <div class="card-panel-text">班级</div>
@@ -40,30 +40,30 @@
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
         <div class="card-panel" @click="handleSetLineChartData('purchases')">
           <div class="card-panel-icon-wrapper icon-money">
-            <svg-icon icon-class="money" class-name="card-panel-icon" />
+            <svg-icon icon-class="headmasterList" class-name="card-panel-icon" />
           </div>
           <div class="card-panel-description">
             <div class="card-panel-text">班主任</div>
             <count-to
               :start-val="0"
-              :end-val="9280"
+              :end-val="getHeadAll"
               :duration="3200"
               class="card-panel-num"
             />
           </div>
         </div>
       </el-col>
-      <!-- 购物 -->
+      <!-- 讲师 -->
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
         <div class="card-panel" @click="handleSetLineChartData('shoppings')">
           <div class="card-panel-icon-wrapper icon-shopping">
-            <svg-icon icon-class="shopping" class-name="card-panel-icon" />
+            <svg-icon icon-class="lecturer" class-name="card-panel-icon" />
           </div>
           <div class="card-panel-description">
-            <div class="card-panel-text">购物</div>
+            <div class="card-panel-text">讲师</div>
             <count-to
               :start-val="0"
-              :end-val="13600"
+              :end-val="getTeacherAll"
               :duration="3600"
               class="card-panel-num"
             />
@@ -79,7 +79,8 @@
 
 <script>
 import CountTo from 'vue-count-to';
-import { allstudent, getClass } from '@/api/api';
+import { getPage, getClass } from '@/api/api';
+import {getHeadAll,getTeacherAll} from '@/api/headAll.js'
 import EcharsZhu from './echars/echarszhu';
 
 const lineChartData = {
@@ -93,19 +94,29 @@ export default {
   components: { CountTo, EcharsZhu },
   data() {
     return {
-      allstudent: 0,
-      getClass: 0,
+      getPage: 0, // 学生
+      getClass: 0, // 班级
+      getHeadAll:0, // 班主任
+      getTeacherAll:0, // 讲师
       lineChartData: lineChartData.newVisitis
     };
   },
   async mounted() {
     // 获取学生总人数
-    const { data } = await allstudent();
-    this.allstudent = data.data.length;
+    const { data } = await getPage();
+    this.getPage = data.total;
+
     // 获取班级数量
     const Class = await getClass();
     this.getClass = Class.data.data.length;
+
     // 获取班主任总数量
+    const HeadAll = await getHeadAll();
+    this.getHeadAll = HeadAll.data.total;
+
+    // 获取讲师总数量
+    const TeacherAll = await getTeacherAll();
+    this.getTeacherAll = TeacherAll.data.total;
   }
 };
 </script>

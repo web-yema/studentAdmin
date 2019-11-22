@@ -221,7 +221,7 @@ export default {
         return false
       } else {
         // 获取到引入的json文件中的label值,然后转换成字符串,在把默认的逗号去掉
-        obj.nativeplace = this.$refs['cascaderAddr'].currentLabels.join('')
+        obj.nativeplace = this.$refs['cascaderAddr'].getCheckedNodes()[0].pathLabels.join('')
         const success = await getStudent(obj)
         if (success.data.code === 200) {
           this.clearList()
@@ -266,7 +266,7 @@ export default {
 <style scoped>
 .demo-input-size {
   width: 100%;
-  height: 750px;
+  height: 800px;
   margin-top: 15px;
 }
 .demo-input-smallsize {

@@ -79,7 +79,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .el-table td, .el-table th{
   padding: 12px 35px;
 }
