@@ -79,10 +79,7 @@ export default {
 }
 </script>
 
-<style scoped>
-.el-table td, .el-table th{
-  padding: 12px 35px;
-}
+<style >
 .addMajor{
   margin-top: 50px;
   float: right;

@@ -1,58 +1,48 @@
 <template>
   <div class="app-container">
-    <el-table
-v-loading="listLoading"
-              :data="tableData"
-              style="width: 150%"
->
-      <el-table-column
-label="名称"
-                       prop="adminName"
->
+    <el-table v-loading="listLoading" :data="tableData" style="width: 150%">
+      <el-table-column label="名称" prop="adminName" align="center">
         <template slot-scope="scope">
           <div>{{ scope.row.adminName }}</div>
         </template>
       </el-table-column>
-      <el-table-column
-label="权限"
-                       prop="power"
->
+      <el-table-column label="权限" prop="power" align="center">
         <template slot-scope="scope">
           <div v-show="isUpdate !== scope.row._id">{{ scope.row.power }}</div>
           <el-select
-v-show="isUpdate === scope.row._id"
-                     v-model="value"
-                     placeholder="请选择"
->
+            v-show="isUpdate === scope.row._id"
+            v-model="value"
+            placeholder="请选择"
+          >
             <el-option
-v-for="item in options"
-                       :key="item.value"
-                       :label="item.label"
-                       :value="item.value"
-/>
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
           </el-select>
         </template>
       </el-table-column>
-      <el-table-column align="right">
+      <el-table-column align="center" label="操作">
         <template slot-scope="scope">
           <el-button
-v-show="isUpdate === scope.row._id"
-                     size="mini"
-                     type="primary"
-                     @click="updateClassCancel()"
->取消</el-button>
+            v-show="isUpdate === scope.row._id"
+            size="mini"
+            type="primary"
+            @click="updateClassCancel()"
+          >取消</el-button>
           <el-button
-v-show="isUpdate === scope.row._id"
-                     size="mini"
-                     type="success"
-                     @click="updateClassSucess(scope.row._id)"
->确定</el-button>
+            v-show="isUpdate === scope.row._id"
+            size="mini"
+            type="success"
+            @click="updateClassSucess(scope.row._id)"
+          >确定</el-button>
           <el-button
-v-show="isUpdate !== scope.row._id"
-                     size="mini"
-                     type="primary"
-                     @click="updateClass(scope.row)"
->修改</el-button>
+            v-show="isUpdate !== scope.row._id"
+            size="mini"
+            type="primary"
+            @click="updateClass(scope.row)"
+          >修改</el-button>
           <el-button
             v-show="isUpdate !== scope.row._id"
             size="mini"
@@ -66,8 +56,8 @@ v-show="isUpdate !== scope.row._id"
 </template>
 
 <script>
-import { getAllAdmin, delAdmin } from '@/api/user'
-import { updateAdminPass } from '@/api/api'
+import { getAllAdmin, delAdmin } from '@/api/user';
+import { updateAdminPass } from '@/api/api';
 
 export default {
   data() {
@@ -105,9 +95,9 @@ export default {
       for (let i = 0; i < this.tableData.length; i++) {
         let tableDatas = this.tableData[i].power
         if (tableDatas === '2') {
-          tableDatas = '管理员'
+          tableDatas = '管理员';
         } else if (tableDatas === '3') {
-          tableDatas = '普通用户'
+          tableDatas = '普通用户';
         }
         this.tableData[i].power = tableDatas
       }
@@ -144,14 +134,14 @@ export default {
       this.update.power = row.power
       this.isUpdate = row._id
       if (this.update.power === '管理员') {
-        this.value = '2'
+        this.value = '2';
       } else if (this.update.power === '普通用户') {
-        this.value = '3'
+        this.value = '3';
       }
     },
     // 取消修改
     updateClassCancel() {
-      this.isUpdate = ''
+      this.isUpdate = '';
     },
     // 确定修改
     async updateClassSucess(id) {

@@ -148,7 +148,10 @@
       @getcurrentPage="getcurrentPage"
     />
     <!-- 导出excel表 -->
+    <<<<<<< HEAD
 
+    =======
+    >>>>>>> master
     <el-button
       v-if="power"
       size="mini"
@@ -284,11 +287,7 @@ export default {
     sliceJg(Array) {
       // eslint-disable-next-line no-undef
       for (let i = 0; i < Array.length; i++) {
-        // eslint-disable-next-line no-undef
-        if (!Array.length) {
-          return false
-        }
-        if (Array[i].nativeplace = '') {
+        if (Array[i].nativeplace === '') {
           continue
         } else if (
           Array[i].nativeplace.includes('黑龙江') ||
@@ -325,9 +324,13 @@ export default {
       const {
         data
       } = await getPage(page)
-      const sliceData = this.sliceJg(data.data) // 调用切割籍贯函数
-      this.tableData = sliceData
-      this.total = data.total
+      if (data.code === 200) {
+        const sliceData = this.sliceJg(data.data) // 调用切割籍贯函数
+        this.tableData = sliceData
+        this.total = data.total
+      } else {
+        this.$message.error('暂无数据!')
+      }
     },
     // 获取专业
     async Majors() {
@@ -367,14 +370,14 @@ export default {
       this.selectflag = true
       if (
         this.search.serName === '' &&
-                        this.search.serStudy === '' &&
-                        this.search.serMajor === '' &&
-                        this.search.serClasses === '' &&
-                        this.search.sercityCenter === '' &&
-                        this.search.serchengji.$gte === '' &&
-                        this.search.serchengji.$lte === '' &&
-                        this.search.sergraduation === '' &&
-                        this.search.serFailss === ''
+          this.search.serStudy === '' &&
+          this.search.serMajor === '' &&
+          this.search.serClasses === '' &&
+          this.search.sercityCenter === '' &&
+          this.search.serchengji.$gte === '' &&
+          this.search.serchengji.$lte === '' &&
+          this.search.sergraduation === '' &&
+          this.search.serFailss === ''
       ) {
         return false
       }
@@ -423,12 +426,12 @@ export default {
         // 处于搜索情况下
         if (
           this.search.serName === '' &&
-                            this.search.serStudy === '' &&
-                            this.search.serMajor === '' &&
-                            this.search.serClasses === '' &&
-                            this.search.serchengji === '' &&
-                            this.search.sercityCenter === '' &&
-                            this.search.serFailss === ''
+            this.search.serStudy === '' &&
+            this.search.serMajor === '' &&
+            this.search.serClasses === '' &&
+            this.search.serchengji === '' &&
+            this.search.sercityCenter === '' &&
+            this.search.serFailss === ''
         ) {
           this.$message.error('搜索不能全部为空!')
           this.excelshow = false // 不在则不显示导入框
@@ -445,45 +448,45 @@ export default {
     // 导出函数
     exportExcel() {
       this.exportLodding = true
-                        import('../../excel/Export2Excel.js').then(excel => {
-                          const tHeader = [
-                            '学号',
-                            '姓名',
-                            '籍贯',
-                            '性别',
-                            '年龄',
-                            '学制',
-                            '专业',
-                            '班级',
-                            '市场部',
-                            '当前成绩',
-                            '还差成绩',
-                            '挂科次数'
-                          ]
-                          const filterVal = [
-                            'studentID',
-                            'name',
-                            'nativeplace',
-                            'sex',
-                            'age',
-                            'study',
-                            'major',
-                            'classes',
-                            'citycenter',
-                            'chengji',
-                            'graduation',
-                            'failss'
-                          ]
-                          const data = this.formatJson(filterVal, this.tableData)
-                          excel.export_json_to_excel({
-                            header: tHeader,
-                            data,
-                            filename: '学生信息',
-                            autoWidth: true,
-                            bookType: 'xlsx'
-                          })
-                          this.exportLodding = false
-                        })
+        import('../../excel/Export2Excel.js').then(excel => {
+          const tHeader = [
+            '学号',
+            '姓名',
+            '籍贯',
+            '性别',
+            '年龄',
+            '学制',
+            '专业',
+            '班级',
+            '市场部',
+            '当前成绩',
+            '还差成绩',
+            '挂科次数'
+          ]
+          const filterVal = [
+            'studentID',
+            'name',
+            'nativeplace',
+            'sex',
+            'age',
+            'study',
+            'major',
+            'classes',
+            'citycenter',
+            'chengji',
+            'graduation',
+            'failss'
+          ]
+          const data = this.formatJson(filterVal, this.tableData)
+          excel.export_json_to_excel({
+            header: tHeader,
+            data,
+            filename: '学生信息',
+            autoWidth: true,
+            bookType: 'xlsx'
+          })
+          this.exportLodding = false
+        })
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v =>
