@@ -148,10 +148,6 @@
       @getcurrentPage="getcurrentPage"
     />
     <!-- 导出excel表 -->
-    <<<<<<< HEAD
-
-    =======
-    >>>>>>> master
     <el-button
       v-if="power"
       size="mini"
@@ -162,7 +158,7 @@
       @click="outExcel"
     >导出当页excel
     </el-button>
-    </el-button></div>
+    </div>
 </template>
 
 <script>
