@@ -60,7 +60,7 @@
         <el-button style="margin-top:10px" type="primary" size="small" @click="addstudent()">添加学生</el-button>
       </template>
     </div>
-
+    <!-- 导入-导出 -->
     <div v-if="power" style="position:fixed;right:50px;bottom:20px;z-index:1000;">
       <!-- 导出 -->
       <el-button size="mini" type="success" round :loading="downloadLoading" @click="handleDownload">导出当页excel</el-button>
@@ -99,7 +99,7 @@ export default {
   components: {
     pageCount
   },
-  data () {
+  data() {
     return {
       xgshow: false,
       plxgshow: false,
@@ -136,17 +136,17 @@ export default {
     ...mapGetters(['roles'])
   },
   watch: {
-    'allstudent': function (newVal) {
+    'allstudent': function(newVal) {
       this.all = newVal
     }
   },
   // '3' 代表的普通用户，普通用户登录会将操作按钮隐藏
-  created () {
+  created() {
     if (this.roles.includes('3')) {
       this.power = false
     }
   },
-  async mounted () {
+  async mounted() {
     const { data } = await allstudent()
     this.allstudent = data.data
     this.listLoading = false
@@ -167,14 +167,14 @@ export default {
   },
   methods: {
     // 保存选中的数据id,row-key就是要指定一个key标识这一行的数据
-    getRowKey (row) {
+    getRowKey(row) {
       return row.id
     },
     // async getStudata() {
 
     // },
     // 删除学生
-    remove (row) {
+    remove(row) {
       const h = this.$createElement
       this.$msgbox({
         title: '提示',
@@ -208,7 +208,7 @@ export default {
         })
     },
     // 修改
-    update (index, row) {
+    update(index, row) {
       this.xgshow = true
       this.plxgshow = false
       this.rowlist = row
@@ -220,7 +220,7 @@ export default {
       this.ruleForm.id = row._id
     },
     // 确定修改
-    async submitForm () {
+    async submitForm() {
       // 默认值
       const obj = {
         classes: this.ruleForm.classes,
@@ -250,7 +250,7 @@ export default {
       }
     },
     // 取消修改
-    secede (formName) {
+    secede(formName) {
       this.$refs[formName].resetFields()
       this.$message({
         type: 'info',
@@ -259,13 +259,13 @@ export default {
       this.show = false
     },
     // 添加
-    addstudent () {
+    addstudent() {
       this.$router.push({
         path: this.path // 跳转路由
       })
     },
     // 选择项
-    selsChange (sels) {
+    selsChange(sels) {
       this.sels = sels
       const all_Id = []
       for (let i = 0; i < sels.length; i++) {
@@ -274,13 +274,13 @@ export default {
       this.checkeds = all_Id
     },
     // 批量修改
-    updatesomestudent () {
+    updatesomestudent() {
       this.show = true
       this.xgshow = false
       this.plxgshow = true
     },
     // 确定批量修改
-    async plsubmitForm () {
+    async plsubmitForm() {
       const obj = {
         classes: this.ruleForm.classes,
         chengji: this.ruleForm.chengji,
@@ -310,7 +310,7 @@ export default {
       }
     },
     // 批量删除
-    soamdelstudent () {
+    soamdelstudent() {
       this.$confirm('此操作将永久删除这几项, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -330,7 +330,7 @@ export default {
         })
       })
     },
-    handleDownload () {
+    handleDownload() {
       this.downloadLoading = true
       import('../../../excel/Export2Excel.js').then(excel => {
         const tHeader = [
@@ -372,17 +372,17 @@ export default {
         this.downloadLoading = false
       })
     },
-    formatJson (filterVal, jsonData) {
+    formatJson(filterVal, jsonData) {
       return jsonData.map(v =>
         filterVal.map(j => {
           return v[j]
         })
       )
     },
-    handleInter () {
+    handleInter() {
       this.downloadLoading2 = true
     },
-    importfxx (obj) {
+    importfxx(obj) {
       const _this = this
       // eslint-disable-next-line no-unused-vars
       const inputDOM = this.$refs.inputer
@@ -392,7 +392,7 @@ export default {
       var f = this.file
       var reader = new FileReader()
       // if (!FileReader.prototype.readAsBinaryString) {
-      FileReader.prototype.readAsBinaryString = function (f) {
+      FileReader.prototype.readAsBinaryString = function(f) {
         var binary = ''
         var rABS = false // 是否将文件读取为二进制字符串
         // eslint-disable-next-line no-unused-vars
@@ -400,7 +400,7 @@ export default {
         var wb // 读取完成的数据
         var outdata
         var reader = new FileReader()
-        reader.onload = async function (e) {
+        reader.onload = async function(e) {
           var bytes = new Uint8Array(reader.result)
           var length = bytes.byteLength
           for (var i = 0; i < length; i++) {
@@ -462,12 +462,12 @@ export default {
       }
     },
     // 调用子组件传过来的事件
-    getcurrentPage (currentPage) {
+    getcurrentPage(currentPage) {
       this.currentPage = currentPage
       this.getPage(currentPage)
     },
     // 分页加学生接口调用
-    async getPage (page) {
+    async getPage(page) {
       const { data } = await getPage(page)
       this.all = data.data
       for (var i = 0; i < this.all.length; i++) {
@@ -480,7 +480,7 @@ export default {
       this.classstudents = []
     },
     // 切割籍贯函数
-    sliceJg (Array) {
+    sliceJg(Array) {
       // eslint-disable-next-line no-undef
       for (let i = 0; i < Array.length; i++) {
         // eslint-disable-next-line no-undef

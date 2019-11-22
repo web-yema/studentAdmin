@@ -1,12 +1,12 @@
 <template>
   <div class="app-container">
     <el-table v-loading="listLoading" :data="tableData" style="width: 150%">
-      <el-table-column label="名称" prop="adminName">
+      <el-table-column label="名称" prop="adminName" align="center">
         <template slot-scope="scope">
           <div>{{ scope.row.adminName }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="权限" prop="power">
+      <el-table-column label="权限" prop="power" align="center">
         <template slot-scope="scope">
           <div v-show="isUpdate !== scope.row._id">{{ scope.row.power }}</div>
           <el-select
@@ -23,7 +23,7 @@
           </el-select>
         </template>
       </el-table-column>
-      <el-table-column align="right">
+      <el-table-column align="center" label="操作">
         <template slot-scope="scope">
           <el-button
             v-show="isUpdate === scope.row._id"
