@@ -7,86 +7,35 @@
       </li>
       <li>
         <el-select v-model="search.serStudy" size="mini" placeholder="学制">
-          <el-option
-            v-for="item in upstudys"
-            :key="item.value"
-            size="mini"
-            :value="item.value"
-          />
+          <el-option v-for="item in upstudys" :key="item.value" size="mini" :value="item.value" />
         </el-select>
       </li>
       <li>
         <el-select v-model="search.serMajor" size="mini" placeholder="专业">
-          <el-option
-            v-for="item in upmajors"
-            :key="item.value"
-            size="mini"
-            :value="item.value"
-          />
+          <el-option v-for="item in upmajors" :key="item.value" size="mini" :value="item.value" />
         </el-select>
       </li>
       <li>
         <el-select v-model="search.serClasses" size="mini" placeholder="班级">
-          <el-option
-            v-for="item in upclasses"
-            :key="item.value"
-            size="mini"
-            :value="item.value"
-          />
+          <el-option v-for="item in upclasses" :key="item.value" size="mini" :value="item.value" />
         </el-select>
       </li>
       <li>
-        <el-select
-          v-model="search.sercityCenter"
-          size="mini"
-          placeholder="市场部"
-        >
-          <el-option
-            v-for="item in upcityCenters"
-            :key="item.value"
-            size="mini"
-            :value="item.value"
-          />
+        <el-select v-model="search.sercityCenter" size="mini" placeholder="市场部">
+          <el-option v-for="item in upcityCenters" :key="item.value" size="mini" :value="item.value" />
         </el-select>
       </li>
       <li class="chengji">
-        <el-input
-          v-model="search.serchengji.$gte"
-          type="number"
-          min="0"
-          max="39"
-          size="mini"
-          placeholder=">0"
-        />
+        <el-input v-model="search.serchengji.$gte" type="number" min="0" max="39" size="mini" placeholder=">0" />
         <span>-</span>
-        <el-input
-          v-model="search.serchengji.$lte"
-          type="number"
-          min="1"
-          max="40"
-          size="mini"
-          placeholder="<40"
-        />
+        <el-input v-model="search.serchengji.$lte" type="number" min="1" max="40" size="mini" placeholder="<40" />
       </li>
       <li>
-        <el-input
-          v-model="search.sergraduation"
-          size="mini"
-          placeholder="还差成绩"
-        />
+        <el-input v-model="search.sergraduation" size="mini" placeholder="还差成绩" />
       </li>
       <li>
-        <el-select
-          v-model="search.serFailss"
-          size="mini"
-          placeholder="挂科次数"
-        >
-          <el-option
-            v-for="item in searFail"
-            :key="item.value"
-            size="mini"
-            :value="item.value"
-          />
+        <el-select v-model="search.serFailss" size="mini" placeholder="挂科次数">
+          <el-option v-for="item in searFail" :key="item.value" size="mini" :value="item.value" />
         </el-select>
       </li>
       <li style="display:flex;">
@@ -97,34 +46,19 @@
     <el-table :data="tableData" style="width: 150%">
       <el-table-column label="学号">
         <template slot-scope="scope">
-          <el-input
-            v-if="scope.$index === updateShow"
-            v-model="studentID"
-            size="mini"
-            placeholder="请输入内容"
-          />
+          <el-input v-if="scope.$index === updateShow" v-model="studentID" size="mini" placeholder="请输入内容" />
           <div v-else>{{ tableData[scope.$index].studentID }}</div>
         </template>
       </el-table-column>
       <el-table-column label="姓名">
         <template slot-scope="scope">
-          <el-input
-            v-if="scope.$index === updateShow"
-            v-model="upname"
-            size="mini"
-            placeholder="请输入内容"
-          />
+          <el-input v-if="scope.$index === updateShow" v-model="upname" size="mini" placeholder="请输入内容" />
           <div v-else>{{ tableData[scope.$index].name }}</div>
         </template>
       </el-table-column>
       <el-table-column label="籍贯">
         <template slot-scope="scope">
-          <el-input
-            v-if="scope.$index === updateShow"
-            v-model="nativeplace"
-            size="mini"
-            placeholder="请输入内容"
-          />
+          <el-input v-if="scope.$index === updateShow" v-model="nativeplace" size="mini" placeholder="请输入内容" />
           <div v-else>{{ tableData[scope.$index].nativeplace }}</div>
         </template>
       </el-table-column>
@@ -140,12 +74,7 @@
       <el-table-column label="年龄">
         <template slot-scope="scope">
           <div v-if="scope.$index === updateShow">
-            <el-input
-              v-if="scope.$index === updateShow"
-              v-model="upage"
-              size="mini"
-              placeholder="请输入内容"
-            />
+            <el-input v-if="scope.$index === updateShow" v-model="upage" size="mini" placeholder="请输入内容" />
           </div>
           <div v-else>{{ tableData[scope.$index].age }}</div>
         </template>
@@ -164,12 +93,7 @@
         <template slot-scope="scope">
           <div v-if="scope.$index === updateShow">
             <el-select v-model="upclass" size="mini" placeholder="班级">
-              <el-option
-                v-for="item in upclasses"
-                :key="item"
-                size="mini"
-                :value="item"
-              />
+              <el-option v-for="item in upclasses" :key="item" size="mini" :value="item" />
             </el-select>
           </div>
           <div v-else>{{ tableData[scope.$index].classes }}</div>
@@ -179,12 +103,7 @@
         <template slot-scope="scope">
           <div v-if="scope.$index === updateShow">
             <el-select v-model="upcityCenter" size="mini" placeholder="市场部">
-              <el-option
-                v-for="item in upcityCenters"
-                :key="item"
-                size="mini"
-                :value="item"
-              />
+              <el-option v-for="item in upcityCenters" :key="item" size="mini" :value="item" />
             </el-select>
           </div>
           <div v-else>{{ tableData[scope.$index].citycenter }}</div>
@@ -192,12 +111,7 @@
       </el-table-column>
       <el-table-column label="当前成绩">
         <template slot-scope="scope">
-          <el-input
-            v-if="scope.$index === updateShow"
-            v-model="upchengji"
-            size="mini"
-            placeholder="请输入内容"
-          />
+          <el-input v-if="scope.$index === updateShow" v-model="upchengji" size="mini" placeholder="请输入内容" />
           <div v-else style="text-align:center">
             {{ tableData[scope.$index].chengji }}
           </div>
@@ -205,12 +119,7 @@
       </el-table-column>
       <el-table-column label="还差成绩">
         <template slot-scope="scope">
-          <el-input
-            v-if="scope.$index === updateShow"
-            v-model="upgraduation"
-            size="mini"
-            placeholder="请输入内容"
-          />
+          <el-input v-if="scope.$index === updateShow" v-model="upgraduation" size="mini" placeholder="请输入内容" />
           <div v-else style="text-align:center">
             {{ tableData[scope.$index].graduation }}
           </div>
@@ -218,12 +127,7 @@
       </el-table-column>
       <el-table-column label="挂科次数">
         <template slot-scope="scope">
-          <el-input
-            v-if="scope.$index === updateShow"
-            v-model="upFail"
-            size="mini"
-            placeholder="请输入内容"
-          />
+          <el-input v-if="scope.$index === updateShow" v-model="upFail" size="mini" placeholder="请输入内容" />
           <div v-else style="text-align:center">
             {{ tableData[scope.$index].failss }}
           </div>
@@ -231,11 +135,7 @@
       </el-table-column>
       <el-table-column align="right">
         <template slot-scope="scope">
-          <el-button
-            v-if="scope.$index === updateShow"
-            size="mini"
-            type="primary"
-          >确定</el-button>
+          <el-button v-if="scope.$index === updateShow" size="mini" type="primary">确定</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -272,7 +172,9 @@ import {
 } from '../../api/api.js'
 
 // 引入vuex
-import { mapGetters } from 'vuex'
+import {
+  mapGetters
+} from 'vuex'
 
 // 引入分页模板
 import Pageoption from '../../components/Pagination'
@@ -313,19 +215,18 @@ export default {
         serFailss: '' // 挂科次数
       },
       // 学制选项
-      upstudys: [
-        {
-          value: '1'
-        },
-        {
-          value: '2'
-        },
-        {
-          value: '3'
-        },
-        {
-          value: '4'
-        }
+      upstudys: [{
+        value: '1'
+      },
+      {
+        value: '2'
+      },
+      {
+        value: '3'
+      },
+      {
+        value: '4'
+      }
       ],
       // 专业选项
       upmajors: [],
@@ -334,19 +235,18 @@ export default {
       // 市场部选项
       upcityCenters: [],
       //  搜索挂科次数选项
-      searFail: [
-        {
-          value: '0次'
-        },
-        {
-          value: '1次'
-        },
-        {
-          value: '2次'
-        },
-        {
-          value: '3次及以上'
-        }
+      searFail: [{
+        value: '0次'
+      },
+      {
+        value: '1次'
+      },
+      {
+        value: '2次'
+      },
+      {
+        value: '3次及以上'
+      }
       ],
       // 学生的下标
       index: 0,
@@ -383,18 +283,19 @@ export default {
     sliceJg(Array) {
       // eslint-disable-next-line no-undef
       for (let i = 0; i < Array.length; i++) {
-        // eslint-disable-next-line no-undef
-        if (
+        if (Array[i].nativeplace === '') {
+          continue
+        } else if (
           Array[i].nativeplace.includes('黑龙江') ||
-          Array[i].nativeplace.includes('内蒙古')
+            Array[i].nativeplace.includes('内蒙古')
         ) {
           // eslint-disable-next-line no-undef
           Array[i].nativeplace = Array[i].nativeplace.slice(0, 3)
         } else {
           Array[i].nativeplace = Array[i].nativeplace.slice(0, 2)
         }
+        return Array
       }
-      return Array
     },
     async selectallstud(page, obj) {
       const searchSuc = await selectAllstud(page, obj)
@@ -416,14 +317,22 @@ export default {
     },
     // 分页加学生接口调用
     async getPage(page) {
-      const { data } = await getPage(page)
-      const sliceData = this.sliceJg(data.data) // 调用切割籍贯函数
-      this.tableData = sliceData
-      this.total = data.total
+      const {
+        data
+      } = await getPage(page)
+      if (data.code === 200) {
+        const sliceData = this.sliceJg(data.data) // 调用切割籍贯函数
+        this.tableData = sliceData
+        this.total = data.total
+      } else {
+        this.$message.error('暂无数据!')
+      }
     },
     // 获取专业
     async Majors() {
-      const { data } = await getMajor()
+      const {
+        data
+      } = await getMajor()
       for (let i = 0; i < data.data.length; i++) {
         this.upmajors.push({
           value: data.data[i].majorname
@@ -432,7 +341,9 @@ export default {
     },
     // 获取班级
     async Classs() {
-      const { data } = await getClass()
+      const {
+        data
+      } = await getClass()
       for (let i = 0; i < data.data.length; i++) {
         this.upclasses.push({
           value: data.data[i].classname
@@ -441,7 +352,9 @@ export default {
     },
     // 获取市场部
     async CityCenters() {
-      const { data } = await getMarketing()
+      const {
+        data
+      } = await getMarketing()
       for (let i = 0; i < data.data.length; i++) {
         this.upcityCenters.push({
           value: data.data[i].marketname
@@ -453,14 +366,14 @@ export default {
       this.selectflag = true
       if (
         this.search.serName === '' &&
-        this.search.serStudy === '' &&
-        this.search.serMajor === '' &&
-        this.search.serClasses === '' &&
-        this.search.sercityCenter === '' &&
-        this.search.serchengji.$gte === '' &&
-        this.search.serchengji.$lte === '' &&
-        this.search.sergraduation === '' &&
-        this.search.serFailss === ''
+          this.search.serStudy === '' &&
+          this.search.serMajor === '' &&
+          this.search.serClasses === '' &&
+          this.search.sercityCenter === '' &&
+          this.search.serchengji.$gte === '' &&
+          this.search.serchengji.$lte === '' &&
+          this.search.sergraduation === '' &&
+          this.search.serFailss === ''
       ) {
         return false
       }
@@ -509,12 +422,12 @@ export default {
         // 处于搜索情况下
         if (
           this.search.serName === '' &&
-          this.search.serStudy === '' &&
-          this.search.serMajor === '' &&
-          this.search.serClasses === '' &&
-          this.search.serchengji === '' &&
-          this.search.sercityCenter === '' &&
-          this.search.serFailss === ''
+            this.search.serStudy === '' &&
+            this.search.serMajor === '' &&
+            this.search.serClasses === '' &&
+            this.search.serchengji === '' &&
+            this.search.sercityCenter === '' &&
+            this.search.serFailss === ''
         ) {
           this.$message.error('搜索不能全部为空!')
           this.excelshow = false // 不在则不显示导入框
@@ -531,45 +444,45 @@ export default {
     // 导出函数
     exportExcel() {
       this.exportLodding = true
-      import('../../excel/Export2Excel.js').then(excel => {
-        const tHeader = [
-          '学号',
-          '姓名',
-          '籍贯',
-          '性别',
-          '年龄',
-          '学制',
-          '专业',
-          '班级',
-          '市场部',
-          '当前成绩',
-          '还差成绩',
-          '挂科次数'
-        ]
-        const filterVal = [
-          'studentID',
-          'name',
-          'nativeplace',
-          'sex',
-          'age',
-          'study',
-          'major',
-          'classes',
-          'citycenter',
-          'chengji',
-          'graduation',
-          'failss'
-        ]
-        const data = this.formatJson(filterVal, this.tableData)
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          filename: '学生信息',
-          autoWidth: true,
-          bookType: 'xlsx'
+        import('../../excel/Export2Excel.js').then(excel => {
+          const tHeader = [
+            '学号',
+            '姓名',
+            '籍贯',
+            '性别',
+            '年龄',
+            '学制',
+            '专业',
+            '班级',
+            '市场部',
+            '当前成绩',
+            '还差成绩',
+            '挂科次数'
+          ]
+          const filterVal = [
+            'studentID',
+            'name',
+            'nativeplace',
+            'sex',
+            'age',
+            'study',
+            'major',
+            'classes',
+            'citycenter',
+            'chengji',
+            'graduation',
+            'failss'
+          ]
+          const data = this.formatJson(filterVal, this.tableData)
+          excel.export_json_to_excel({
+            header: tHeader,
+            data,
+            filename: '学生信息',
+            autoWidth: true,
+            bookType: 'xlsx'
+          })
+          this.exportLodding = false
         })
-        this.exportLodding = false
-      })
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v =>
@@ -583,29 +496,35 @@ export default {
 </script>
 
 <style>
-.searchbox-bs-002 {
-  width: 100%;
-  display: flex;
-  align-items: center;
-}
-.searchbox-bs-002 > li {
-  width: 10%;
-  margin-left: 20px;
-  margin-top: 15px;
-  margin-bottom: 15px;
-  list-style: none;
-}
-.chengji {
-  display: flex;
-}
-.chengji span {
-  display: inline-block;
-  margin: 5px 0 0 0;
-}
-.chengji .el-input__inner {
-  padding: 0 0 0 0;
-}
-.el-table td, .el-table th {
-  text-align:center;
-}
+  .searchbox-bs-002 {
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  .searchbox-bs-002>li {
+    width: 10%;
+    margin-left: 20px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    list-style: none;
+  }
+
+  .chengji {
+    display: flex;
+  }
+
+  .chengji span {
+    display: inline-block;
+    margin: 5px 0 0 0;
+  }
+
+  .chengji .el-input__inner {
+    padding: 0 0 0 0;
+  }
+
+  .el-table td,
+  .el-table th {
+    text-align: center;
+  }
 </style>
