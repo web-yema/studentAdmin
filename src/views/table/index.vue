@@ -179,11 +179,11 @@
     <Pageoption style="position:fixed;left:205px;bottom:20px;" :total="total" :page-size="pageSize" :current-page="currentPage" @getcurrentPage="getcurrentPage" />
     <!-- 导出excel表 -->
     <el-button
+      v-if="power"
       size="mini"
       :loading="exportLodding"
       type="success"
       round
-      v-if="power"
       style="position:fixed;right:5px;bottom:20px;"
       @click="outExcel"
     >导出当页excel

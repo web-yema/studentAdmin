@@ -46,6 +46,7 @@
                 align="right"
                 type="date"
                 placeholder="选择日期"
+                :editable="false"
                 :picker-options="pickerOptions"
               />
             </el-form-item>
@@ -125,29 +126,38 @@ export default {
         entryDate: this.btn(),
         position: this.ruleForm.job
       }
+      if (person.entryDate === 'NaN-NaN-NaN') {
+        const date = new Date()
+        person.entryDate =
+          date.getFullYear() +
+          '-' +
+          (date.getMonth() + 1) +
+          '-' +
+          date.getDate()
+      }
       // 判断如果填入信息有一项为空，提示用户提交信息中存在空项
-      if (
-        person.headname.trim() === '' ||
-        person.headsex === '' ||
-        person.college === '' ||
-        person.headage === '' ||
-        person.entryDate === '' ||
-        person.position.trim() === ''
-      ) {
-        this.$message.error('提交信息中存在空项!')
-        return false
-      }
-      const { data } = await addHead(person)
-      if (data.code === 200) {
-        // 如果code码为200，提示用户添加成功，并清空信息
-        this.$message.success(data.message)
-        this.$refs[formName].resetFields()
-      } else if (data.code === 203) {
-        // 如果code码为203，提示用户该班主任已经存在，并清空信息
-        this.$message.error(data.message)
-        this.$refs[formName].resetFields()
-        return false
-      }
+      // if (
+      //   person.headname.trim() === '' ||
+      //   person.headsex === '' ||
+      //   person.college === '' ||
+      //   person.headage === '' ||
+      //   person.entryDate === '' ||
+      //   person.position.trim() === ''
+      // ) {
+      //   this.$message.error('提交信息中存在空项!')
+      //   return false
+      // }
+      // const { data } = await addHead(person)
+      // if (data.code === 200) {
+      //   // 如果code码为200，提示用户添加成功，并清空信息
+      //   this.$message.success(data.message)
+      //   this.$refs[formName].resetFields()
+      // } else if (data.code === 203) {
+      //   // 如果code码为203，提示用户该班主任已经存在，并清空信息
+      //   this.$message.error(data.message)
+      //   this.$refs[formName].resetFields()
+      //   return false
+      // }
     },
     resetForm(formName) {
       // 清空信息

@@ -55,7 +55,8 @@
           type="primary"
           style="width:100%;margin-bottom:30px;"
           @click.native.prevent="handleLogin"
-        >登录</el-button>
+          >登录</el-button
+        >
       </el-form>
     </div>
     <CopyrightNotice />
@@ -63,92 +64,96 @@
 </template>
 
 <script>
-import CopyrightNotice from '@/components/CopyrightNotice/index'
-import '@/assets/css/style.css'
-import branch from '@/assets/js/script.js'
+import axios from "axios";
+import CopyrightNotice from "@/components/CopyrightNotice/index";
+import "@/assets/css/style.css";
+import branch from "@/assets/js/script.js";
 export default {
-  name: 'Login',
+  name: "Login",
   components: {
     CopyrightNotice
   },
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入正确的用户名'))
+      if (value === "") {
+        callback(new Error("请输入正确的用户名"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error(' 密码不能小于6位'))
+        callback(new Error(" 密码不能小于6位"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     return {
       loginForm: {
-        username: '',
-        password: '',
-        loginFlag: ''
+        username: "",
+        password: "",
+        loginFlag: ""
       },
       loginRules: {
         username: [
-          { required: true, trigger: 'blur', validator: validateUsername }
+          { required: true, trigger: "blur", validator: validateUsername }
         ],
         password: [
-          { required: true, trigger: 'blur', validator: validatePassword }
+          { required: true, trigger: "blur", validator: validatePassword }
         ]
       },
       loading: false,
-      passwordType: 'password',
+      passwordType: "password",
       redirect: undefined
-    }
+    };
   },
   watch: {
     $route: {
       handler: function(route) {
-        this.redirect = route.query && route.query.redirect
+        this.redirect = route.query && route.query.redirect;
       },
       immediate: true
     }
   },
   mounted() {
-    branch(this.$refs.canvas)
+    axios.get("http://132.232.89.22:8080/allstudent").then(res => {
+      console.log(res);
+    });
+    branch(this.$refs.canvas);
   },
   methods: {
     // 显示密码
     showPwd() {
-      if (this.passwordType === 'password') {
-        this.passwordType = ''
+      if (this.passwordType === "password") {
+        this.passwordType = "";
       } else {
-        this.passwordType = 'password'
+        this.passwordType = "password";
       }
       this.$nextTick(() => {
-        this.$refs.password.focus()
-      })
+        this.$refs.password.focus();
+      });
     },
     // 登录按钮事件
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          this.loading = true
+          this.loading = true;
           this.$store
-            .dispatch('user/login', this.loginForm)
+            .dispatch("user/login", this.loginForm)
             .then(() => {
-              this.$router.push({ path: this.redirect || '/' })
-              this.loading = false
+              this.$router.push({ path: this.redirect || "/" });
+              this.loading = false;
             })
             .catch(() => {
-              this.loading = false
-            })
+              this.loading = false;
+            });
         } else {
-          return false
+          return false;
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 
 <style lang="scss">
@@ -246,7 +251,7 @@ $light_gray: #eee;
       color: $light_gray;
       margin: 0px auto 40px auto;
       text-align: center;
-      font-family: Microsoft Yahei !important;
+      font-family: STXingkai;
     }
   }
 

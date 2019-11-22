@@ -1,54 +1,64 @@
 <template>
   <div class="app-container">
-    <el-table v-loading="listLoading" :data="tableData" style="width: 150%">
-      <el-table-column label="名称" prop="adminName">
+    <el-table
+v-loading="listLoading"
+              :data="tableData"
+              style="width: 150%"
+>
+      <el-table-column
+label="名称"
+                       prop="adminName"
+>
         <template slot-scope="scope">
           <div>{{ scope.row.adminName }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="权限" prop="power">
+      <el-table-column
+label="权限"
+                       prop="power"
+>
         <template slot-scope="scope">
           <div v-show="isUpdate !== scope.row._id">{{ scope.row.power }}</div>
           <el-select
-            v-show="isUpdate === scope.row._id"
-            v-model="value"
-            placeholder="请选择"
-          >
+v-show="isUpdate === scope.row._id"
+                     v-model="value"
+                     placeholder="请选择"
+>
             <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
+v-for="item in options"
+                       :key="item.value"
+                       :label="item.label"
+                       :value="item.value"
+/>
           </el-select>
         </template>
       </el-table-column>
       <el-table-column align="right">
         <template slot-scope="scope">
           <el-button
-            v-show="isUpdate === scope.row._id"
-            size="mini"
-            type="primary"
-            @click="updateClassCancel()"
-          >取消</el-button>
+v-show="isUpdate === scope.row._id"
+                     size="mini"
+                     type="primary"
+                     @click="updateClassCancel()"
+>取消</el-button>
           <el-button
-            v-show="isUpdate === scope.row._id"
-            size="mini"
-            type="success"
-            @click="updateClassSucess(scope.row._id)"
-          >确定</el-button>
+v-show="isUpdate === scope.row._id"
+                     size="mini"
+                     type="success"
+                     @click="updateClassSucess(scope.row._id)"
+>确定</el-button>
           <el-button
-            v-show="isUpdate !== scope.row._id"
-            size="mini"
-            type="primary"
-            @click="updateClass(scope.row)"
-          >修改</el-button>
+v-show="isUpdate !== scope.row._id"
+                     size="mini"
+                     type="primary"
+                     @click="updateClass(scope.row)"
+>修改</el-button>
           <el-button
-            v-show="isUpdate !== scope.row._id"
-            size="mini"
-            type="danger"
-            @click="handleDelete(scope.row._id)"
-          >销毁</el-button>
+v-show="isUpdate !== scope.row._id"
+                     size="mini"
+                     type="danger"
+                     @click="handleDelete(scope.row._id)"
+>销毁</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -119,7 +129,8 @@ export default {
             message: data.msg,
             type: 'error'
           })
-        }).catch(error => {
+        })
+        .catch(error => {
           this.$message({
             type: 'info',
             message: '已取消删除'

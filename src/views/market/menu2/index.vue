@@ -1,12 +1,20 @@
 <template>
   <div style="padding:30px;">
     <el-alert :closable="false">
-      <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
+      <el-form
+        ref="ruleForm"
+        :model="ruleForm"
+        :rules="rules"
+        label-width="100px"
+        class="demo-ruleForm"
+      >
         <el-form-item label="市场部名称" prop="name">
           <el-input v-model="ruleForm.name" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm('ruleForm')">确定</el-button>
+          <el-button
+type="primary"
+@click="submitForm('ruleForm')">确定</el-button>
           <el-button @click="resetForm('ruleForm')">清空</el-button>
         </el-form-item>
       </el-form>

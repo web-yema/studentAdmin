@@ -11,7 +11,12 @@
             </div>
             <div class="card-panel-description">
               <div class="card-panel-text">学生人数</div>
-              <count-to :start-val="0" :end-val="allstudent" :duration="2600" class="card-panel-num" />
+              <count-to
+                :start-val="0"
+                :end-val="allstudent"
+                :duration="2600"
+                class="card-panel-num"
+              />
             </div>
           </div>
         </el-col>
@@ -23,7 +28,12 @@
             </div>
             <div class="card-panel-description">
               <div class="card-panel-text">班级</div>
-              <count-to :start-val="0" :end-val="getClass" :duration="3000" class="card-panel-num" />
+              <count-to
+                :start-val="0"
+                :end-val="getClass"
+                :duration="3000"
+                class="card-panel-num"
+              />
             </div>
           </div>
         </el-col>
@@ -35,7 +45,12 @@
             </div>
             <div class="card-panel-description">
               <div class="card-panel-text">班主任</div>
-              <count-to :start-val="0" :end-val="9280" :duration="3200" class="card-panel-num" />
+              <count-to
+                :start-val="0"
+                :end-val="9280"
+                :duration="3200"
+                class="card-panel-num"
+              />
             </div>
           </div>
         </el-col>
@@ -47,7 +62,12 @@
             </div>
             <div class="card-panel-description">
               <div class="card-panel-text">购物</div>
-              <count-to :start-val="0" :end-val="13600" :duration="3600" class="card-panel-num" />
+              <count-to
+                :start-val="0"
+                :end-val="13600"
+                :duration="3600"
+                class="card-panel-num"
+              />
             </div>
           </div>
         </el-col>
@@ -61,36 +81,34 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import CountTo from "vue-count-to";
-import { allstudent,getClass } from "@/api/api";
-import EcharsZhu from "./echars/echarszhu";
+import CountTo from 'vue-count-to'
+import { allstudent, getClass } from '@/api/api'
+import EcharsZhu from './echars/echarszhu'
 export default {
   name: 'Dashboard',
   components: { CountTo, EcharsZhu },
   data() {
     return {
       allstudent: 0,
-      getClass:0
-    };
+      getClass: 0
+    }
   },
   async mounted() {
     // 获取学生总人数
-    let { data } = await allstudent();
-    this.allstudent = data.data.length;
+    const { data } = await allstudent()
+    this.allstudent = data.data.length
     // 获取班级数量
-    let  Class = await getClass();
-    this.getClass = Class.data.data.length;
+    const Class = await getClass()
+    this.getClass = Class.data.data.length
     // 获取班主任总数量
   },
-   methods: {
+  methods: {
     handleSetLineChartData(type) {
       this.$emit('handleSetLineChartData', type)
     }
   },
   computed: {
-    ...mapGetters([
-      'name'
-    ])
+    ...mapGetters(['name'])
   }
 }
 </script>
