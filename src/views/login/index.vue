@@ -68,9 +68,9 @@
 </template>
 
 <script>
-import CopyrightNotice from '@/components/CopyrightNotice/index';
-import '@/assets/css/style.css';
-import branch from '@/assets/js/script.js';
+import CopyrightNotice from '@/components/CopyrightNotice/index'
+import '@/assets/css/style.css'
+import branch from '@/assets/js/script.js'
 export default {
   name: 'Login',
   components: {
@@ -119,18 +119,15 @@ export default {
     }
   },
   mounted() {
-    axios.get('http://132.232.89.22:8080/allstudent').then(res => {
-      console.log(res)
-    })
     branch(this.$refs.canvas)
   },
   methods: {
     // 显示密码
     showPwd() {
       if (this.passwordType === 'password') {
-        this.passwordType = '';
+        this.passwordType = ''
       } else {
-        this.passwordType = 'password';
+        this.passwordType = 'password'
       }
       this.$nextTick(() => {
         this.$refs.password.focus()
