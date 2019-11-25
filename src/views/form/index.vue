@@ -56,8 +56,10 @@
         <span slot="footer" class="dialog-footer">
           <el-button size="small" @click="secede('ruleForm')">取 消</el-button>
           <el-button
-type="primary"
-size="small" @click="submitForm()">修 改</el-button>
+            type="primary"
+            size="small"
+            @click="submitForm()"
+          >修 改</el-button>
         </span>
       </el-dialog>
     </div>
@@ -107,7 +109,7 @@ size="small" @click="submitForm()">修 改</el-button>
             :disabled="item.disabled"
           />
         </el-select>
-        <br >
+        <br>
         <el-button
           style="margin:0px 10px;width:92%;position:absolute;bottom:0;"
           type="primary"
@@ -142,12 +144,12 @@ import {
   getMajor, // 所有专业
   // eslint-disable-next-line no-unused-vars
   classPage // 班级分页
-} from '../../api/api.js';
+} from '../../api/api.js'
 // 引入分页模块
 // eslint-disable-next-line no-unused-vars
-import pageCount from '../../components/Pagination/index';
+import pageCount from '../../components/Pagination/index'
 // 引入vuex权限
-import { mapGetters } from 'vuex';
+import { mapGetters } from 'vuex'
 export default {
   components: {
     // eslint-disable-next-line vue/no-unused-components
@@ -250,6 +252,7 @@ export default {
             .then(async res => {
               this.zyStu = true
             })
+            // eslint-disable-next-line handle-callback-err
             .catch(err => {
               this.$message({
                 type: 'info',
@@ -329,7 +332,7 @@ export default {
         if (this.xzmajor) {
           this.op_click(this.xzmajor)
         } else {
-          this.xzmajor = '全部班级';
+          this.xzmajor = '全部班级'
           this.op_click(this.xzmajor)
         }
         this.$message.success('修改成功')
@@ -394,7 +397,7 @@ export default {
           var num = this.all.indexOf(this.zyStuId)
           this.all.splice(num, 1)
           this.$message.success('转移成功！')
-          this.zyStuId = '';
+          this.zyStuId = ''
         }
       }
     },
@@ -406,7 +409,7 @@ export default {
     // 分页加班级接口调用
     async classPage(page) {
       if (this.xzmajor === '全部班级') {
-        this.xzmajor = '';
+        this.xzmajor = ''
       }
       const { data } = await classPage(page, this.xzmajor)
       if (data.code === 202) {

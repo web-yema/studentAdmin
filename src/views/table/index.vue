@@ -283,7 +283,7 @@ export default {
     sliceJg(Array) {
       // eslint-disable-next-line no-undef
       for (let i = 0; i < Array.length; i++) {
-        if (Array[i].nativeplace === '') {
+        if (Array[i].nativeplace === '' || Array[i].nativeplace === null || Array[i].nativeplace === undefined) {
           continue
         } else if (
           Array[i].nativeplace.includes('黑龙江') ||

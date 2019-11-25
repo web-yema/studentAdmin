@@ -17,11 +17,11 @@
           min-width="50"
         />
         <el-table-column prop="studentID" label="学号" />
-        <el-table-column prop="nativeplace" min-width="90" label="籍贯" />
         <el-table-column prop="name" label="姓名" />
         <el-table-column prop="sex" min-width="50" label="性别" />
         <el-table-column prop="age" min-width="50" label="年龄" />
         <el-table-column prop="study" min-width="50" label="学制" />
+        <el-table-column prop="nativeplace" min-width="90" label="籍贯" />
         <el-table-column prop="major" min-width="50" label="专业" />
         <el-table-column prop="classes" min-width="90" label="班级" />
         <el-table-column prop="citycenter" min-width="90" label="市场部" />
@@ -36,8 +36,10 @@
               @click="update(scope.$index, scope.row)"
             >修改</el-button>
             <el-button
-type="danger"
-size="mini" @click="remove(scope.row)">删除</el-button>
+              type="danger"
+              size="mini"
+              @click="remove(scope.row)"
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -181,14 +183,14 @@ import {
   updateStudent, // 批量修改
   selectAllstud, // 查询学生
   getExcel
-} from '../../../api/api.js';
+} from '../../../api/api.js'
 // 分页模块
-import pageCount from '../../../components/Pagination/index';
+import pageCount from '../../../components/Pagination/index'
 // Excel模块
 // eslint-disable-next-line no-unused-vars
-import UploadExcel from '../../../components/UploadExcel/index';
+import UploadExcel from '../../../components/UploadExcel/index'
 // 引入vuex 权限
-import { mapGetters } from 'vuex';
+import { mapGetters } from 'vuex'
 export default {
   components: {
     pageCount
@@ -240,6 +242,7 @@ export default {
     // 接收存储数据
     this.getClass = JSON.parse(localStorage.getItem('data'))
     this.selectStud()
+    this.listLoading = false
   },
   methods: {
     // 保存选中的数据id,row-key就是要指定一个key标识这一行的数据
@@ -256,6 +259,7 @@ export default {
         this.delpage = optionstu.data.delpage
         this.listLoading = false
       }
+      this.sliceJg(this.all)
     },
     // 删除学生
     remove(row) {
@@ -273,8 +277,9 @@ export default {
             if (res.data.code === 201) {
               this.$message.error(res.data.msg)
             } else {
-              if(this.currentPage !== 1){
-                this.currentPage = this.currentPage -1
+              if (this.all.length === 1) {
+                this.currentPage = this.currentPage - 1
+                this.deltotal = this.deltotal - 1
               }
               this.selectStud()
               this.$message({
@@ -346,7 +351,10 @@ export default {
     // 添加
     addstudent() {
       this.$router.push({
-        path: this.path // 跳转路由
+        path: this.path, // 跳转路由
+        query: {
+          value: '/form/classstudent'
+        }
       })
     },
     // 选择项
@@ -405,6 +413,10 @@ export default {
             if (res.data.code === 201) {
               this.$message.error(res.data.msg)
             } else {
+              if (this.all.length === 1) {
+                this.currentPage = this.currentPage - 1
+                this.deltotal = this.deltotal - 1
+              }
               this.selectStud()
               this.$refs.multipleTable.clearSelection()
               this.$message({
@@ -480,7 +492,7 @@ export default {
       var reader = new FileReader()
       // if (!FileReader.prototype.readAsBinaryString) {
       FileReader.prototype.readAsBinaryString = function(f) {
-        var binary = '';
+        var binary = ''
         var rABS = false // 是否将文件读取为二进制字符串
         // eslint-disable-next-line no-unused-vars
         var pt = this
@@ -543,9 +555,9 @@ export default {
           const para = {
             QwithList: arr
           }
-        };
+        }
         reader.readAsArrayBuffer(f)
-      };
+      }
       if (rABS) {
         reader.readAsArrayBuffer(f)
       } else {
@@ -562,8 +574,8 @@ export default {
     sliceJg(Array) {
       // eslint-disable-next-line no-undef
       for (let i = 0; i < Array.length; i++) {
-        if (!Array[i].nativeplace.length) {
-          return false
+        if (Array[i].nativeplace === '' || Array[i].nativeplace === null || Array[i].nativeplace === undefined) {
+          continue
         } else if (
           Array[i].nativeplace.includes('黑龙江') ||
           Array[i].nativeplace.includes('内蒙古')
