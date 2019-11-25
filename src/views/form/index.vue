@@ -249,9 +249,7 @@ export default {
           })
             .then(async res => {
               this.zyStu = true
-              // eslint-disable-next-line handle-callback-err
             })
-            // eslint-disable-next-line handle-callback-err
             .catch(err => {
               this.$message({
                 type: 'info',

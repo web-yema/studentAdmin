@@ -4,6 +4,7 @@
     <!-- 列表 -->
     <div class="table_divs">
       <el-table
+        ref="multipleTable"
         v-loading="listLoading"
         :row-key="getRowKey"
         :data="all"
@@ -13,21 +14,21 @@
         <el-table-column
           :reserve-selection="true"
           type="selection"
-          width="55"
+          min-width="50"
         />
-        <el-table-column prop="classes" label="班级" />
-        <el-table-column prop="name" label="姓名" />
-        <el-table-column prop="sex" label="性别" />
-        <el-table-column prop="age" label="年龄" />
-        <el-table-column prop="major" label="专业" />
-        <el-table-column prop="citycenter" label="市场部" />
-        <el-table-column prop="chengji" label="已有成绩" />
-        <el-table-column prop="graduation" label="还差成绩" />
-        <el-table-column prop="failss" label="挂科次数" />
-        <el-table-column prop="study" label="学制" />
-        <el-table-column prop="nativeplace" label="籍贯" />
         <el-table-column prop="studentID" label="学号" />
-        <el-table-column v-if="power" label="操作" min-width="180">
+        <el-table-column prop="nativeplace" min-width="90" label="籍贯" />
+        <el-table-column prop="name" label="姓名" />
+        <el-table-column prop="sex" min-width="50" label="性别" />
+        <el-table-column prop="age" min-width="50" label="年龄" />
+        <el-table-column prop="study" min-width="50" label="学制" />
+        <el-table-column prop="major" min-width="50" label="专业" />
+        <el-table-column prop="classes" min-width="90" label="班级" />
+        <el-table-column prop="citycenter" min-width="90" label="市场部" />
+        <el-table-column prop="chengji" width="80" label="当前成绩" />
+        <el-table-column prop="graduation" width="80" label="还差成绩" />
+        <el-table-column prop="failss" width="80" label="挂科次数" />
+        <el-table-column v-if="power" label="操作" min-width="150">
           <template slot-scope="scope">
             <el-button
               type="primary"
@@ -92,7 +93,7 @@ size="mini" @click="remove(scope.row)">删除</el-button>
     </div>
     <div
       v-if="power"
-      style="position:fixed;bottom:100px;margin-left:10px;z-index:1000"
+      style="position:fixed;bottom:20px;margin-left:10px;z-index:1000"
     >
       <!-- 批量删除 -->
       <template>
@@ -155,7 +156,7 @@ size="mini" @click="remove(scope.row)">删除</el-button>
       </label>
     </div>
     <pageCount
-      style="position:fixed;left:205px;bottom:20px;z-index:1000"
+      style="position:fixed;left:600px;bottom:20px;z-index:1000"
       :total="total"
       :page-size="pageSize"
       :current-page="currentPage"
@@ -219,8 +220,9 @@ export default {
       checkeds: [], // 批量删除选中id
       updateShow: 100000, // 最大匹配的值
       total: 1, // 数据总条数，默认给1
-      pageSize: 6, // 数据的总条数，默认是6条
+      pageSize: 7, // 数据的总条数，默认是6条
       currentPage: 1, // 当前页数，默认是第1页
+      delpage: [], // 页数
       power: true // 操作按钮权限
     }
   },
@@ -251,6 +253,7 @@ export default {
       if (optionstu.data.code === 200) {
         this.all = optionstu.data.data
         this.total = optionstu.data.total
+        this.delpage = optionstu.data.delpage
         this.listLoading = false
       }
     },
@@ -270,6 +273,9 @@ export default {
             if (res.data.code === 201) {
               this.$message.error(res.data.msg)
             } else {
+              if(this.currentPage !== 1){
+                this.currentPage = this.currentPage -1
+              }
               this.selectStud()
               this.$message({
                 message: res.data.msg,
@@ -400,6 +406,7 @@ export default {
               this.$message.error(res.data.msg)
             } else {
               this.selectStud()
+              this.$refs.multipleTable.clearSelection()
               this.$message({
                 message: res.data.msg,
                 type: 'success'
@@ -551,7 +558,6 @@ export default {
       // this.sliceJg(this.all)
       this.selectStud()
     },
-    // 分页加学生接口调用
     // 切割籍贯函数
     sliceJg(Array) {
       // eslint-disable-next-line no-undef
