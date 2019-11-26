@@ -3,24 +3,43 @@
   <div class="top_option" style="overflow-x: none">
     <!-- 列表 -->
     <div class="table_divs">
-      <el-table v-loading="listLoading" :row-key="getRowKey" :data="all" style="width: 100%;" @selection-change="selsChange">
-        <el-table-column :reserve-selection="true" type="selection" width="55" />
-        <el-table-column prop="classes" label="班级" />
-        <el-table-column prop="name" label="姓名" />
-        <el-table-column prop="sex" label="性别" />
-        <el-table-column prop="age" label="年龄" />
-        <el-table-column prop="major" label="专业" />
-        <el-table-column prop="citycenter" label="市场部" />
-        <el-table-column prop="chengji" label="已有成绩" />
-        <el-table-column prop="graduation" label="还差成绩" />
-        <el-table-column prop="failss" label="挂科次数" />
-        <el-table-column prop="study" label="学制" />
-        <el-table-column prop="nativeplace" label="籍贯" />
+      <el-table
+        ref="multipleTable"
+        v-loading="listLoading"
+        :row-key="getRowKey"
+        :data="all"
+        style="width: 100%"
+        @selection-change="selsChange"
+      >
+        <el-table-column
+          :reserve-selection="true"
+          type="selection"
+          min-width="50"
+        />
         <el-table-column prop="studentID" label="学号" />
-        <el-table-column v-if="power" label="操作" min-width="180">
+        <el-table-column prop="name" label="姓名" />
+        <el-table-column prop="sex" min-width="50" label="性别" />
+        <el-table-column prop="age" min-width="50" label="年龄" />
+        <el-table-column prop="study" min-width="50" label="学制" />
+        <el-table-column prop="nativeplace" min-width="90" label="籍贯" />
+        <el-table-column prop="major" min-width="50" label="专业" />
+        <el-table-column prop="classes" min-width="90" label="班级" />
+        <el-table-column prop="citycenter" min-width="90" label="市场部" />
+        <el-table-column prop="chengji" width="80" label="当前成绩" />
+        <el-table-column prop="graduation" width="80" label="还差成绩" />
+        <el-table-column prop="failss" width="80" label="挂科次数" />
+        <el-table-column v-if="power" label="操作" min-width="150">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="update(scope.$index, scope.row)">修改</el-button>
-            <el-button type="danger" size="mini" @click="remove(scope.row)">删除</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="update(scope.$index, scope.row)"
+            >修改</el-button>
+            <el-button
+              type="danger"
+              size="mini"
+              @click="remove(scope.row)"
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -33,9 +52,6 @@
           <el-form-item label="已有成绩" prop="chengji">
             <el-input v-model="ruleForm.chengji" oninput="value=value.replace(/[^\d.]/g,'')" maxlength="2" />
           </el-form-item>
-          <el-form-item label="还差成绩" prop="graduation">
-            <el-input v-model="ruleForm.graduation" oninput="value=value.replace(/[^\d.]/g,'')" maxlength="2" />
-          </el-form-item>
           <el-form-item label="挂科次数" prop="failss">
             <el-input v-model="ruleForm.failss" oninput="value=value.replace(/[^\d.]/g,'')" maxlength="2" />
           </el-form-item>
@@ -47,7 +63,10 @@
         </span>
       </el-dialog>
     </div>
-    <div v-if="power" style="position:fixed;bottom:100px;margin-left:10px;z-index:1000">
+    <div
+      v-if="power"
+      style="position:fixed;bottom:20px;margin-left:10px;z-index:1000"
+    >
       <!-- 批量删除 -->
       <template>
         <el-button style="margin-top:10px" type="danger" size="small" :disabled="this.sels.length === 0" @click="soamdelstudent()">批量删除</el-button>
@@ -77,7 +96,7 @@
       </label>
     </div>
     <pageCount
-      style="position:fixed;left:205px;bottom:20px;z-index:1000"
+      style="position:fixed;left:600px;bottom:20px;z-index:1000"
       :total="total"
       :page-size="pageSize"
       :current-page="currentPage"
@@ -181,9 +200,7 @@ import pageCount from '../../../components/Pagination/index'
 // eslint-disable-next-line no-unused-vars
 import UploadExcel from '../../../components/UploadExcel/index'
 // 引入vuex 权限
-import {
-  mapGetters
-} from 'vuex'
+import { mapGetters } from 'vuex'
 export default {
   components: {
     pageCount
@@ -210,17 +227,19 @@ export default {
         id: ''
       },
       rowlist: [], // 修改旧值
+      study: [], // 学制
       path: '/example/tree',
       sels: [], // 选中的值显示
       checkeds: [], // 批量删除选中id
       updateShow: 100000, // 最大匹配的值
       total: 1, // 数据总条数，默认给1
-      pageSize: 6, // 数据的总条数，默认是6条
+      pageSize: 7, // 数据的总条数，默认是6条
       currentPage: 1, // 当前页数，默认是第1页
       power: true, // 操作按钮权限
       dialogVisible: false, // 导入时，重复的学生显示弹出框
       exists: [], // 导入-数据库中已存在的数据
       checkList: [], // 重复学生表单中的多选框
+      delpage: [], // 页数
     }
   },
   // vuex 权限
@@ -237,6 +256,7 @@ export default {
     // 接收存储数据
     this.getClass = JSON.parse(localStorage.getItem('data'))
     this.selectStud()
+    this.listLoading = false
   },
   methods: {
     // 保存选中的数据id,row-key就是要指定一个key标识这一行的数据
@@ -250,8 +270,10 @@ export default {
       if (optionstu.data.code === 200) {
         this.all = optionstu.data.data
         this.total = optionstu.data.total
+        this.delpage = optionstu.data.delpage
         this.listLoading = false
       }
+      this.sliceJg(this.all)
     },
     // 删除学生
     remove(row) {
@@ -269,6 +291,10 @@ export default {
             if (res.data.code === 201) {
               this.$message.error(res.data.msg)
             } else {
+              if (this.all.length === 1) {
+                this.currentPage = this.currentPage - 1
+                this.deltotal = this.deltotal - 1
+              }
               this.selectStud()
               this.$message({
                 message: res.data.msg,
@@ -294,18 +320,19 @@ export default {
       this.show = true
       this.ruleForm.classes = row.classes
       this.ruleForm.chengji = row.chengji
-      this.ruleForm.graduation = row.graduation
       this.ruleForm.failss = row.failss
       this.ruleForm.id = row._id
+      this.study = row.study
     },
     // 确定修改
     async submitForm() {
+      const graduation = this.study * 10 - this.ruleForm.chengji
       // 默认值
       const obj = {
         classes: this.ruleForm.classes,
         chengji: this.ruleForm.chengji,
-        graduation: this.ruleForm.graduation,
-        failss: this.ruleForm.failss
+        failss: this.ruleForm.failss,
+        graduation: graduation
       }
       const ID = this.ruleForm.id
       const {
@@ -314,9 +341,8 @@ export default {
       // 判断值是否改变
       if (
         obj.classes === this.rowlist.classes &&
-          obj.chengji === this.rowlist.chengji &&
-          obj.graduation === this.rowlist.graduation &&
-          obj.failss === this.rowlist.failss
+        obj.chengji === this.rowlist.chengji &&
+        obj.failss === this.rowlist.failss
       ) {
         this.$message.info('没有任何修改')
         this.show = false
@@ -341,7 +367,10 @@ export default {
     // 添加
     addstudent() {
       this.$router.push({
-        path: this.path // 跳转路由
+        path: this.path, // 跳转路由
+        query: {
+          value: '/form/classstudent'
+        }
       })
     },
     // 选择项
@@ -355,6 +384,12 @@ export default {
     },
     // 批量修改
     updatesomestudent() {
+      this.sels.forEach((item, index) => {
+        this.sels[index] = item.study
+      })
+      this.ruleForm.classes = ''
+      this.ruleForm.chengji = ''
+      this.ruleForm.failss = ''
       this.show = true
       this.xgshow = false
       this.plxgshow = true
@@ -364,7 +399,6 @@ export default {
       const obj = {
         classes: this.ruleForm.classes,
         chengji: this.ruleForm.chengji,
-        graduation: this.ruleForm.graduation,
         failss: this.ruleForm.failss
       }
       if (obj.classes === '') {
@@ -372,22 +406,34 @@ export default {
       }
       if (obj.chengji === '') {
         delete obj.chengji
-      }
-      if (obj.graduation === '') {
-        delete obj.graduation
+      } else {
+        for (var i = 0; i < this.sels.length; i++) {
+          if (this.sels.length > 1 && this.sels[0] !== this.sels[1]) {
+            this.$message.error('年制不同，修改失败')
+            this.show = false
+            this.$refs.multipleTable.clearSelection()
+            return false
+          } else {
+            const key = 'graduation'
+            obj[key] = this.sels[i] * 10 - obj.chengji
+          }
+        }
       }
       if (obj.failss === '') {
         delete obj.failss
       }
-      const {
-        data
-      } = await updateStudent(this.checkeds, obj)
-      if (data.code === 200) {
-        this.$message.success('修改成功')
-        this.show = false
-        this.selectStud()
+      if (!obj.classes && !obj.chengji && !obj.failss) {
+        this.$message.error('没有任何修改')
       } else {
-        this.$message.error(data.msg)
+        const { data } = await updateStudent(this.checkeds, obj)
+        if (data.code === 200) {
+          this.selectStud()
+          this.$refs.multipleTable.clearSelection()
+          this.$message.success('修改成功')
+          this.show = false
+        } else {
+          this.$message.error(data.msg)
+        }
       }
     },
     // 批量删除
@@ -402,7 +448,12 @@ export default {
             if (res.data.code === 201) {
               this.$message.error(res.data.msg)
             } else {
+              if (this.all.length === 1) {
+                this.currentPage = this.currentPage - 1
+                this.deltotal = this.deltotal - 1
+              }
               this.selectStud()
+              this.$refs.multipleTable.clearSelection()
               this.$message({
                 message: res.data.msg,
                 type: 'success'
@@ -555,13 +606,12 @@ export default {
       // this.sliceJg(this.all)
       this.selectStud()
     },
-    // 分页加学生接口调用
     // 切割籍贯函数
     sliceJg(Array) {
       // eslint-disable-next-line no-undef
       for (let i = 0; i < Array.length; i++) {
-        if (!Array[i].nativeplace.length) {
-          return false
+        if (Array[i].nativeplace === '' || Array[i].nativeplace === null || Array[i].nativeplace === undefined) {
+          continue
         } else if (
           Array[i].nativeplace.includes('黑龙江') ||
             Array[i].nativeplace.includes('内蒙古')

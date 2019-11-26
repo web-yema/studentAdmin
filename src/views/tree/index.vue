@@ -163,16 +163,21 @@ export default {
       // 市场部选项
       cityCenters: [],
       // 地区选项
-      options: []
+      options: [],
+      patho: [] // 班级路径
     }
   },
   mounted() {
+    this.getRouterData()
     this.Majors() // 专业接口调用
     this.Classs() // 班级接口调用
     this.CityCenters() // 市场部调用
     this.options = City // 地区调用
   },
   methods: {
+    getRouterData() {
+      this.patho = this.$route.query.value
+    },
     async Majors() {
       // 获取专业
       const { data } = await getMajor()
@@ -242,21 +247,45 @@ export default {
         const success = await getStudent(obj)
         if(success.data.code === 200) {
           this.clearList()
-          this.$confirm(`${success.data.msg},是否跳转至学生列表页`,'提示',{
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            this.$router.push({
-              name: 'All',
-              params: { maxpage: success.data.maxpages }
+          if (this.patho === undefined) {
+            this.$confirm(`${success.data.msg},是否跳转至学生列表页`, '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
             })
-          }).catch(() => {
-            this.$message({
-              type: 'info',
-              message: '取消跳转'
+              .then(() => {
+                this.$router.push({
+                  name: 'All',
+                  params: { maxpage: success.data.maxpages }
+                }) // 如果想在push里传递params参数，就必须用路由对应的name跳转
+              })
+              .catch(() => {
+                this.$message({
+                  type: 'info',
+                  message: '取消跳转'
+                })
+              })
+          } else {
+            this.$confirm(`${success.data.msg},是否跳转至班级学生页`, '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
             })
-          })
+              .then(() => {
+                this.$router.push({
+                  name: '班级成员',
+                  params: { maxpage: success.data.maxpages }
+                }) // 如果想在push里传递params参数，就必须用路由对应的name跳转
+              })
+              .catch(() => {
+                this.$message({
+                  type: 'info',
+                  message: '取消跳转'
+                })
+              })
+          }
+        } else {
+          this.$message.error(success.data.msg)
         }
       }
     },
