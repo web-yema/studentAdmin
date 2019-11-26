@@ -61,13 +61,6 @@
               maxlength="2"
             />
           </el-form-item>
-          <el-form-item label="还差成绩" prop="graduation">
-            <el-input
-              v-model="ruleForm.graduation"
-              oninput="value=value.replace(/[^\d.]/g,'')"
-              maxlength="2"
-            />
-          </el-form-item>
           <el-form-item label="挂科次数" prop="failss">
             <el-input
               v-model="ruleForm.failss"
@@ -217,6 +210,7 @@ export default {
         id: ''
       },
       rowlist: [], // 修改旧值
+      study: [], // 学制
       path: '/example/tree',
       sels: [], // 选中的值显示
       checkeds: [], // 批量删除选中id
@@ -306,18 +300,19 @@ export default {
       this.show = true
       this.ruleForm.classes = row.classes
       this.ruleForm.chengji = row.chengji
-      this.ruleForm.graduation = row.graduation
       this.ruleForm.failss = row.failss
       this.ruleForm.id = row._id
+      this.study = row.study
     },
     // 确定修改
     async submitForm() {
+      const graduation = this.study * 10 - this.ruleForm.chengji
       // 默认值
       const obj = {
         classes: this.ruleForm.classes,
         chengji: this.ruleForm.chengji,
-        graduation: this.ruleForm.graduation,
-        failss: this.ruleForm.failss
+        failss: this.ruleForm.failss,
+        graduation: graduation
       }
       const ID = this.ruleForm.id
       const { data } = await updateAllstud(ID, obj)
@@ -325,7 +320,6 @@ export default {
       if (
         obj.classes === this.rowlist.classes &&
         obj.chengji === this.rowlist.chengji &&
-        obj.graduation === this.rowlist.graduation &&
         obj.failss === this.rowlist.failss
       ) {
         this.$message.info('没有任何修改')
@@ -368,6 +362,12 @@ export default {
     },
     // 批量修改
     updatesomestudent() {
+      this.sels.forEach((item, index) => {
+        this.sels[index] = item.study
+      })
+      this.ruleForm.classes = ''
+      this.ruleForm.chengji = ''
+      this.ruleForm.failss = ''
       this.show = true
       this.xgshow = false
       this.plxgshow = true
@@ -377,7 +377,6 @@ export default {
       const obj = {
         classes: this.ruleForm.classes,
         chengji: this.ruleForm.chengji,
-        graduation: this.ruleForm.graduation,
         failss: this.ruleForm.failss
       }
       if (obj.classes === '') {
@@ -385,20 +384,34 @@ export default {
       }
       if (obj.chengji === '') {
         delete obj.chengji
-      }
-      if (obj.graduation === '') {
-        delete obj.graduation
+      } else {
+        for (var i = 0; i < this.sels.length; i++) {
+          if (this.sels.length > 1 && this.sels[0] !== this.sels[1]) {
+            this.$message.error('年制不同，修改失败')
+            this.show = false
+            this.$refs.multipleTable.clearSelection()
+            return false
+          } else {
+            const key = 'graduation'
+            obj[key] = this.sels[i] * 10 - obj.chengji
+          }
+        }
       }
       if (obj.failss === '') {
         delete obj.failss
       }
-      const { data } = await updateStudent(this.checkeds, obj)
-      if (data.code === 200) {
-        this.$message.success('修改成功')
-        this.show = false
-        this.selectStud()
+      if (!obj.classes && !obj.chengji && !obj.failss) {
+        this.$message.error('没有任何修改')
       } else {
-        this.$message.error(data.msg)
+        const { data } = await updateStudent(this.checkeds, obj)
+        if (data.code === 200) {
+          this.selectStud()
+          this.$refs.multipleTable.clearSelection()
+          this.$message.success('修改成功')
+          this.show = false
+        } else {
+          this.$message.error(data.msg)
+        }
       }
     },
     // 批量删除
