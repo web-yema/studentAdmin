@@ -53,7 +53,7 @@
         <el-button
           :loading="loading"
           type="primary"
-          style="width:60%;margin-bottom:30px; margin-right:10px;"
+          style="width:55%;margin-bottom:30px; margin-right:10px;"
           @click.native.prevent="handleLogin"
         >登录</el-button>
         <el-button
@@ -68,9 +68,9 @@
 </template>
 
 <script>
-import CopyrightNotice from '@/components/CopyrightNotice/index';
-import '@/assets/css/style.css';
-import branch from '@/assets/js/script.js';
+import CopyrightNotice from '@/components/CopyrightNotice/index'
+import '@/assets/css/style.css'
+import branch from '@/assets/js/script.js'
 export default {
   name: 'Login',
   components: {
@@ -125,9 +125,9 @@ export default {
     // 显示密码
     showPwd() {
       if (this.passwordType === 'password') {
-        this.passwordType = '';
+        this.passwordType = ''
       } else {
-        this.passwordType = 'password';
+        this.passwordType = 'password'
       }
       this.$nextTick(() => {
         this.$refs.password.focus()
