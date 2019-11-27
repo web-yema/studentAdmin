@@ -110,3 +110,8 @@ export const addallStudent = (data) => {
 export const selectOneStudent = (data) => {
   return Axios.post('http://132.232.89.22:8080/selectOneStudent', data)
 }
+
+// Excel导入学生时修改重复项
+export const updateExcelstudent = (data) => {
+  return Axios.post('http://132.232.89.22:8080/updateExcelstudent', data)
+}

@@ -1,25 +1,45 @@
+/* eslint-disable no-constant-condition */
 <template>
-  <div class="top_option">
+  <div class="top_option" style="overflow-x: none">
     <!-- 列表 -->
     <div class="table_divs">
-      <el-table v-loading="listLoading" :data="all" style="width: 100%" @selection-change="selsChange">
-        <el-table-column :reserve-selection="true" type="selection" width="55" />
-        <el-table-column prop="classes" label="班级" />
-        <el-table-column prop="name" label="姓名" />
-        <el-table-column prop="sex" label="性别" />
-        <el-table-column prop="age" label="年龄" />
-        <el-table-column prop="major" label="专业" />
-        <el-table-column prop="citycenter" label="市场部" />
-        <el-table-column prop="chengji" label="已有成绩" />
-        <el-table-column prop="graduation" label="还差成绩" />
-        <el-table-column prop="failss" label="挂科次数" />
-        <el-table-column prop="study" label="学制" />
-        <el-table-column prop="nativeplace" label="籍贯" />
+      <el-table
+        ref="multipleTable"
+        v-loading="listLoading"
+        :row-key="getRowKey"
+        :data="all"
+        style="width: 100%"
+        @selection-change="selsChange"
+      >
+        <el-table-column
+          :reserve-selection="true"
+          type="selection"
+          min-width="50"
+        />
         <el-table-column prop="studentID" label="学号" />
-        <el-table-column v-if="power" label="操作" min-width="180">
+        <el-table-column prop="name" label="姓名" />
+        <el-table-column prop="sex" min-width="50" label="性别" />
+        <el-table-column prop="age" min-width="50" label="年龄" />
+        <el-table-column prop="study" min-width="50" label="学制" />
+        <el-table-column prop="nativeplace" min-width="90" label="籍贯" />
+        <el-table-column prop="major" min-width="50" label="专业" />
+        <el-table-column prop="classes" min-width="90" label="班级" />
+        <el-table-column prop="citycenter" min-width="90" label="市场部" />
+        <el-table-column prop="chengji" width="80" label="当前成绩" />
+        <el-table-column prop="graduation" width="80" label="还差成绩" />
+        <el-table-column prop="failss" width="80" label="挂科次数" />
+        <el-table-column v-if="power" label="操作" min-width="150">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="update(scope.$index, scope.row)">修改</el-button>
-            <el-button type="danger" size="mini" @click="remove(scope.row)">删除</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="update(scope.$index, scope.row)"
+            >修改</el-button>
+            <el-button
+              type="danger"
+              size="mini"
+              @click="remove(scope.row)"
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -32,9 +52,6 @@
           <el-form-item label="已有成绩" prop="chengji">
             <el-input v-model="ruleForm.chengji" oninput="value=value.replace(/[^\d.]/g,'')" maxlength="2" />
           </el-form-item>
-          <el-form-item label="还差成绩" prop="graduation">
-            <el-input v-model="ruleForm.graduation" oninput="value=value.replace(/[^\d.]/g,'')" maxlength="2" />
-          </el-form-item>
           <el-form-item label="挂科次数" prop="failss">
             <el-input v-model="ruleForm.failss" oninput="value=value.replace(/[^\d.]/g,'')" maxlength="2" />
           </el-form-item>
@@ -46,7 +63,10 @@
         </span>
       </el-dialog>
     </div>
-    <div v-if="power" style="position:fixed;bottom:100px;margin-left:10px;z-index:1000">
+    <div
+      v-if="power"
+      style="position:fixed;bottom:20px;margin-left:10px;z-index:1000"
+    >
       <!-- 批量删除 -->
       <template>
         <el-button style="margin-top:10px" type="danger" size="small" :disabled="this.sels.length === 0" @click="soamdelstudent()">批量删除</el-button>
@@ -60,17 +80,99 @@
         <el-button style="margin-top:10px" type="primary" size="small" @click="addstudent()">添加学生</el-button>
       </template>
     </div>
-    <!-- 导入-导出 -->
+
     <div v-if="power" style="position:fixed;right:50px;bottom:20px;z-index:1000;">
       <!-- 导出 -->
       <el-button size="mini" type="success" round :loading="downloadLoading" @click="handleDownload">导出当页excel</el-button>
       <!-- 导入 -->
       <label class="fileinp">
         <input type="button" class="btn" value="导入excel" round @click="handleInter">
-        <input type="file" class="fileinpd" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" @change="importfxx(this)">
+        <input
+          type="file"
+          class="fileinpd"
+          accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+          @change="importfxx(this)"
+        >
       </label>
     </div>
-    <pageCount style="position:fixed;left:205px;bottom:20px;z-index:1000" :total="total" :page-size="pageSize" :current-page="currentPage" @getcurrentPage="getcurrentPage" />
+    <pageCount
+      style="position:fixed;left:600px;bottom:20px;z-index:1000"
+      :total="total"
+      :page-size="pageSize"
+      :current-page="currentPage"
+      @getcurrentPage="getcurrentPage"
+    />
+    <div class="duplicate-item">
+      <el-dialog
+        title="重复学生名单"
+        :visible.sync="dialogVisible"
+        width="87%"
+        :center="true"
+        :show-close="false"
+        :close-on-press-escape="false"
+        :close-on-click-modal="false"
+      >
+       <div class="Duplicate">
+       <table class="Duplicate-form">
+         <tr>
+           <th>学号</th>
+           <th>姓名</th>
+           <th>班级</th>
+           <th>性别</th>
+           <th>年龄</th>
+           <th>专业</th>
+           <th>市场部</th>
+           <th>已有成绩</th>
+           <th>还差成绩</th>
+           <th>挂科次数</th>
+           <th>学制</th>
+           <th>籍贯</th>
+         </tr>
+         <template v-for="item in exists">
+          <tr v-for="(items,index) in item">
+          <template v-if="index==0">
+          <td>{{items.studentID}}</td>
+              <td>{{items.name}}</td>
+              <td>{{items.classes}}</td>
+              <td>{{items.sex}}</td>
+              <td>{{items.age}}</td>
+              <td>{{items.major}}</td>
+              <td>{{items.citycenter}}</td>
+              <td>{{items.chengji}}</td>
+              <td>{{items.graduation}}</td>
+              <td>{{items.failss}}</td>
+              <td>{{items.study}}</td>
+              <td>{{items.nativeplace}}</td>
+          </template>
+          
+          <el-checkbox-group v-else v-model="checkList" id="Currentimport">
+            <el-checkbox class="Currentimport-checkbox" :label="items"> 
+              <td>{{items.studentID}}</td>
+              <td>{{items.name}}</td>
+              <td>{{items.classes}}</td>
+              <td>{{items.sex}}</td>
+              <td>{{items.age}}</td>
+              <td>{{items.major}}</td>
+              <td>{{items.citycenter}}</td>
+              <td>{{items.chengji}}</td>
+              <td>{{items.graduation}}</td>
+              <td>{{items.failss}}</td>
+              <td>{{items.study}}</td>
+              <td>{{items.nativeplace}}</td>
+            </el-checkbox>
+          </el-checkbox-group>
+            
+          </tr>
+         </template>
+          </table>
+       </div>
+
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="Confirmreplacement">确 定</el-button>
+        </span>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -80,6 +182,7 @@
 import {
   // eslint-disable-next-line no-unused-vars
   getPage, // 学生分页
+  // eslint-disable-next-line no-unused-vars
   allstudent,
   updateAllstud,
   // eslint-disable-next-line no-unused-vars
@@ -87,11 +190,14 @@ import {
   // eslint-disable-next-line no-unused-vars
   addallStudent,
   updateStudent, // 批量修改
-  getExcel
+  selectAllstud, // 查询学生
+  getExcel,
+  updateExcelstudent // 导入修改
 } from '../../../api/api.js'
-// 分页模块
+  // 分页模块
 import pageCount from '../../../components/Pagination/index'
 // Excel模块
+// eslint-disable-next-line no-unused-vars
 import UploadExcel from '../../../components/UploadExcel/index'
 // 引入vuex 权限
 import { mapGetters } from 'vuex'
@@ -121,24 +227,24 @@ export default {
         id: ''
       },
       rowlist: [], // 修改旧值
+      study: [], // 学制
       path: '/example/tree',
       sels: [], // 选中的值显示
       checkeds: [], // 批量删除选中id
       updateShow: 100000, // 最大匹配的值
       total: 1, // 数据总条数，默认给1
-      pageSize: 6, // 数据的总条数，默认是6条
-      currentPage: 1, // 总页数，默认是第1页
-      power: true // 操作按钮权限
+      pageSize: 7, // 数据的总条数，默认是6条
+      currentPage: 1, // 当前页数，默认是第1页
+      power: true, // 操作按钮权限
+      dialogVisible: false, // 导入时，重复的学生显示弹出框
+      exists: [], // 导入-数据库中已存在的数据
+      checkList: [], // 重复学生表单中的多选框
+      delpage: [], // 页数
     }
   },
   // vuex 权限
   computed: {
     ...mapGetters(['roles'])
-  },
-  watch: {
-    'allstudent': function(newVal) {
-      this.all = newVal
-    }
   },
   // '3' 代表的普通用户，普通用户登录会将操作按钮隐藏
   created() {
@@ -147,32 +253,28 @@ export default {
     }
   },
   async mounted() {
-    const { data } = await allstudent()
-    this.allstudent = data.data
-    this.listLoading = false
     // 接收存储数据
     this.getClass = JSON.parse(localStorage.getItem('data'))
-    for (var i = 0; i < this.allstudent.length; i++) {
-      if (this.getClass === this.allstudent[i].classes) {
-        this.classstudents.push(this.allstudent[i])
-      }
-    }
-    this.all = this.classstudents
-    this.classstudents = []
-    this.sliceJg(this.all)
-    // eslint-disable-next-line eqeqeq
-    if (this.all == '') {
-      return false
-    }
+    this.selectStud()
+    this.listLoading = false
   },
   methods: {
     // 保存选中的数据id,row-key就是要指定一个key标识这一行的数据
     getRowKey(row) {
       return row.id
     },
-    // async getStudata() {
-
-    // },
+    async selectStud() {
+      const optionstu = await selectAllstud(this.currentPage, {
+        classes: this.getClass
+      })
+      if (optionstu.data.code === 200) {
+        this.all = optionstu.data.data
+        this.total = optionstu.data.total
+        this.delpage = optionstu.data.delpage
+        this.listLoading = false
+      }
+      this.sliceJg(this.all)
+    },
     // 删除学生
     remove(row) {
       const h = this.$createElement
@@ -189,8 +291,11 @@ export default {
             if (res.data.code === 201) {
               this.$message.error(res.data.msg)
             } else {
-              const { data } = await allstudent()
-              this.allstudent = data.data
+              if (this.all.length === 1) {
+                this.currentPage = this.currentPage - 1
+                this.deltotal = this.deltotal - 1
+              }
+              this.selectStud()
               this.$message({
                 message: res.data.msg,
                 type: 'success'
@@ -199,7 +304,7 @@ export default {
           })
           // eslint-disable-next-line handle-callback-err
         })
-        // eslint-disable-next-line handle-callback-err
+      // eslint-disable-next-line handle-callback-err
         .catch(err => {
           this.$message({
             type: 'info',
@@ -215,35 +320,36 @@ export default {
       this.show = true
       this.ruleForm.classes = row.classes
       this.ruleForm.chengji = row.chengji
-      this.ruleForm.graduation = row.graduation
       this.ruleForm.failss = row.failss
       this.ruleForm.id = row._id
+      this.study = row.study
     },
     // 确定修改
     async submitForm() {
+      const graduation = this.study * 10 - this.ruleForm.chengji
       // 默认值
       const obj = {
         classes: this.ruleForm.classes,
         chengji: this.ruleForm.chengji,
-        graduation: this.ruleForm.graduation,
-        failss: this.ruleForm.failss
+        failss: this.ruleForm.failss,
+        graduation: graduation
       }
       const ID = this.ruleForm.id
-      const { data } = await updateAllstud(ID, obj)
+      const {
+        data
+      } = await updateAllstud(ID, obj)
       // 判断值是否改变
       if (
         obj.classes === this.rowlist.classes &&
         obj.chengji === this.rowlist.chengji &&
-        obj.graduation === this.rowlist.graduation &&
         obj.failss === this.rowlist.failss
       ) {
         this.$message.info('没有任何修改')
         this.show = false
       } else if (data.code === 200) {
         this.$message.success('修改成功')
+        this.selectStud()
         this.show = false
-        const { data } = await allstudent()
-        this.allstudent = data.data
       } else {
         this.$message.error(data.msg)
         return false
@@ -261,7 +367,10 @@ export default {
     // 添加
     addstudent() {
       this.$router.push({
-        path: this.path // 跳转路由
+        path: this.path, // 跳转路由
+        query: {
+          value: '/form/classstudent'
+        }
       })
     },
     // 选择项
@@ -275,6 +384,12 @@ export default {
     },
     // 批量修改
     updatesomestudent() {
+      this.sels.forEach((item, index) => {
+        this.sels[index] = item.study
+      })
+      this.ruleForm.classes = ''
+      this.ruleForm.chengji = ''
+      this.ruleForm.failss = ''
       this.show = true
       this.xgshow = false
       this.plxgshow = true
@@ -284,7 +399,6 @@ export default {
       const obj = {
         classes: this.ruleForm.classes,
         chengji: this.ruleForm.chengji,
-        graduation: this.ruleForm.graduation,
         failss: this.ruleForm.failss
       }
       if (obj.classes === '') {
@@ -292,21 +406,34 @@ export default {
       }
       if (obj.chengji === '') {
         delete obj.chengji
-      }
-      if (obj.graduation === '') {
-        delete obj.graduation
+      } else {
+        for (var i = 0; i < this.sels.length; i++) {
+          if (this.sels.length > 1 && this.sels[0] !== this.sels[1]) {
+            this.$message.error('年制不同，修改失败')
+            this.show = false
+            this.$refs.multipleTable.clearSelection()
+            return false
+          } else {
+            const key = 'graduation'
+            obj[key] = this.sels[i] * 10 - obj.chengji
+          }
+        }
       }
       if (obj.failss === '') {
         delete obj.failss
       }
-      const { data } = await updateStudent(this.checkeds, obj)
-      if (data.code === 200) {
-        this.$message.success('修改成功')
-        this.show = false
-        const { data } = await allstudent()
-        this.allstudent = data.data
+      if (!obj.classes && !obj.chengji && !obj.failss) {
+        this.$message.error('没有任何修改')
       } else {
-        this.$message.error(data.msg)
+        const { data } = await updateStudent(this.checkeds, obj)
+        if (data.code === 200) {
+          this.selectStud()
+          this.$refs.multipleTable.clearSelection()
+          this.$message.success('修改成功')
+          this.show = false
+        } else {
+          this.$message.error(data.msg)
+        }
       }
     },
     // 批量删除
@@ -315,62 +442,68 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
-        delAllStudent(this.checkeds).then(async res => {
-          if (res.data.code === 201) {
-            this.$message.error(res.data.msg)
-          } else {
-            const { data } = await allstudent()
-            this.allstudent = data.data
-            this.$message({
-              message: res.data.msg,
-              type: 'success'
-            })
-          }
-        })
       })
+        .then(() => {
+          delAllStudent(this.checkeds).then(async res => {
+            if (res.data.code === 201) {
+              this.$message.error(res.data.msg)
+            } else {
+              if (this.all.length === 1) {
+                this.currentPage = this.currentPage - 1
+                this.deltotal = this.deltotal - 1
+              }
+              this.selectStud()
+              this.$refs.multipleTable.clearSelection()
+              this.$message({
+                message: res.data.msg,
+                type: 'success'
+              })
+            }
+          })
+        })
+        .catch(() => {})
     },
     handleDownload() {
       this.downloadLoading = true
-      import('../../../excel/Export2Excel.js').then(excel => {
-        const tHeader = [
-          '班级',
-          '姓名',
-          '性别',
-          '年龄',
-          '专业',
-          '市场部',
-          '已有成绩',
-          '还差成绩',
-          '挂科次数',
-          '学制',
-          '籍贯',
-          '学号'
-        ] // excel 表头
-        const filterVal = [
-          'classes',
-          'name',
-          'sex',
-          'age',
-          'major',
-          'citycenter',
-          'chengji',
-          'graduation',
-          'failss',
-          'study',
-          'nativeplace',
-          'studentID'
-        ] // 获取的数据字段名
-        const list = this.all // 所要生成Excel数据源
-        const data = this.formatJson(filterVal, list)
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          filename: this.filename,
-          autoWidth: this.autoWidth
+        import('../../../excel/Export2Excel.js').then(excel => {
+          const tHeader = [
+            '班级',
+            '姓名',
+            '性别',
+            '年龄',
+            '专业',
+            '市场部',
+            '已有成绩',
+            '还差成绩',
+            '挂科次数',
+            '学制',
+            '籍贯',
+            '学号'
+          ] // excel 表头
+          const filterVal = [
+            'classes',
+            'name',
+            'sex',
+            'age',
+            'major',
+            'citycenter',
+            'chengji',
+            'graduation',
+            'failss',
+            'study',
+            'nativeplace',
+            'studentID'
+          ] // 获取的数据字段名
+          const list = this.all // 所要生成Excel数据源
+          const data = this.formatJson(filterVal, list)
+          excel.export_json_to_excel({
+            header: tHeader,
+            data,
+            filename: this.filename,
+            autoWidth: this.autoWidth
+          })
+          this.downloadLoading = false
         })
-        this.downloadLoading = false
-      })
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v =>
@@ -382,6 +515,7 @@ export default {
     handleInter() {
       this.downloadLoading2 = true
     },
+    // 导入
     importfxx(obj) {
       const _this = this
       // eslint-disable-next-line no-unused-vars
@@ -438,20 +572,25 @@ export default {
             arr.push(obj)
           })
           getExcel(arr).then(res => {
-            // eslint-disable-next-line no-empty
-            if (res.data.code === 201) {
-              // eslint-disable-next-line no-empty
+            _this.exists = res.data.exist
+            if (res.data.code === 200) {
+              _this.$message({
+                message: '请耐心等待导入成功',
+                type: 'success'
+              })
+              _this.selectStud()
             } else {
+              _this.$message({
+                message: res.data.msg,
+                type: 'success'
+              })
+              _this.dialogVisible = true // 进入学生重复
             }
           })
           // eslint-disable-next-line no-unused-vars
           const para = {
             QwithList: arr
           }
-          _this.$message({
-            message: '请耐心等待导入成功',
-            type: 'success'
-          })
         }
         reader.readAsArrayBuffer(f)
       }
@@ -464,29 +603,18 @@ export default {
     // 调用子组件传过来的事件
     getcurrentPage(currentPage) {
       this.currentPage = currentPage
-      this.getPage(currentPage)
-    },
-    // 分页加学生接口调用
-    async getPage(page) {
-      const { data } = await getPage(page)
-      this.all = data.data
-      for (var i = 0; i < this.all.length; i++) {
-        if (this.getClass === this.all[i].classes) {
-          this.classstudents.push(this.all[i])
-        }
-      }
-      this.total = this.all.length
-      this.all = this.classstudents
-      this.classstudents = []
+      // this.sliceJg(this.all)
+      this.selectStud()
     },
     // 切割籍贯函数
     sliceJg(Array) {
       // eslint-disable-next-line no-undef
       for (let i = 0; i < Array.length; i++) {
-        // eslint-disable-next-line no-undef
-        if (
+        if (Array[i].nativeplace === '' || Array[i].nativeplace === null || Array[i].nativeplace === undefined) {
+          continue
+        } else if (
           Array[i].nativeplace.includes('黑龙江') ||
-          Array[i].nativeplace.includes('内蒙古')
+            Array[i].nativeplace.includes('内蒙古')
         ) {
           // eslint-disable-next-line no-undef
           Array[i].nativeplace = Array[i].nativeplace.slice(0, 3)
@@ -495,11 +623,20 @@ export default {
         }
       }
       return Array
+    },
+    // 重复学生
+    async Confirmreplacement(){     
+      const { data } = await updateExcelstudent(this.checkList)
+      if(data.code === 200) {
+        this.dialogVisible = false
+        this.selectStud()
+        this.$message.success(data.msg)
+      }
     }
   }
 }
 </script>
 
 <style scoped>
-@import "./asset.scss";
+  @import "./asset.scss";
 </style>

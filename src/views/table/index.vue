@@ -283,9 +283,7 @@ export default {
     sliceJg(Array) {
       // for循环出来这个数组的长度
       for (let i = 0; i < Array.length; i++) {
-        // 如果这个数组里边的nativeplace等于空或者未定义
         if (Array[i].nativeplace === '' || Array[i].nativeplace === null || Array[i].nativeplace === undefined) {
-          // 那么就跳出循环
           continue
         } else if (
           // 否则就用includes获取到这个两个下标

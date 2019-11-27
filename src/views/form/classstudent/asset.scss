@@ -33,3 +33,50 @@
 #text {
   color: red;
 }
+
+.Duplicate{
+  width: 100%;
+  height: 319px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.Duplicate-form{
+  width: 100%;
+}
+.Duplicate-form>tr{
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+
+}
+.Duplicate-form>tr>td{
+  width: 8%;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+}
+.Duplicate-form>tr>th{
+  width: 8%;
+}
+
+#Currentimport>.Currentimport-checkbox>span:nth-child(1){
+  position: absolute;
+  margin-top: -8px;
+}
+
+#Currentimport{
+  width: 100%;
+}
+#Currentimport>.Currentimport-checkbox{
+  width: 100%;
+}
+#Currentimport>.Currentimport-checkbox>span:nth-child(2){
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  padding-left: 0px;
+}
+#Currentimport>.Currentimport-checkbox>span:nth-child(2)>td{
+  width: 8%;
+  text-align: center;
+}
