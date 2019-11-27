@@ -281,21 +281,26 @@ export default {
   methods: {
     // 切割籍贯函数
     sliceJg(Array) {
-      // eslint-disable-next-line no-undef
+      // for循环出来这个数组的长度
       for (let i = 0; i < Array.length; i++) {
-        if (Array[i].nativeplace = '') {
+        // 如果这个数组里边的nativeplace等于空或者未定义
+        if (Array[i].nativeplace === '' || Array[i].nativeplace === null || Array[i].nativeplace === undefined) {
+          // 那么就跳出循环
           continue
         } else if (
+          // 否则就用includes获取到这个两个下标
           Array[i].nativeplace.includes('黑龙江') ||
-            Array[i].nativeplace.includes('内蒙古')
+          Array[i].nativeplace.includes('内蒙古')
         ) {
-          // eslint-disable-next-line no-undef
+          // 要不然就截取nativeplace的长度,如果是黑龙江和内蒙古，就截取3个
           Array[i].nativeplace = Array[i].nativeplace.slice(0, 3)
         } else {
+          // 否则就截取2个
           Array[i].nativeplace = Array[i].nativeplace.slice(0, 2)
         }
-        return Array
       }
+      // 返回数组
+      return Array
     },
     async selectallstud(page, obj) {
       const searchSuc = await selectAllstud(page, obj)
@@ -317,9 +322,7 @@ export default {
     },
     // 分页加学生接口调用
     async getPage(page) {
-      const {
-        data
-      } = await getPage(page)
+      const { data } = await getPage(page)
       if (data.code === 200) {
         const sliceData = this.sliceJg(data.data) // 调用切割籍贯函数
         this.tableData = sliceData

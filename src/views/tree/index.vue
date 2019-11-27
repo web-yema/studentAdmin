@@ -202,7 +202,6 @@ export default {
     },
     // 确定(添加学生)
     async Determine() {
-      // 添加一项
       const obj = {
         name: this.newName,
         age: this.newAge,
@@ -215,35 +214,49 @@ export default {
         studentID: this.xuehao,
         nativeplace: this.jiguan
       }
-      if (/.*[\u4e00-\u9fa5]+.*$/.test(this.chengji)) {
-        // 判断不带汉字的正则
+      if(
+        this.newName === '' || 
+        this.newAge === '' || 
+        this.sex === '' ||
+        this.study === '' ||
+        this.major === '' ||
+        this.newclass === '' ||
+        this.cityCenter === '' ||
+        this.chengji === '' ||
+        this.xuehao === '' ||
+        this.jiguan === []
+      ) {
+        this.$message.error('有空项请填写完整!')
+        return false
+      } else if(/^[0-9]{1,2}$/.test(this.studentID)) {
+        this.$message.error('学号必须是数字!')
+        return false
+      } else if(/^[0-9]{1,2}$/.test(this.age)) {
+        this.$message.error('年龄必须是数字!')
+        return false
+      } else if(/.*[\u4e00-\u9fa5]+.*$/.test(this.chengji)) {
         this.$message.error('成绩不必带单位!')
         return false
       } else {
-        // 获取到引入的json文件中的label值,然后转换成字符串,在把默认的逗号去掉
         obj.nativeplace = this.$refs['cascaderAddr'].getCheckedNodes()[0].pathLabels.join('')
         const success = await getStudent(obj)
-        if (success.data.code === 200) {
+        if(success.data.code === 200) {
           this.clearList()
-          this.$confirm(`${success.data.msg},是否跳转至学生列表页`, '提示', {
+          this.$confirm(`${success.data.msg},是否跳转至学生列表页`,'提示',{
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
+          }).then(() => {
+            this.$router.push({
+              name: 'All',
+              params: { maxpage: success.data.maxpages }
+            })
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '取消跳转'
+            })
           })
-            .then(() => {
-              this.$router.push({
-                name: 'All',
-                params: { maxpage: success.data.maxpages }
-              }) // 如果想在push里传递params参数，就必须用路由对应的name跳转
-            })
-            .catch(() => {
-              this.$message({
-                type: 'info',
-                message: '取消跳转'
-              })
-            })
-        } else {
-          this.$message.error(success.data.msg)
         }
       }
     },
@@ -271,7 +284,7 @@ export default {
 }
 .demo-input-smallsize {
   width: 1000px;
-  height: 750px;
+  height: 800px;
   margin: 0 auto;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   padding-top: 30px;

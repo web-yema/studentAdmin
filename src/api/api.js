@@ -1,6 +1,6 @@
 import Axios from 'axios'
 // 修改密码
-export function updateAdminPass (obj) {
+export function updateAdminPass(obj) {
   return Axios.post('http://132.232.89.22:8080/updateAdminPass', obj)
   // eslint-disable-next-line no-unused-vars
 }
