@@ -219,9 +219,9 @@ export default {
         studentID: this.xuehao,
         nativeplace: this.jiguan
       }
-      if(
-        this.newName === '' || 
-        this.newAge === '' || 
+      if (
+        this.newName === '' ||
+        this.newAge === '' ||
         this.sex === '' ||
         this.study === '' ||
         this.major === '' ||
@@ -233,19 +233,19 @@ export default {
       ) {
         this.$message.error('有空项请填写完整!')
         return false
-      } else if(/^[0-9]{1,2}$/.test(this.studentID)) {
+      } else if (/^[0-9]{1,2}$/.test(this.studentID)) {
         this.$message.error('学号必须是数字!')
         return false
-      } else if(/^[0-9]{1,2}$/.test(this.age)) {
+      } else if (/^[0-9]{1,2}$/.test(this.age)) {
         this.$message.error('年龄必须是数字!')
         return false
-      } else if(/.*[\u4e00-\u9fa5]+.*$/.test(this.chengji)) {
+      } else if (/.*[\u4e00-\u9fa5]+.*$/.test(this.chengji)) {
         this.$message.error('成绩不必带单位!')
         return false
       } else {
         obj.nativeplace = this.$refs['cascaderAddr'].getCheckedNodes()[0].pathLabels.join('')
         const success = await getStudent(obj)
-        if(success.data.code === 200) {
+        if (success.data.code === 200) {
           this.clearList()
           if (this.patho === undefined) {
             this.$confirm(`${success.data.msg},是否跳转至学生列表页`, '提示', {
@@ -310,10 +310,11 @@ export default {
   width: 100%;
   height: 800px;
   margin-top: 15px;
+  overflow:scroll;
 }
 .demo-input-smallsize {
   width: 1000px;
-  height: 800px;
+  height: 110%;
   margin: 0 auto;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   padding-top: 30px;

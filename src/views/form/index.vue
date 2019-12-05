@@ -133,10 +133,6 @@
 <script>
 // 引入接口函数
 import {
-  // eslint-disable-next-line no-unused-vars
-  getClass, // 获取班级
-  // eslint-disable-next-line no-unused-vars
-  selectAllstud, // 查询学生
   delClass, // 删除班级
   updateClass, // 修改班级信息
   allstudent, // 所有学生信息

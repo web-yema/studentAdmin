@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="top_option">
     <el-select v-model="value" placeholder="全部" style="margin: 10px 0; width: 100%" @change="changeTeacher">
       <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" style="width: 100%" />
     </el-select>
@@ -56,7 +56,7 @@
     </el-table>
     <el-button v-if="power" type="primary" class="addLecturer" @click="addLecturers">添加讲师</el-button>
     <!-- 分页模块 -->
-    <pageCount style="position:fixed;left:205px;  top:520px;" :total="total" :pageSize="pageSize" :currentPage="currentPage" @getcurrentPage="getcurrentPage" />
+    <pageCount style="position:fixed;left:205px;  bottom:40px;" :total="total" :page-size="pageSize" :current-page="currentPage" @getcurrentPage="getcurrentPage" />
   </div>
 </template>
 
@@ -215,5 +215,13 @@ export default {
   margin-top: 50px;
   float: right;
   margin-right: 45px;
+}
+.top_option{
+  position:absolute;
+  bottom:0px;
+  left:0px;
+  width:100%;
+  height:100%;
+  overflow:hidden;
 }
 </style>

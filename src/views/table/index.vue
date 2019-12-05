@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="top_option">
     <!-- 查询模块 -->
     <div v-show="searchShow === 1" class="searchbox-bs-002">
       <li>
@@ -497,6 +497,15 @@ export default {
 </script>
 
 <style>
+  .top_option{
+    position:absolute;
+    bottom:0px;
+    left:0px;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+  }
+
   .searchbox-bs-002 {
     width: 100%;
     display: flex;

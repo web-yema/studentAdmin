@@ -9,22 +9,22 @@
       </div>
     </div>
     <!-- 抽屉-展示学生个人信息 -->
-      <el-drawer title="个人信息" :visible.sync="table" direction="btt" size="50%" style="overflow-y: hidden;">
-        <el-table :data="studentData" row-key="index" style="width: 100%" class="information">
-          <el-table-column prop="studentID" label="学号" />
-          <el-table-column prop="name" label="姓名" />
-          <el-table-column prop="sex" label="性别" />
-          <el-table-column prop="age" label="年龄" />
-          <el-table-column prop="study" label="学制" />
-          <el-table-column prop="classes" label="班级" />
-          <el-table-column prop="major" label="专业" />
-          <el-table-column prop="citycenter" label="市场部" />
-          <el-table-column prop="chengji" label="已有成绩" />
-          <el-table-column prop="graduation" label="还差成绩" />
-          <el-table-column prop="failss" label="挂科次数" />
-          <el-table-column prop="nativeplace" label="籍贯" />
-        </el-table>
-      </el-drawer>
+    <el-drawer title="个人信息" :visible.sync="table" direction="btt" size="50%" style="overflow-y: hidden;">
+      <el-table :data="studentData" row-key="index" style="width: 100%" class="information">
+        <el-table-column prop="studentID" label="学号" />
+        <el-table-column prop="name" label="姓名" />
+        <el-table-column prop="sex" label="性别" />
+        <el-table-column prop="age" label="年龄" />
+        <el-table-column prop="study" label="学制" />
+        <el-table-column prop="classes" label="班级" />
+        <el-table-column prop="major" label="专业" />
+        <el-table-column prop="citycenter" label="市场部" />
+        <el-table-column prop="chengji" label="已有成绩" />
+        <el-table-column prop="graduation" label="还差成绩" />
+        <el-table-column prop="failss" label="挂科次数" />
+        <el-table-column prop="nativeplace" label="籍贯" />
+      </el-table>
+    </el-drawer>
   </div>
 </template>
 
