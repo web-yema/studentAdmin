@@ -133,6 +133,14 @@
           </div>
         </template>
       </el-table-column>
+      <el-table-column label="入学时间">
+        <template slot-scope="scope">
+          <el-input v-if="scope.$index === updateShow" v-model="intime" size="mini" placeholder="请输入内容" />
+          <div v-else style="text-align:center">
+            {{ tableData[scope.$index].entryDate }}
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column align="right">
         <template slot-scope="scope">
           <el-button v-if="scope.$index === updateShow" size="mini" type="primary">确定</el-button>
@@ -200,6 +208,7 @@ export default {
       pageSize: 7, // 每页展示条数 用来让total进行切割，算出来一共的页数
       currentPage: 1, // 当前在第几页,默认在第一页
       updateShow: 100000, // 当前展示的修改弹出项，给这么大是为了一开始谁也匹配不到
+      intime: '', // 入学时间
       search: {
         // 搜索的v-model绑定值
         serName: '', // 姓名
@@ -458,7 +467,8 @@ export default {
             '市场部',
             '当前成绩',
             '还差成绩',
-            '挂科次数'
+            '挂科次数',
+            '入学时间'
           ]
           const filterVal = [
             'studentID',
@@ -472,7 +482,8 @@ export default {
             'citycenter',
             'chengji',
             'graduation',
-            'failss'
+            'failss',
+            'entryDate'
           ]
           const data = this.formatJson(filterVal, this.tableData)
           excel.export_json_to_excel({
