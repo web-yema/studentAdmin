@@ -1,6 +1,6 @@
 /* eslint-disable no-constant-condition */
 <template>
-  <div class="top_option" style="overflow-x: none">
+  <div class="top_option">
     <!-- 列表 -->
     <div class="table_divs">
       <el-table
@@ -16,7 +16,7 @@
           type="selection"
           min-width="50"
         />
-        <el-table-column prop="studentID" label="学号" />
+        <el-table-column prop="studentID" min-width="85" label="学号" />
         <el-table-column prop="name" label="姓名" />
         <el-table-column prop="sex" min-width="50" label="性别" />
         <el-table-column prop="age" min-width="50" label="年龄" />
@@ -46,8 +46,10 @@
       <!-- 修改 -->
       <el-dialog title="修改操作" :visible.sync="show" width="30%">
         <el-form ref="ruleForm" :model="ruleForm" label-width="100px" class="demo-ruleForm">
-          <el-form-item label="班级" prop="classes">
-            <el-input v-model="ruleForm.classes" />
+          <el-form-item label="班级" prop="major">
+            <el-select v-model="ruleForm.classes" placeholder="选择班级">
+              <el-option v-for="site in allClass" :key="site" :label="site" :value="site" />
+            </el-select>
           </el-form-item>
           <el-form-item label="已有成绩" prop="chengji">
             <el-input v-model="ruleForm.chengji" oninput="value=value.replace(/[^\d.]/g,'')" maxlength="2" />
@@ -63,45 +65,48 @@
         </span>
       </el-dialog>
     </div>
-    <div
-      v-if="power"
-      style="position:fixed;bottom:20px;margin-left:10px;z-index:1000"
-    >
-      <!-- 批量删除 -->
-      <template>
-        <el-button style="margin-top:10px" type="danger" size="small" :disabled="this.sels.length === 0" @click="soamdelstudent()">批量删除</el-button>
-      </template>
-      <!-- 批量修改 -->
-      <template>
-        <el-button style="margin-top:10px" type="success" size="small" :disabled="this.sels.length === 0" @click="updatesomestudent()">批量修改</el-button>
-      </template>
-      <!-- 添加 -->
-      <template>
-        <el-button style="margin-top:10px" type="primary" size="small" @click="addstudent()">添加学生</el-button>
-      </template>
+    <div class="buju">
+      <div
+        v-if="power"
+        style="position:fixed;bottom:20px;margin-left:10px;z-index:1000"
+      >
+        <!-- 批量删除 -->
+        <template>
+          <el-button style="margin-top:10px" type="danger" size="small" :disabled="this.sels.length === 0" @click="soamdelstudent()">批量删除</el-button>
+        </template>
+        <!-- 批量修改 -->
+        <template>
+          <el-button style="margin-top:10px" type="success" size="small" :disabled="this.sels.length === 0" @click="updatesomestudent()">批量修改</el-button>
+        </template>
+        <!-- 添加 -->
+        <template>
+          <el-button style="margin-top:10px" type="primary" size="small" @click="addstudent()">添加学生</el-button>
+        </template>
+      </div>
+
+      <div v-if="power" style="position:fixed;right:50px;bottom:20px;z-index:1000;">
+        <!-- 导出 -->
+        <el-button size="mini" type="success" round :loading="downloadLoading" @click="handleDownload">导出当页excel</el-button>
+        <!-- 导入 -->
+        <label class="fileinp">
+          <input type="button" class="btn" value="导入excel" round @click="handleInter">
+          <input
+            type="file"
+            class="fileinpd"
+            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+            @change="importfxx(this)"
+          >
+        </label>
+      </div>
+      <pageCount
+        style="position:fixed;left:600px;bottom:20px;z-index:1000"
+        :total="total"
+        :page-size="pageSize"
+        :current-page="currentPage"
+        @getcurrentPage="getcurrentPage"
+      />
     </div>
 
-    <div v-if="power" style="position:fixed;right:50px;bottom:20px;z-index:1000;">
-      <!-- 导出 -->
-      <el-button size="mini" type="success" round :loading="downloadLoading" @click="handleDownload">导出当页excel</el-button>
-      <!-- 导入 -->
-      <label class="fileinp">
-        <input type="button" class="btn" value="导入excel" round @click="handleInter">
-        <input
-          type="file"
-          class="fileinpd"
-          accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-          @change="importfxx(this)"
-        >
-      </label>
-    </div>
-    <pageCount
-      style="position:fixed;left:600px;bottom:20px;z-index:1000"
-      :total="total"
-      :page-size="pageSize"
-      :current-page="currentPage"
-      @getcurrentPage="getcurrentPage"
-    />
     <div class="duplicate-item">
       <el-dialog
         title="重复学生名单"
@@ -112,60 +117,60 @@
         :close-on-press-escape="false"
         :close-on-click-modal="false"
       >
-       <div class="Duplicate">
-       <table class="Duplicate-form">
-         <tr>
-           <th>学号</th>
-           <th>姓名</th>
-           <th>班级</th>
-           <th>性别</th>
-           <th>年龄</th>
-           <th>专业</th>
-           <th>市场部</th>
-           <th>已有成绩</th>
-           <th>还差成绩</th>
-           <th>挂科次数</th>
-           <th>学制</th>
-           <th>籍贯</th>
-         </tr>
-         <template v-for="item in exists">
-          <tr v-for="(items,index) in item">
-          <template v-if="index==0">
-          <td>{{items.studentID}}</td>
-              <td>{{items.name}}</td>
-              <td>{{items.classes}}</td>
-              <td>{{items.sex}}</td>
-              <td>{{items.age}}</td>
-              <td>{{items.major}}</td>
-              <td>{{items.citycenter}}</td>
-              <td>{{items.chengji}}</td>
-              <td>{{items.graduation}}</td>
-              <td>{{items.failss}}</td>
-              <td>{{items.study}}</td>
-              <td>{{items.nativeplace}}</td>
-          </template>
-          
-          <el-checkbox-group v-else v-model="checkList" id="Currentimport">
-            <el-checkbox class="Currentimport-checkbox" :label="items"> 
-              <td>{{items.studentID}}</td>
-              <td>{{items.name}}</td>
-              <td>{{items.classes}}</td>
-              <td>{{items.sex}}</td>
-              <td>{{items.age}}</td>
-              <td>{{items.major}}</td>
-              <td>{{items.citycenter}}</td>
-              <td>{{items.chengji}}</td>
-              <td>{{items.graduation}}</td>
-              <td>{{items.failss}}</td>
-              <td>{{items.study}}</td>
-              <td>{{items.nativeplace}}</td>
-            </el-checkbox>
-          </el-checkbox-group>
-            
-          </tr>
-         </template>
+        <div class="Duplicate">
+          <table class="Duplicate-form">
+            <tr>
+              <th>学号</th>
+              <th>姓名</th>
+              <th>班级</th>
+              <th>性别</th>
+              <th>年龄</th>
+              <th>专业</th>
+              <th>市场部</th>
+              <th>已有成绩</th>
+              <th>还差成绩</th>
+              <th>挂科次数</th>
+              <th>学制</th>
+              <th>籍贯</th>
+            </tr>
+            <template v-for="item in exists">
+              <tr v-for="(items,index) in item">
+                <template v-if="index==0">
+                  <td>{{ items.studentID }}</td>
+                  <td>{{ items.name }}</td>
+                  <td>{{ items.classes }}</td>
+                  <td>{{ items.sex }}</td>
+                  <td>{{ items.age }}</td>
+                  <td>{{ items.major }}</td>
+                  <td>{{ items.citycenter }}</td>
+                  <td>{{ items.chengji }}</td>
+                  <td>{{ items.graduation }}</td>
+                  <td>{{ items.failss }}</td>
+                  <td>{{ items.study }}</td>
+                  <td>{{ items.nativeplace }}</td>
+                </template>
+
+                <el-checkbox-group v-else id="Currentimport" v-model="checkList">
+                  <el-checkbox class="Currentimport-checkbox" :label="items">
+                    <td>{{ items.studentID }}</td>
+                    <td>{{ items.name }}</td>
+                    <td>{{ items.classes }}</td>
+                    <td>{{ items.sex }}</td>
+                    <td>{{ items.age }}</td>
+                    <td>{{ items.major }}</td>
+                    <td>{{ items.citycenter }}</td>
+                    <td>{{ items.chengji }}</td>
+                    <td>{{ items.graduation }}</td>
+                    <td>{{ items.failss }}</td>
+                    <td>{{ items.study }}</td>
+                    <td>{{ items.nativeplace }}</td>
+                  </el-checkbox>
+                </el-checkbox-group>
+
+              </tr>
+            </template>
           </table>
-       </div>
+        </div>
 
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
@@ -180,19 +185,13 @@
 // 引入接口函数
 // eslint-disable-next-line no-unused-vars
 import {
-  // eslint-disable-next-line no-unused-vars
-  getPage, // 学生分页
-  // eslint-disable-next-line no-unused-vars
-  allstudent,
   updateAllstud,
-  // eslint-disable-next-line no-unused-vars
   delAllStudent,
-  // eslint-disable-next-line no-unused-vars
-  addallStudent,
   updateStudent, // 批量修改
   selectAllstud, // 查询学生
   getExcel,
-  updateExcelstudent // 导入修改
+  updateExcelstudent, // 导入修改
+  getClass // 获取班级
 } from '../../../api/api.js'
   // 分页模块
 import pageCount from '../../../components/Pagination/index'
@@ -240,6 +239,7 @@ export default {
       exists: [], // 导入-数据库中已存在的数据
       checkList: [], // 重复学生表单中的多选框
       delpage: [], // 页数
+      allClass: '' // 所有班级
     }
   },
   // vuex 权限
@@ -313,7 +313,12 @@ export default {
         })
     },
     // 修改
-    update(index, row) {
+    async update(index, row) {
+      const { data } = await getClass()
+      this.allClass = data.data
+      this.allClass.forEach((item, index) => {
+        this.allClass[index] = item.classname
+      })
       this.xgshow = true
       this.plxgshow = false
       this.rowlist = row
@@ -605,6 +610,7 @@ export default {
       this.currentPage = currentPage
       // this.sliceJg(this.all)
       this.selectStud()
+      this.$refs.multipleTable.clearSelection()
     },
     // 切割籍贯函数
     sliceJg(Array) {
@@ -625,9 +631,9 @@ export default {
       return Array
     },
     // 重复学生
-    async Confirmreplacement(){     
+    async Confirmreplacement() {
       const { data } = await updateExcelstudent(this.checkList)
-      if(data.code === 200) {
+      if (data.code === 200) {
         this.dialogVisible = false
         this.selectStud()
         this.$message.success(data.msg)

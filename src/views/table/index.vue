@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="top_option">
     <!-- 查询模块 -->
     <div v-show="searchShow === 1" class="searchbox-bs-002">
       <li>
@@ -133,6 +133,14 @@
           </div>
         </template>
       </el-table-column>
+      <el-table-column label="入学时间">
+        <template slot-scope="scope">
+          <el-input v-if="scope.$index === updateShow" v-model="intime" size="mini" placeholder="请输入内容" />
+          <div v-else style="text-align:center">
+            {{ tableData[scope.$index].entryDate }}
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column align="right">
         <template slot-scope="scope">
           <el-button v-if="scope.$index === updateShow" size="mini" type="primary">确定</el-button>
@@ -200,6 +208,7 @@ export default {
       pageSize: 7, // 每页展示条数 用来让total进行切割，算出来一共的页数
       currentPage: 1, // 当前在第几页,默认在第一页
       updateShow: 100000, // 当前展示的修改弹出项，给这么大是为了一开始谁也匹配不到
+      intime: '', // 入学时间
       search: {
         // 搜索的v-model绑定值
         serName: '', // 姓名
@@ -281,21 +290,24 @@ export default {
   methods: {
     // 切割籍贯函数
     sliceJg(Array) {
-      // eslint-disable-next-line no-undef
+      // for循环出来这个数组的长度
       for (let i = 0; i < Array.length; i++) {
         if (Array[i].nativeplace === '' || Array[i].nativeplace === null || Array[i].nativeplace === undefined) {
           continue
         } else if (
+          // 否则就用includes获取到这个两个下标
           Array[i].nativeplace.includes('黑龙江') ||
           Array[i].nativeplace.includes('内蒙古')
         ) {
-          // eslint-disable-next-line no-undef
+          // 要不然就截取nativeplace的长度,如果是黑龙江和内蒙古，就截取3个
           Array[i].nativeplace = Array[i].nativeplace.slice(0, 3)
         } else {
+          // 否则就截取2个
           Array[i].nativeplace = Array[i].nativeplace.slice(0, 2)
         }
-        return Array
       }
+      // 返回数组
+      return Array
     },
     async selectallstud(page, obj) {
       const searchSuc = await selectAllstud(page, obj)
@@ -317,9 +329,7 @@ export default {
     },
     // 分页加学生接口调用
     async getPage(page) {
-      const {
-        data
-      } = await getPage(page)
+      const { data } = await getPage(page)
       if (data.code === 200) {
         const sliceData = this.sliceJg(data.data) // 调用切割籍贯函数
         this.tableData = sliceData
@@ -457,7 +467,8 @@ export default {
             '市场部',
             '当前成绩',
             '还差成绩',
-            '挂科次数'
+            '挂科次数',
+            '入学时间'
           ]
           const filterVal = [
             'studentID',
@@ -471,7 +482,8 @@ export default {
             'citycenter',
             'chengji',
             'graduation',
-            'failss'
+            'failss',
+            'entryDate'
           ]
           const data = this.formatJson(filterVal, this.tableData)
           excel.export_json_to_excel({
@@ -496,6 +508,15 @@ export default {
 </script>
 
 <style>
+  .top_option{
+    position:absolute;
+    bottom:0px;
+    left:0px;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+  }
+
   .searchbox-bs-002 {
     width: 100%;
     display: flex;

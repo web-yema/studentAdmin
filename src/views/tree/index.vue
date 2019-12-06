@@ -93,7 +93,7 @@
       <div
         style="margin-left:15px;width:70%;display:flex;justify-content: space-between;margin-top:30px;"
       >
-        <div style="margin:5px;">当前成绩：</div>
+        <div style="margin:10px;">当前成绩：</div>
         <el-input-number
           v-model="chengji"
           style="width:20%;height:28px;margin-right:460px;"
@@ -104,10 +104,20 @@
           label="当前成绩"
         />
       </div>
+      <div style="margin-left:15px;width:70%;display:flex;justify-content: space-between;margin-top:30px;">
+        <div style="margin:10px;">入学时间：</div>
+        <el-date-picker
+            v-model="intime"
+            type="date"
+            placeholder="选择日期"
+            style="width:20%;height:28px;margin-right:460px;"
+        >
+        </el-date-picker>
+      </div>
       <el-button
         type="primary"
         style="width:90px;height:38px;line-height:0;margin-left:500px;margin-top:20px;"
-        @click="Determine"
+        @click="Determine(), btn"
       >确定</el-button>
       <el-button
         type="warning"
@@ -140,6 +150,7 @@ export default {
       newclass: '', // 班级选项
       cityCenter: '', // 市场部选项
       chengji: '', // 已有成绩
+      intime:'', // 入学时间
       // select中value才是选中的那个值
       // 学制选项
       studys: [
@@ -175,6 +186,10 @@ export default {
     this.options = City // 地区调用
   },
   methods: {
+     btn() {
+      // 入职时间格式
+      return new Date(this.entryDate).getFullYear() + '-' + (new Date(this.entryDate).getMonth() + 1) + '-' + new Date(this.entryDate).getDate()
+    },
     getRouterData() {
       this.patho = this.$route.query.value
     },
@@ -217,11 +232,21 @@ export default {
         citycenter: this.cityCenter,
         chengji: this.chengji,
         studentID: this.xuehao,
-        nativeplace: this.jiguan
+        nativeplace: this.jiguan,
+        entryDate: this.btn()
       }
-      if(
-        this.newName === '' || 
-        this.newAge === '' || 
+      if (obj.entryDate === 'NaN-NaN-NaN') {
+        const date = new Date()
+        obj.entryDate =
+          date.getFullYear() +
+          '-' +
+          (date.getMonth() + 1) +
+          '-' +
+          date.getDate()
+      }
+      if (
+        this.newName === '' ||
+        this.newAge === '' ||
         this.sex === '' ||
         this.study === '' ||
         this.major === '' ||
@@ -229,23 +254,24 @@ export default {
         this.cityCenter === '' ||
         this.chengji === '' ||
         this.xuehao === '' ||
-        this.jiguan === []
+        this.jiguan === [] ||
+        this.intime === ''
       ) {
         this.$message.error('有空项请填写完整!')
         return false
-      } else if(/^[0-9]{1,2}$/.test(this.studentID)) {
+      } else if (/^[0-9]{1,2}$/.test(this.studentID)) {
         this.$message.error('学号必须是数字!')
         return false
-      } else if(/^[0-9]{1,2}$/.test(this.age)) {
+      } else if (/^[0-9]{1,2}$/.test(this.age)) {
         this.$message.error('年龄必须是数字!')
         return false
-      } else if(/.*[\u4e00-\u9fa5]+.*$/.test(this.chengji)) {
+      } else if (/.*[\u4e00-\u9fa5]+.*$/.test(this.chengji)) {
         this.$message.error('成绩不必带单位!')
         return false
       } else {
         obj.nativeplace = this.$refs['cascaderAddr'].getCheckedNodes()[0].pathLabels.join('')
         const success = await getStudent(obj)
-        if(success.data.code === 200) {
+        if (success.data.code === 200) {
           this.clearList()
           if (this.patho === undefined) {
             this.$confirm(`${success.data.msg},是否跳转至学生列表页`, '提示', {
@@ -300,7 +326,8 @@ export default {
       this.cityCenter = ''
       this.chengji = ''
       this.xuehao = ''
-      this.jiguan = []
+      this.jiguan = [],
+      this.intime = ''
     }
   }
 }
@@ -310,10 +337,11 @@ export default {
   width: 100%;
   height: 800px;
   margin-top: 15px;
+  overflow:scroll;
 }
 .demo-input-smallsize {
   width: 1000px;
-  height: 800px;
+  height: 110%;
   margin: 0 auto;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   padding-top: 30px;
