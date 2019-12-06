@@ -1,11 +1,21 @@
 <template>
   <div class="app-container">
     <el-table v-loading="listLoading" :data="tableData" style="width: 150%">
-      <el-table-column label="名称" prop="adminName" align="center">
+      <!-- 用户名 -->
+      <el-table-column label="名称" prop="adminName">
         <template slot-scope="scope">
-          <div>{{ scope.row.adminName }}</div>
+          <div v-show="isUpdate!==scope.row._id">{{ scope.row.adminName }}</div>
+          <el-input v-show="isUpdate === scope.row._id" v-model="adminName" size="mini"></el-input>
         </template>
       </el-table-column>
+      <!-- 密码 -->
+      <el-table-column label="密码" prop="password">
+        <template slot-scope="scope">
+          <div v-show="isUpdate !== scope.row._id">{{ scope.row.password }}</div>
+          <el-input v-show="isUpdate === scope.row._id" v-model="password" size="mini"></el-input>
+        </template>
+      </el-table-column>
+      <!-- 权限 -->
       <el-table-column label="权限" prop="power" align="center">
         <template slot-scope="scope">
           <div v-show="isUpdate !== scope.row._id">{{ scope.row.power }}</div>
@@ -79,7 +89,9 @@ export default {
           label: '普通用户'
         }
       ],
-      value: ''
+      value: '', // 权限
+      adminName:'', // 名称
+      password:'' // 密码 
     }
   },
   mounted() {
@@ -121,7 +133,6 @@ export default {
             type: 'error'
           })
         })
-        // eslint-disable-next-line handle-callback-err
         .catch(error => {
           this.$message({
             type: 'info',
@@ -133,6 +144,8 @@ export default {
     updateClass(row, scope) {
       this.update.power = row.power
       this.isUpdate = row._id
+      this.adminName = row.adminName
+      this.password = row.password
       if (this.update.power === '管理员') {
         this.value = '2'
       } else if (this.update.power === '普通用户') {
@@ -143,13 +156,13 @@ export default {
     updateClassCancel() {
       this.isUpdate = ''
     },
-    // 确定修改
+    // 确定修改 
     async updateClassSucess(id) {
       this.update['_id'] = id
-      if (this.update.power === '') {
+      if (this.update.power === '' || this.adminName === '' || this.password === '') {
         return this.$message.error('更新信息中不能为空')
-      }
-      const { data } = await updateAdminPass({ _id: id, power: this.value })
+      }    
+      const { data } = await updateAdminPass({ _id: id, power: this.value, adminName: this.adminName, password: this.password })
       if (data.code === 2002) {
         this.$message.success(data.msg)
         this.updateClassCancel()
