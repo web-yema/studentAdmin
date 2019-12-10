@@ -5,7 +5,7 @@
       :current-page="currentPage"
       :page-size="pageSize"
       background
-      layout="prev, pager, next"
+      layout="prev, pager, next" 
       :total="total"
       @current-change="current_change"
     />
