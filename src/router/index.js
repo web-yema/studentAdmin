@@ -60,7 +60,7 @@ export const constantRoutes = [
       {
         path: '/yourprofile',
         name: 'Yourprofile',
-        component: () => import('@/layout/components/yourprofile/index'),
+        component: () => import('@/views/yourprofile/index'),
         meta: { title: '个人中心' },
         hidden: true
       }
