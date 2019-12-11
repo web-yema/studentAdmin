@@ -12,7 +12,7 @@
         @selection-change="selsChange"
       >
         <el-table-column
-          :reserve-selection="true"
+          reserve-selection
           type="selection"
           min-width="50"
         />
@@ -21,7 +21,7 @@
         <el-table-column prop="sex" min-width="50" label="性别" />
         <el-table-column prop="age" min-width="50" label="年龄" />
         <el-table-column prop="study" min-width="50" label="学制" />
-        <el-table-column prop="nativeplace" min-width="90" label="籍贯" />
+        <el-table-column prop="nativeplace" min-width="60" label="籍贯" />
         <el-table-column prop="major" min-width="50" label="专业" />
         <el-table-column prop="classes" min-width="90" label="班级" />
         <el-table-column prop="citycenter" min-width="90" label="市场部" />
@@ -267,6 +267,7 @@ export default {
       const optionstu = await selectAllstud(this.currentPage, {
         classes: this.getClass
       })
+      console.log(this.optionstu)
       if (optionstu.data.code === 200) {
         this.all = optionstu.data.data
         this.total = optionstu.data.total
@@ -274,6 +275,7 @@ export default {
         this.listLoading = false
       }
       this.sliceJg(this.all)
+      console.log(this.all)
     },
     // 删除学生
     remove(row) {
@@ -388,7 +390,14 @@ export default {
       this.checkeds = all_Id
     },
     // 批量修改
-    updatesomestudent() {
+    async updatesomestudent() {
+      // 所有班级
+      const { data } = await getClass()
+      this.allClass = data.data
+      this.allClass.forEach((item, index) => {
+        this.allClass[index] = item.classname
+      })
+      // 选中学制
       this.sels.forEach((item, index) => {
         this.sels[index] = item.study
       })
@@ -406,6 +415,7 @@ export default {
         chengji: this.ruleForm.chengji,
         failss: this.ruleForm.failss
       }
+      console.log(obj)
       if (obj.classes === '') {
         delete obj.classes
       }
@@ -457,8 +467,8 @@ export default {
                 this.currentPage = this.currentPage - 1
                 this.deltotal = this.deltotal - 1
               }
-              this.selectStud()
               this.$refs.multipleTable.clearSelection()
+              this.selectStud()
               this.$message({
                 message: res.data.msg,
                 type: 'success'
@@ -610,7 +620,7 @@ export default {
       this.currentPage = currentPage
       // this.sliceJg(this.all)
       this.selectStud()
-      this.$refs.multipleTable.clearSelection()
+      // this.$refs.multipleTable.clearSelection()
     },
     // 切割籍贯函数
     sliceJg(Array) {
