@@ -274,6 +274,7 @@ export default {
         return false
       } else {
         obj.nativeplace = this.$refs['cascaderAddr'].getCheckedNodes()[0].pathLabels.join('')
+        console.log(obj.nativeplace)
         const success = await getStudent(obj)
         if(success.data.code === 200) {
           this.clearList()
