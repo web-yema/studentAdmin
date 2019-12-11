@@ -73,7 +73,8 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" >
+// scoped
   .el-table td,
   .el-table th {
     text-align: center;
@@ -124,7 +125,7 @@ export default {
   .el-drawer__container,.el-drawer__open{
     // 全部背景
     .el-drawer {
-      background: rgba(39, 39, 39, 0.4);
+      background: rgba(39, 39, 39, 0.4) !important;
       // 个人信息 与 x
       .el-drawer__header {
         color: #fff;
@@ -159,16 +160,4 @@ export default {
     }
   }
 }
-
-//
-//   .el-table td,
-//   .el-table th.is-leaf {
-//     border-bottom: none;
-//   }
-//
-
-//
-//   .el-table {
-//     color: #000;
-//   }
 </style>

@@ -11,11 +11,7 @@
         style="width: 100%"
         @selection-change="selsChange"
       >
-        <el-table-column
-          :reserve-selection="true"
-          type="selection"
-          min-width="50"
-        />
+        <el-table-column :reserve-selection="true" type="selection" min-width="50" />
         <el-table-column prop="studentID" min-width="85" label="学号" />
         <el-table-column prop="name" label="姓名" />
         <el-table-column prop="sex" min-width="50" label="性别" />
@@ -30,16 +26,8 @@
         <el-table-column prop="failss" width="80" label="挂科次数" />
         <el-table-column v-if="power" label="操作" min-width="150">
           <template slot-scope="scope">
-            <el-button
-              type="primary"
-              size="mini"
-              @click="update(scope.$index, scope.row)"
-            >修改</el-button>
-            <el-button
-              type="danger"
-              size="mini"
-              @click="remove(scope.row)"
-            >删除</el-button>
+            <el-button type="primary" size="mini" @click="update(scope.$index, scope.row)">修改</el-button>
+            <el-button type="danger" size="mini" @click="remove(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -52,10 +40,18 @@
             </el-select>
           </el-form-item>
           <el-form-item label="已有成绩" prop="chengji">
-            <el-input v-model="ruleForm.chengji" oninput="value=value.replace(/[^\d.]/g,'')" maxlength="2" />
+            <el-input
+              v-model="ruleForm.chengji"
+              oninput="value=value.replace(/[^\d.]/g,'')"
+              maxlength="2"
+            />
           </el-form-item>
           <el-form-item label="挂科次数" prop="failss">
-            <el-input v-model="ruleForm.failss" oninput="value=value.replace(/[^\d.]/g,'')" maxlength="2" />
+            <el-input
+              v-model="ruleForm.failss"
+              oninput="value=value.replace(/[^\d.]/g,'')"
+              maxlength="2"
+            />
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -66,17 +62,26 @@
       </el-dialog>
     </div>
     <div class="buju">
-      <div
-        v-if="power"
-        style="position:fixed;bottom:20px;margin-left:10px;z-index:1000"
-      >
+      <div v-if="power" style="position:fixed;bottom:20px;margin-left:10px;z-index:1000">
         <!-- 批量删除 -->
         <template>
-          <el-button style="margin-top:10px" type="danger" size="small" :disabled="this.sels.length === 0" @click="soamdelstudent()">批量删除</el-button>
+          <el-button
+            style="margin-top:10px"
+            type="danger"
+            size="small"
+            :disabled="this.sels.length === 0"
+            @click="soamdelstudent()"
+          >批量删除</el-button>
         </template>
         <!-- 批量修改 -->
         <template>
-          <el-button style="margin-top:10px" type="success" size="small" :disabled="this.sels.length === 0" @click="updatesomestudent()">批量修改</el-button>
+          <el-button
+            style="margin-top:10px"
+            type="success"
+            size="small"
+            :disabled="this.sels.length === 0"
+            @click="updatesomestudent()"
+          >批量修改</el-button>
         </template>
         <!-- 添加 -->
         <template>
@@ -86,16 +91,22 @@
 
       <div v-if="power" style="position:fixed;right:50px;bottom:20px;z-index:1000;">
         <!-- 导出 -->
-        <el-button size="mini" type="success" round :loading="downloadLoading" @click="handleDownload">导出当页excel</el-button>
+        <el-button
+          size="mini"
+          type="success"
+          round
+          :loading="downloadLoading"
+          @click="handleDownload"
+        >导出当页excel</el-button>
         <!-- 导入 -->
         <label class="fileinp">
-          <input type="button" class="btn" value="导入excel" round @click="handleInter">
+          <input type="button" class="btn" value="导入excel" round @click="handleInter" />
           <input
             type="file"
             class="fileinpd"
             accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
             @change="importfxx(this)"
-          >
+          />
         </label>
       </div>
       <pageCount
@@ -132,26 +143,12 @@
               <th>挂科次数</th>
               <th>学制</th>
               <th>籍贯</th>
+              <th>入学时间</th>
             </tr>
-            <template v-for="item in exists">
-              <tr v-for="(items,index) in item">
-                <template v-if="index==0">
-                  <td>{{ items.studentID }}</td>
-                  <td>{{ items.name }}</td>
-                  <td>{{ items.classes }}</td>
-                  <td>{{ items.sex }}</td>
-                  <td>{{ items.age }}</td>
-                  <td>{{ items.major }}</td>
-                  <td>{{ items.citycenter }}</td>
-                  <td>{{ items.chengji }}</td>
-                  <td>{{ items.graduation }}</td>
-                  <td>{{ items.failss }}</td>
-                  <td>{{ items.study }}</td>
-                  <td>{{ items.nativeplace }}</td>
-                </template>
-
-                <el-checkbox-group v-else id="Currentimport" v-model="checkList">
-                  <el-checkbox class="Currentimport-checkbox" :label="items">
+            <div id="bao">
+              <template v-for="item in exists">
+                <tr v-for="(items,index) in item">
+                  <template v-if="index==0">
                     <td>{{ items.studentID }}</td>
                     <td>{{ items.name }}</td>
                     <td>{{ items.classes }}</td>
@@ -164,11 +161,29 @@
                     <td>{{ items.failss }}</td>
                     <td>{{ items.study }}</td>
                     <td>{{ items.nativeplace }}</td>
-                  </el-checkbox>
-                </el-checkbox-group>
+                    <td>{{ items.entryDate }}</td>
+                  </template>
 
-              </tr>
-            </template>
+                  <el-checkbox-group v-else id="Currentimport" v-model="checkList">
+                    <el-checkbox class="Currentimport-checkbox" :label="items">
+                      <td>{{ items.studentID }}</td>
+                      <td>{{ items.name }}</td>
+                      <td>{{ items.classes }}</td>
+                      <td>{{ items.sex }}</td>
+                      <td>{{ items.age }}</td>
+                      <td>{{ items.major }}</td>
+                      <td>{{ items.citycenter }}</td>
+                      <td>{{ items.chengji }}</td>
+                      <td>{{ items.graduation }}</td>
+                      <td>{{ items.failss }}</td>
+                      <td>{{ items.study }}</td>
+                      <td>{{ items.nativeplace }}</td>
+                      <td>{{ items.entryDate }}</td>
+                    </el-checkbox>
+                  </el-checkbox-group>
+                </tr>
+              </template>
+            </div>
           </table>
         </div>
 
@@ -192,14 +207,14 @@ import {
   getExcel,
   updateExcelstudent, // 导入修改
   getClass // 获取班级
-} from '../../../api/api.js'
-  // 分页模块
-import pageCount from '../../../components/Pagination/index'
+} from "../../../api/api.js";
+// 分页模块
+import pageCount from "../../../components/Pagination/index";
 // Excel模块
 // eslint-disable-next-line no-unused-vars
-import UploadExcel from '../../../components/UploadExcel/index'
+import UploadExcel from "../../../components/UploadExcel/index";
 // 引入vuex 权限
-import { mapGetters } from 'vuex'
+import { mapGetters } from "vuex";
 export default {
   components: {
     pageCount
@@ -219,15 +234,15 @@ export default {
       all: [], // 获取班级学生
       createClass: [], // 导入
       ruleForm: {
-        classes: '',
-        chengji: '',
-        graduation: '',
-        failss: '',
-        id: ''
+        classes: "",
+        chengji: "",
+        graduation: "",
+        failss: "",
+        id: ""
       },
       rowlist: [], // 修改旧值
       study: [], // 学制
-      path: '/example/tree',
+      path: "/example/tree",
       sels: [], // 选中的值显示
       checkeds: [], // 批量删除选中id
       updateShow: 100000, // 最大匹配的值
@@ -239,165 +254,163 @@ export default {
       exists: [], // 导入-数据库中已存在的数据
       checkList: [], // 重复学生表单中的多选框
       delpage: [], // 页数
-      allClass: '' // 所有班级
-    }
+      allClass: "" // 所有班级
+    };
   },
   // vuex 权限
   computed: {
-    ...mapGetters(['roles'])
+    ...mapGetters(["roles"])
   },
   // '3' 代表的普通用户，普通用户登录会将操作按钮隐藏
   created() {
-    if (this.roles.includes('3')) {
-      this.power = false
+    if (this.roles.includes("3")) {
+      this.power = false;
     }
   },
   async mounted() {
     // 接收存储数据
-    this.getClass = JSON.parse(localStorage.getItem('data'))
-    this.selectStud()
-    this.listLoading = false
+    this.getClass = JSON.parse(localStorage.getItem("data"));
+    this.selectStud();
+    this.listLoading = false;
   },
   methods: {
     // 保存选中的数据id,row-key就是要指定一个key标识这一行的数据
     getRowKey(row) {
-      return row.id
+      return row.id;
     },
     async selectStud() {
       const optionstu = await selectAllstud(this.currentPage, {
         classes: this.getClass
-      })
+      });
       if (optionstu.data.code === 200) {
-        this.all = optionstu.data.data
-        this.total = optionstu.data.total
-        this.delpage = optionstu.data.delpage
-        this.listLoading = false
+        this.all = optionstu.data.data;
+        this.total = optionstu.data.total;
+        this.delpage = optionstu.data.delpage;
+        this.listLoading = false;
       }
-      this.sliceJg(this.all)
+      this.sliceJg(this.all);
     },
     // 删除学生
     remove(row) {
-      const h = this.$createElement
+      const h = this.$createElement;
       this.$msgbox({
-        title: '提示',
-        message: h('p', null, [h('span', null, '您确定要移除这个学生吗？')]),
+        title: "提示",
+        message: h("p", null, [h("span", null, "您确定要移除这个学生吗？")]),
         showCancelButton: true,
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       })
         .then(async res => {
           delAllStudent(row._id).then(async res => {
             if (res.data.code === 201) {
-              this.$message.error(res.data.msg)
+              this.$message.error(res.data.msg);
             } else {
               if (this.all.length === 1) {
-                this.currentPage = this.currentPage - 1
-                this.deltotal = this.deltotal - 1
+                this.currentPage = this.currentPage - 1;
+                this.deltotal = this.deltotal - 1;
               }
-              this.selectStud()
+              this.selectStud();
               this.$message({
                 message: res.data.msg,
-                type: 'success'
-              })
+                type: "success"
+              });
             }
-          })
+          });
           // eslint-disable-next-line handle-callback-err
         })
-      // eslint-disable-next-line handle-callback-err
+        // eslint-disable-next-line handle-callback-err
         .catch(err => {
           this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
+            type: "info",
+            message: "已取消删除"
+          });
+        });
     },
     // 修改
     async update(index, row) {
-      const { data } = await getClass()
-      this.allClass = data.data
+      const { data } = await getClass();
+      this.allClass = data.data;
       this.allClass.forEach((item, index) => {
-        this.allClass[index] = item.classname
-      })
-      this.xgshow = true
-      this.plxgshow = false
-      this.rowlist = row
-      this.show = true
-      this.ruleForm.classes = row.classes
-      this.ruleForm.chengji = row.chengji
-      this.ruleForm.failss = row.failss
-      this.ruleForm.id = row._id
-      this.study = row.study
+        this.allClass[index] = item.classname;
+      });
+      this.xgshow = true;
+      this.plxgshow = false;
+      this.rowlist = row;
+      this.show = true;
+      this.ruleForm.classes = row.classes;
+      this.ruleForm.chengji = row.chengji;
+      this.ruleForm.failss = row.failss;
+      this.ruleForm.id = row._id;
+      this.study = row.study;
     },
     // 确定修改
     async submitForm() {
-      const graduation = this.study * 10 - this.ruleForm.chengji
+      const graduation = this.study * 10 - this.ruleForm.chengji;
       // 默认值
       const obj = {
         classes: this.ruleForm.classes,
         chengji: this.ruleForm.chengji,
         failss: this.ruleForm.failss,
         graduation: graduation
-      }
-      const ID = this.ruleForm.id
-      const {
-        data
-      } = await updateAllstud(ID, obj)
+      };
+      const ID = this.ruleForm.id;
+      const { data } = await updateAllstud(ID, obj);
       // 判断值是否改变
       if (
         obj.classes === this.rowlist.classes &&
         obj.chengji === this.rowlist.chengji &&
         obj.failss === this.rowlist.failss
       ) {
-        this.$message.info('没有任何修改')
-        this.show = false
+        this.$message.info("没有任何修改");
+        this.show = false;
       } else if (data.code === 200) {
-        this.$message.success('修改成功')
-        this.selectStud()
-        this.show = false
+        this.$message.success("修改成功");
+        this.selectStud();
+        this.show = false;
       } else {
-        this.$message.error(data.msg)
-        return false
+        this.$message.error(data.msg);
+        return false;
       }
     },
     // 取消修改
     secede(formName) {
-      this.$refs[formName].resetFields()
+      this.$refs[formName].resetFields();
       this.$message({
-        type: 'info',
-        message: '已取消修改'
-      })
-      this.show = false
+        type: "info",
+        message: "已取消修改"
+      });
+      this.show = false;
     },
     // 添加
     addstudent() {
       this.$router.push({
         path: this.path, // 跳转路由
         query: {
-          value: '/form/classstudent'
+          value: "/form/classstudent"
         }
-      })
+      });
     },
     // 选择项
     selsChange(sels) {
-      this.sels = sels
-      const all_Id = []
+      this.sels = sels;
+      const all_Id = [];
       for (let i = 0; i < sels.length; i++) {
-        all_Id.push(sels[i]._id)
+        all_Id.push(sels[i]._id);
       }
-      this.checkeds = all_Id
+      this.checkeds = all_Id;
     },
     // 批量修改
     updatesomestudent() {
       this.sels.forEach((item, index) => {
-        this.sels[index] = item.study
-      })
-      this.ruleForm.classes = ''
-      this.ruleForm.chengji = ''
-      this.ruleForm.failss = ''
-      this.show = true
-      this.xgshow = false
-      this.plxgshow = true
+        this.sels[index] = item.study;
+      });
+      this.ruleForm.classes = "";
+      this.ruleForm.chengji = "";
+      this.ruleForm.failss = "";
+      this.show = true;
+      this.xgshow = false;
+      this.plxgshow = true;
     },
     // 确定批量修改
     async plsubmitForm() {
@@ -405,244 +418,250 @@ export default {
         classes: this.ruleForm.classes,
         chengji: this.ruleForm.chengji,
         failss: this.ruleForm.failss
+      };
+      if (obj.classes === "") {
+        delete obj.classes;
       }
-      if (obj.classes === '') {
-        delete obj.classes
-      }
-      if (obj.chengji === '') {
-        delete obj.chengji
+      if (obj.chengji === "") {
+        delete obj.chengji;
       } else {
         for (var i = 0; i < this.sels.length; i++) {
           if (this.sels.length > 1 && this.sels[0] !== this.sels[1]) {
-            this.$message.error('年制不同，修改失败')
-            this.show = false
-            this.$refs.multipleTable.clearSelection()
-            return false
+            this.$message.error("年制不同，修改失败");
+            this.show = false;
+            this.$refs.multipleTable.clearSelection();
+            return false;
           } else {
-            const key = 'graduation'
-            obj[key] = this.sels[i] * 10 - obj.chengji
+            const key = "graduation";
+            obj[key] = this.sels[i] * 10 - obj.chengji;
           }
         }
       }
-      if (obj.failss === '') {
-        delete obj.failss
+      if (obj.failss === "") {
+        delete obj.failss;
       }
       if (!obj.classes && !obj.chengji && !obj.failss) {
-        this.$message.error('没有任何修改')
+        this.$message.error("没有任何修改");
       } else {
-        const { data } = await updateStudent(this.checkeds, obj)
+        const { data } = await updateStudent(this.checkeds, obj);
         if (data.code === 200) {
-          this.selectStud()
-          this.$refs.multipleTable.clearSelection()
-          this.$message.success('修改成功')
-          this.show = false
+          this.selectStud();
+          this.$refs.multipleTable.clearSelection();
+          this.$message.success("修改成功");
+          this.show = false;
         } else {
-          this.$message.error(data.msg)
+          this.$message.error(data.msg);
         }
       }
     },
     // 批量删除
     soamdelstudent() {
-      this.$confirm('此操作将永久删除这几项, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+      this.$confirm("此操作将永久删除这几项, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       })
         .then(() => {
           delAllStudent(this.checkeds).then(async res => {
             if (res.data.code === 201) {
-              this.$message.error(res.data.msg)
+              this.$message.error(res.data.msg);
             } else {
               if (this.all.length === 1) {
-                this.currentPage = this.currentPage - 1
-                this.deltotal = this.deltotal - 1
+                this.currentPage = this.currentPage - 1;
+                this.deltotal = this.deltotal - 1;
               }
-              this.selectStud()
-              this.$refs.multipleTable.clearSelection()
+              this.selectStud();
+              this.$refs.multipleTable.clearSelection();
               this.$message({
                 message: res.data.msg,
-                type: 'success'
-              })
+                type: "success"
+              });
             }
-          })
+          });
         })
-        .catch(() => {})
+        .catch(() => {});
     },
     handleDownload() {
-      this.downloadLoading = true
-        import('../../../excel/Export2Excel.js').then(excel => {
-          const tHeader = [
-            '班级',
-            '姓名',
-            '性别',
-            '年龄',
-            '专业',
-            '市场部',
-            '已有成绩',
-            '还差成绩',
-            '挂科次数',
-            '学制',
-            '籍贯',
-            '学号'
-          ] // excel 表头
-          const filterVal = [
-            'classes',
-            'name',
-            'sex',
-            'age',
-            'major',
-            'citycenter',
-            'chengji',
-            'graduation',
-            'failss',
-            'study',
-            'nativeplace',
-            'studentID'
-          ] // 获取的数据字段名
-          const list = this.all // 所要生成Excel数据源
-          const data = this.formatJson(filterVal, list)
-          excel.export_json_to_excel({
-            header: tHeader,
-            data,
-            filename: this.filename,
-            autoWidth: this.autoWidth
-          })
-          this.downloadLoading = false
-        })
+      this.downloadLoading = true;
+      import("../../../excel/Export2Excel.js").then(excel => {
+        const tHeader = [
+          "班级",
+          "姓名",
+          "性别",
+          "年龄",
+          "专业",
+          "市场部",
+          "已有成绩",
+          "还差成绩",
+          "挂科次数",
+          "学制",
+          "籍贯",
+          "学号"
+        ]; // excel 表头
+        const filterVal = [
+          "classes",
+          "name",
+          "sex",
+          "age",
+          "major",
+          "citycenter",
+          "chengji",
+          "graduation",
+          "failss",
+          "study",
+          "nativeplace",
+          "studentID"
+        ]; // 获取的数据字段名
+        const list = this.all; // 所要生成Excel数据源
+        const data = this.formatJson(filterVal, list);
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: this.filename,
+          autoWidth: this.autoWidth
+        });
+        this.downloadLoading = false;
+      });
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v =>
         filterVal.map(j => {
-          return v[j]
+          return v[j];
         })
-      )
+      );
     },
     handleInter() {
-      this.downloadLoading2 = true
+      this.downloadLoading2 = true;
     },
     // 导入
     importfxx(obj) {
-      const _this = this
+      const _this = this;
       // eslint-disable-next-line no-unused-vars
-      const inputDOM = this.$refs.inputer
+      const inputDOM = this.$refs.inputer;
       // 通过DOM取文件数据
-      this.file = event.currentTarget.files[0]
-      var rABS = false // 是否将文件读取为二进制字符串
-      var f = this.file
-      var reader = new FileReader()
+      this.file = event.currentTarget.files[0];
+      var rABS = false; // 是否将文件读取为二进制字符串
+      var f = this.file;
+      var reader = new FileReader();
       // if (!FileReader.prototype.readAsBinaryString) {
       FileReader.prototype.readAsBinaryString = function(f) {
-        var binary = ''
-        var rABS = false // 是否将文件读取为二进制字符串
+        var binary = "";
+        var rABS = false; // 是否将文件读取为二进制字符串
         // eslint-disable-next-line no-unused-vars
-        var pt = this
-        var wb // 读取完成的数据
-        var outdata
-        var reader = new FileReader()
+        var pt = this;
+        var wb; // 读取完成的数据
+        var outdata;
+        var reader = new FileReader();
         reader.onload = async function(e) {
-          var bytes = new Uint8Array(reader.result)
-          var length = bytes.byteLength
+          var bytes = new Uint8Array(reader.result);
+          var length = bytes.byteLength;
           for (var i = 0; i < length; i++) {
-            binary += String.fromCharCode(bytes[i])
+            binary += String.fromCharCode(bytes[i]);
           }
-          var XLSX = require('xlsx')
+          var XLSX = require("xlsx");
           if (rABS) {
             // eslint-disable-next-line no-undef
             wb = XLSX.read(btoa(fixdata(binary)), {
               // 手动转化
-              type: 'base64'
-            })
+              type: "base64"
+            });
           } else {
             wb = XLSX.read(binary, {
-              type: 'binary'
-            })
+              type: "binary"
+            });
           }
-          outdata = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]) // outdata就是你想要的东西
-          this.da = [...outdata]
-          const arr = []
+          outdata = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]); // outdata就是你想要的东西
+          this.da = [...outdata];
+          const arr = [];
           this.da.map(v => {
-            const obj = {}
-            obj.classes = v.班级
-            obj.name = v.姓名
-            obj.sex = v.性别
-            obj.age = v.年龄
-            obj.major = v.专业
-            obj.citycenter = v.市场部
-            obj.chengji = v.已有成绩
-            obj.graduation = v.还差成绩
-            obj.failss = v.挂科次数
-            obj.study = v.学制
-            obj.nativeplace = v.籍贯
-            obj.studentID = v.学号
-            arr.push(obj)
-          })
+            const obj = {};
+            obj.classes = v.班级;
+            obj.name = v.姓名;
+            obj.sex = v.性别;
+            obj.age = v.年龄;
+            obj.major = v.专业;
+            obj.citycenter = v.市场部;
+            obj.chengji = v.已有成绩;
+            obj.graduation = v.还差成绩;
+            obj.failss = v.挂科次数;
+            obj.study = v.学制;
+            obj.nativeplace = v.籍贯;
+            obj.studentID = v.学号;
+            arr.push(obj);
+          });
           getExcel(arr).then(res => {
-            _this.exists = res.data.exist
+            _this.exists = res.data.exist;
+            console.log(_this.exists);
+
             if (res.data.code === 200) {
               _this.$message({
-                message: '请耐心等待导入成功',
-                type: 'success'
-              })
-              _this.selectStud()
+                message: "请耐心等待导入成功",
+                type: "success"
+              });
+              _this.selectStud();
             } else {
               _this.$message({
                 message: res.data.msg,
-                type: 'success'
-              })
-              _this.dialogVisible = true // 进入学生重复
+                type: "success"
+              });
+              _this.dialogVisible = true; // 进入学生重复
             }
-          })
+          });
           // eslint-disable-next-line no-unused-vars
           const para = {
             QwithList: arr
-          }
-        }
-        reader.readAsArrayBuffer(f)
-      }
+          };
+        };
+        reader.readAsArrayBuffer(f);
+      };
       if (rABS) {
-        reader.readAsArrayBuffer(f)
+        reader.readAsArrayBuffer(f);
       } else {
-        reader.readAsBinaryString(f)
+        reader.readAsBinaryString(f);
       }
     },
     // 调用子组件传过来的事件
     getcurrentPage(currentPage) {
-      this.currentPage = currentPage
-      // this.sliceJg(this.all)
-      this.selectStud()
-      this.$refs.multipleTable.clearSelection()
+      this.currentPage = currentPage;
+      this.selectStud();
+      this.$refs.multipleTable.clearSelection();
     },
     // 切割籍贯函数
     sliceJg(Array) {
       // eslint-disable-next-line no-undef
       for (let i = 0; i < Array.length; i++) {
-        if (Array[i].nativeplace === '' || Array[i].nativeplace === null || Array[i].nativeplace === undefined) {
-          continue
+        if (
+          Array[i].nativeplace === "" ||
+          Array[i].nativeplace === null ||
+          Array[i].nativeplace === undefined
+        ) {
+          continue;
         } else if (
-          Array[i].nativeplace.includes('黑龙江') ||
-            Array[i].nativeplace.includes('内蒙古')
+          Array[i].nativeplace.includes("黑龙江") ||
+          Array[i].nativeplace.includes("内蒙古")
         ) {
           // eslint-disable-next-line no-undef
-          Array[i].nativeplace = Array[i].nativeplace.slice(0, 3)
+          Array[i].nativeplace = Array[i].nativeplace.slice(0, 3);
         } else {
-          Array[i].nativeplace = Array[i].nativeplace.slice(0, 2)
+          Array[i].nativeplace = Array[i].nativeplace.slice(0, 2);
         }
       }
-      return Array
+      return Array;
     },
     // 重复学生
     async Confirmreplacement() {
-      const { data } = await updateExcelstudent(this.checkList)
+      console.log("已点击");
+      const { data } = await updateExcelstudent(this.checkList);
       if (data.code === 200) {
-        this.dialogVisible = false
-        this.selectStud()
-        this.$message.success(data.msg)
+        this.dialogVisible = false;
+        this.selectStud();
+        this.$message.success(data.msg);
       }
     }
   }
-}
+};
 </script>
 
 <style scoped>
-  @import "./asset.scss";
+@import "./asset.scss";
 </style>
