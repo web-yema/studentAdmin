@@ -186,9 +186,13 @@ export default {
     this.options = City // 地区调用
   },
   methods: {
-     btn() {
-      // 入职时间格式
-      return new Date(this.entryDate).getFullYear() + '-' + (new Date(this.entryDate).getMonth() + 1) + '-' + new Date(this.entryDate).getDate()
+    btn() {
+      // 入学时间格式
+      return new Date(this.intime).getFullYear() + 
+      '-' 
+      + (new Date(this.intime).getMonth() + 1) +
+       '-' 
+       + new Date(this.intime).getDate()
     },
     getRouterData() {
       this.patho = this.$route.query.value
