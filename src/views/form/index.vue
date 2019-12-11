@@ -68,7 +68,7 @@
       class="allstulog"
       title="转移学生"
       :visible.sync="zyStu"
-      width="30%"
+      width="40%"
       :before-close="handleClose"
     >
       <el-table
@@ -78,8 +78,14 @@
         class="allstutab"
         :data="all"
         height="300"
-        @current-change="handleCurrentChange"
+        :row-key="getRowKey"
+        @selection-change="selsChange"
       >
+        <el-table-column
+          :reserve-selection="true"
+          type="selection"
+          min-width="50"
+        />
         <el-table-column prop="name" label="姓名">
           <template slot-scope="scope">
             <div style="height:100%">{{ scope.row.name }}</div>
@@ -138,6 +144,7 @@ import {
   allstudent, // 所有学生信息
   getUpdate, // 修改学生信息
   getMajor, // 所有专业
+  updateStudent, // 批量修改
   // eslint-disable-next-line no-unused-vars
   classPage // 班级分页
 } from '../../api/api.js'
@@ -199,13 +206,14 @@ export default {
       zystuclass: [], // 转移学生
       play: false, // 控制显示隐藏
       changeStuClass: '', // 转移选择班级
-      zyStuId: '', // 学生id
       multipleSelection: '',
+      sels: [], // 选中的值显示
       currentRow: null,
       total: 1, // 数据总条数，默认给1
       pageSize: 6, // 数据的总条数，默认是6条
       currentPage: 1, // 总页数，默认是第1页
       getMajor: [], // 所有专业
+      checkeds: [], // 批量转移选中id
       power: true // 操作按钮权限
     }
   },
@@ -228,6 +236,10 @@ export default {
     this.listLoading = false
   },
   methods: {
+    // 保存选中的数据id,row-key就是要指定一个key标识这一行的数据
+    getRowKey(row) {
+      return row.id
+    },
     // 删除班级
     async remove(e, id) {
       const { data } = await allstudent()
@@ -247,6 +259,7 @@ export default {
           })
             .then(async res => {
               this.zyStu = true
+              this.$refs.multipleTable.clearSelection()
             })
             // eslint-disable-next-line handle-callback-err
             .catch(err => {
@@ -354,17 +367,16 @@ export default {
         })
         .catch(_ => {})
     },
-    // 表格项
-    handleCurrentChange(rows) {
-      this.zyStuId = rows
-    },
     // 选择的班级
     changeClass(vel) {
       this.changeStuClass = vel
     },
     // 点击转移
     async zyStus() {
-      if (this.zyStuId === '') {
+      this.sels.forEach((item, index) => {
+        this.sels[index] = item._id
+      })
+      if (!this.checkeds[0]) {
         this.$message({
           type: 'info',
           message: '请选择学生'
@@ -381,21 +393,29 @@ export default {
       const obj = {
         classes: this.changeStuClass
       }
-      const _id = this.zyStuId._id
       if (this.all[0].classes === this.changeStuClass) {
         this.$message({
           type: 'info',
           message: '不能转移到本班'
         })
       } else {
-        const success = await getUpdate(_id, obj)
+        const success = await updateStudent(this.checkeds, obj)
         if (success.data.code === 200) {
-          var num = this.all.indexOf(this.zyStuId)
-          this.all.splice(num, 1)
           this.$message.success('转移成功！')
-          this.zyStuId = ''
+          const { data } = await allstudent()
+          this.all = data.data.filter(item => item.classes !== obj.classes)
+          this.$refs.multipleTable.clearSelection()
         }
       }
+    },
+    // 选择项
+    selsChange(sels) {
+      this.sels = sels
+      const all_Id = []
+      for (let i = 0; i < sels.length; i++) {
+        all_Id.push(sels[i]._id)
+      }
+      this.checkeds = all_Id
     },
     // 调用子组件传过来的事件
     getcurrentPage(currentPage) {
