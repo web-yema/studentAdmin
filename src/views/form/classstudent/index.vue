@@ -23,11 +23,12 @@
         <el-table-column prop="study" min-width="50" label="学制" />
         <el-table-column prop="nativeplace" min-width="60" label="籍贯" />
         <el-table-column prop="major" min-width="50" label="专业" />
-        <el-table-column prop="classes" min-width="90" label="班级" />
-        <el-table-column prop="citycenter" min-width="90" label="市场部" />
+        <el-table-column prop="classes" min-width="80" label="班级" />
+        <el-table-column prop="citycenter" min-width="80" label="市场部" />
         <el-table-column prop="chengji" width="80" label="当前成绩" />
         <el-table-column prop="graduation" width="80" label="还差成绩" />
         <el-table-column prop="failss" width="80" label="挂科次数" />
+        <el-table-column prop="entryDate" width="100" label="入学时间" />
         <el-table-column v-if="power" label="操作" min-width="150">
           <template slot-scope="scope">
             <el-button
@@ -51,7 +52,7 @@
               <el-option v-for="site in allClass" :key="site" :label="site" :value="site" />
             </el-select>
           </el-form-item>
-          <el-form-item label="已有成绩" prop="chengji">
+          <el-form-item label="当前成绩" prop="chengji">
             <el-input v-model="ruleForm.chengji" oninput="value=value.replace(/[^\d.]/g,'')" maxlength="2" />
           </el-form-item>
           <el-form-item label="挂科次数" prop="failss">
@@ -127,11 +128,12 @@
               <th>年龄</th>
               <th>专业</th>
               <th>市场部</th>
-              <th>已有成绩</th>
+              <th>当前成绩</th>
               <th>还差成绩</th>
               <th>挂科次数</th>
               <th>学制</th>
               <th>籍贯</th>
+              <th>入学时间</th>
             </tr>
             <template v-for="item in exists">
               <tr v-for="(items,index) in item">
@@ -148,6 +150,7 @@
                   <td>{{ items.failss }}</td>
                   <td>{{ items.study }}</td>
                   <td>{{ items.nativeplace }}</td>
+                  <td>{{ items.entryDate }}</td>
                 </template>
 
                 <el-checkbox-group v-else id="Currentimport" v-model="checkList">
@@ -164,6 +167,7 @@
                     <td>{{ items.failss }}</td>
                     <td>{{ items.study }}</td>
                     <td>{{ items.nativeplace }}</td>
+                    <td>{{ items.entryDate }}</td>
                   </el-checkbox>
                 </el-checkbox-group>
 
@@ -488,12 +492,13 @@ export default {
             '年龄',
             '专业',
             '市场部',
-            '已有成绩',
+            '当前成绩',
             '还差成绩',
             '挂科次数',
             '学制',
             '籍贯',
-            '学号'
+            '学号',
+            '入学时间'
           ] // excel 表头
           const filterVal = [
             'classes',
@@ -507,7 +512,8 @@ export default {
             'failss',
             'study',
             'nativeplace',
-            'studentID'
+            'studentID',
+            'entryDate'
           ] // 获取的数据字段名
           const list = this.all // 所要生成Excel数据源
           const data = this.formatJson(filterVal, list)
@@ -578,12 +584,13 @@ export default {
             obj.age = v.年龄
             obj.major = v.专业
             obj.citycenter = v.市场部
-            obj.chengji = v.已有成绩
+            obj.chengji = v.当前成绩
             obj.graduation = v.还差成绩
             obj.failss = v.挂科次数
             obj.study = v.学制
             obj.nativeplace = v.籍贯
             obj.studentID = v.学号
+            obj.entryDate = v.入学时间
             arr.push(obj)
           })
           getExcel(arr).then(res => {
