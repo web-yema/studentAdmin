@@ -11,19 +11,24 @@
         style="width: 100%"
         @selection-change="selsChange"
       >
-        <el-table-column :reserve-selection="true" type="selection" min-width="50" />
+        <el-table-column
+          reserve-selection
+          type="selection"
+          min-width="50"
+        />
         <el-table-column prop="studentID" min-width="85" label="学号" />
         <el-table-column prop="name" label="姓名" />
         <el-table-column prop="sex" min-width="50" label="性别" />
         <el-table-column prop="age" min-width="50" label="年龄" />
         <el-table-column prop="study" min-width="50" label="学制" />
-        <el-table-column prop="nativeplace" min-width="90" label="籍贯" />
+        <el-table-column prop="nativeplace" min-width="60" label="籍贯" />
         <el-table-column prop="major" min-width="50" label="专业" />
-        <el-table-column prop="classes" min-width="90" label="班级" />
-        <el-table-column prop="citycenter" min-width="90" label="市场部" />
+        <el-table-column prop="classes" min-width="80" label="班级" />
+        <el-table-column prop="citycenter" min-width="80" label="市场部" />
         <el-table-column prop="chengji" width="80" label="当前成绩" />
         <el-table-column prop="graduation" width="80" label="还差成绩" />
         <el-table-column prop="failss" width="80" label="挂科次数" />
+        <el-table-column prop="entryDate" width="100" label="入学时间" />
         <el-table-column v-if="power" label="操作" min-width="150">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="update(scope.$index, scope.row)">修改</el-button>
@@ -39,12 +44,8 @@
               <el-option v-for="site in allClass" :key="site" :label="site" :value="site" />
             </el-select>
           </el-form-item>
-          <el-form-item label="已有成绩" prop="chengji">
-            <el-input
-              v-model="ruleForm.chengji"
-              oninput="value=value.replace(/[^\d.]/g,'')"
-              maxlength="2"
-            />
+          <el-form-item label="当前成绩" prop="chengji">
+            <el-input v-model="ruleForm.chengji" oninput="value=value.replace(/[^\d.]/g,'')" maxlength="2" />
           </el-form-item>
           <el-form-item label="挂科次数" prop="failss">
             <el-input
@@ -138,7 +139,7 @@
               <th>年龄</th>
               <th>专业</th>
               <th>市场部</th>
-              <th>已有成绩</th>
+              <th>当前成绩</th>
               <th>还差成绩</th>
               <th>挂科次数</th>
               <th>学制</th>
@@ -281,14 +282,16 @@ export default {
     async selectStud() {
       const optionstu = await selectAllstud(this.currentPage, {
         classes: this.getClass
-      });
+      })
+      console.log(this.optionstu)
       if (optionstu.data.code === 200) {
         this.all = optionstu.data.data;
         this.total = optionstu.data.total;
         this.delpage = optionstu.data.delpage;
         this.listLoading = false;
       }
-      this.sliceJg(this.all);
+      this.sliceJg(this.all)
+      console.log(this.all)
     },
     // 删除学生
     remove(row) {
@@ -401,7 +404,14 @@ export default {
       this.checkeds = all_Id;
     },
     // 批量修改
-    updatesomestudent() {
+    async updatesomestudent() {
+      // 所有班级
+      const { data } = await getClass()
+      this.allClass = data.data
+      this.allClass.forEach((item, index) => {
+        this.allClass[index] = item.classname
+      })
+      // 选中学制
       this.sels.forEach((item, index) => {
         this.sels[index] = item.study;
       });
@@ -422,8 +432,12 @@ export default {
       if (obj.classes === "") {
         delete obj.classes;
       }
-      if (obj.chengji === "") {
-        delete obj.chengji;
+      console.log(obj)
+      if (obj.classes === '') {
+        delete obj.classes
+      }
+      if (obj.chengji === '') {
+        delete obj.chengji
       } else {
         for (var i = 0; i < this.sels.length; i++) {
           if (this.sels.length > 1 && this.sels[0] !== this.sels[1]) {
@@ -470,8 +484,8 @@ export default {
                 this.currentPage = this.currentPage - 1;
                 this.deltotal = this.deltotal - 1;
               }
-              this.selectStud();
-              this.$refs.multipleTable.clearSelection();
+              this.$refs.multipleTable.clearSelection()
+              this.selectStud()
               this.$message({
                 message: res.data.msg,
                 type: "success"
@@ -482,46 +496,48 @@ export default {
         .catch(() => {});
     },
     handleDownload() {
-      this.downloadLoading = true;
-      import("../../../excel/Export2Excel.js").then(excel => {
-        const tHeader = [
-          "班级",
-          "姓名",
-          "性别",
-          "年龄",
-          "专业",
-          "市场部",
-          "已有成绩",
-          "还差成绩",
-          "挂科次数",
-          "学制",
-          "籍贯",
-          "学号"
-        ]; // excel 表头
-        const filterVal = [
-          "classes",
-          "name",
-          "sex",
-          "age",
-          "major",
-          "citycenter",
-          "chengji",
-          "graduation",
-          "failss",
-          "study",
-          "nativeplace",
-          "studentID"
-        ]; // 获取的数据字段名
-        const list = this.all; // 所要生成Excel数据源
-        const data = this.formatJson(filterVal, list);
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          filename: this.filename,
-          autoWidth: this.autoWidth
-        });
-        this.downloadLoading = false;
-      });
+      this.downloadLoading = true
+        import('../../../excel/Export2Excel.js').then(excel => {
+          const tHeader = [
+            '班级',
+            '姓名',
+            '性别',
+            '年龄',
+            '专业',
+            '市场部',
+            '当前成绩',
+            '还差成绩',
+            '挂科次数',
+            '学制',
+            '籍贯',
+            '学号',
+            '入学时间'
+          ] // excel 表头
+          const filterVal = [
+            'classes',
+            'name',
+            'sex',
+            'age',
+            'major',
+            'citycenter',
+            'chengji',
+            'graduation',
+            'failss',
+            'study',
+            'nativeplace',
+            'studentID',
+            'entryDate'
+          ] // 获取的数据字段名
+          const list = this.all // 所要生成Excel数据源
+          const data = this.formatJson(filterVal, list)
+          excel.export_json_to_excel({
+            header: tHeader,
+            data,
+            filename: this.filename,
+            autoWidth: this.autoWidth
+          })
+          this.downloadLoading = false
+        })
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v =>
@@ -574,21 +590,22 @@ export default {
           this.da = [...outdata];
           const arr = [];
           this.da.map(v => {
-            const obj = {};
-            obj.classes = v.班级;
-            obj.name = v.姓名;
-            obj.sex = v.性别;
-            obj.age = v.年龄;
-            obj.major = v.专业;
-            obj.citycenter = v.市场部;
-            obj.chengji = v.已有成绩;
-            obj.graduation = v.还差成绩;
-            obj.failss = v.挂科次数;
-            obj.study = v.学制;
-            obj.nativeplace = v.籍贯;
-            obj.studentID = v.学号;
-            arr.push(obj);
-          });
+            const obj = {}
+            obj.classes = v.班级
+            obj.name = v.姓名
+            obj.sex = v.性别
+            obj.age = v.年龄
+            obj.major = v.专业
+            obj.citycenter = v.市场部
+            obj.chengji = v.当前成绩
+            obj.graduation = v.还差成绩
+            obj.failss = v.挂科次数
+            obj.study = v.学制
+            obj.nativeplace = v.籍贯
+            obj.studentID = v.学号
+            obj.entryDate = v.入学时间
+            arr.push(obj)
+          })
           getExcel(arr).then(res => {
             _this.exists = res.data.exist;
             console.log(_this.exists);
@@ -622,9 +639,10 @@ export default {
     },
     // 调用子组件传过来的事件
     getcurrentPage(currentPage) {
-      this.currentPage = currentPage;
-      this.selectStud();
-      this.$refs.multipleTable.clearSelection();
+      this.currentPage = currentPage
+      // this.sliceJg(this.all)
+      this.selectStud()
+      // this.$refs.multipleTable.clearSelection()
     },
     // 切割籍贯函数
     sliceJg(Array) {

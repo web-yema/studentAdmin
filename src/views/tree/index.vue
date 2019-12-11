@@ -107,12 +107,11 @@
       <div style="margin-left:15px;width:70%;display:flex;justify-content: space-between;margin-top:30px;">
         <div style="margin:10px;">入学时间：</div>
         <el-date-picker
-            v-model="intime"
-            type="date"
-            placeholder="选择日期"
-            style="width:20%;height:28px;margin-right:460px;"
-        >
-        </el-date-picker>
+          v-model="intime"
+          type="date"
+          placeholder="选择日期"
+          style="width:20%;height:28px;margin-right:460px;"
+        />
       </div>
       <el-button
         type="primary"
@@ -150,7 +149,7 @@ export default {
       newclass: '', // 班级选项
       cityCenter: '', // 市场部选项
       chengji: '', // 已有成绩
-      intime:'', // 入学时间
+      intime: '', // 入学时间
       // select中value才是选中的那个值
       // 学制选项
       studys: [
@@ -186,9 +185,13 @@ export default {
     this.options = City // 地区调用
   },
   methods: {
-     btn() {
+    btn() {
       // 入职时间格式
-      return new Date(this.entryDate).getFullYear() + '-' + (new Date(this.entryDate).getMonth() + 1) + '-' + new Date(this.entryDate).getDate()
+      return new Date(this.intime).getFullYear() +
+      '-' +
+      (new Date(this.intime).getMonth() + 1) +
+      '-' +
+      new Date(this.intime).getDate()
     },
     getRouterData() {
       this.patho = this.$route.query.value
@@ -326,7 +329,7 @@ export default {
       this.cityCenter = ''
       this.chengji = ''
       this.xuehao = ''
-      this.jiguan = [],
+      this.jiguan = []
       this.intime = ''
     }
   }
@@ -335,16 +338,16 @@ export default {
 <style scoped>
 .demo-input-size {
   width: 100%;
-  height: 800px;
+  height: 100%;
   margin-top: 15px;
-  overflow:scroll;
 }
 .demo-input-smallsize {
-  width: 1000px;
-  height: 110%;
+  width: 1020px;
+  height: 89vh;
   margin: 0 auto;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  padding-top: 30px;
+  padding: 30px 0;
+  overflow-y: scroll;
 }
 .el-input--mini {
   width: 600px;
