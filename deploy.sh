@@ -10,4 +10,5 @@ git pull
 echo '拉取完成'
 git merge ly
 git push origin master
+git checkout ly
 echo '自动发布完成'
