@@ -194,6 +194,7 @@ export default {
       new Date(this.intime).getDate()
     },
     getRouterData() {
+      console.log(11111)
       this.patho = this.$route.query.value
     },
     async Majors() {
