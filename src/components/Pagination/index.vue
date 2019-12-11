@@ -5,9 +5,11 @@
       :current-page="currentPage"
       :page-size="pageSize"
       background
-      layout="prev, pager, next" 
+      layout="prev, pager, next, total, sizes"
       :total="total"
+      :page-sizes="maxPage"
       @current-change="current_change"
+      @size-change="handleSizeChange"
     />
   </div>
 </template>
@@ -23,7 +25,9 @@ export default {
     // eslint-disable-next-line vue/require-default-prop
     currentPage: Number,
     // eslint-disable-next-line vue/require-default-prop
-    tableData: Array
+    tableData: Array,
+    // eslint-disable-next-line vue/require-default-prop
+    maxPage: Array
   },
   data() {
     return {}
@@ -33,6 +37,9 @@ export default {
     async current_change(currentPage) {
       // 发送事件给父组件
       this.$emit('getcurrentPage', currentPage)
+    },
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`)
     }
   }
 }

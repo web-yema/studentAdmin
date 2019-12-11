@@ -17,18 +17,18 @@
           min-width="50"
         />
         <el-table-column prop="studentID" min-width="85" label="学号" />
-        <el-table-column prop="name" label="姓名" />
+        <el-table-column prop="name" min-width="80" label="姓名" />
         <el-table-column prop="sex" min-width="50" label="性别" />
         <el-table-column prop="age" min-width="50" label="年龄" />
         <el-table-column prop="study" min-width="50" label="学制" />
-        <el-table-column prop="nativeplace" min-width="60" label="籍贯" />
+        <el-table-column prop="nativeplace" min-width="50" label="籍贯" />
         <el-table-column prop="major" min-width="50" label="专业" />
         <el-table-column prop="classes" min-width="80" label="班级" />
         <el-table-column prop="citycenter" min-width="80" label="市场部" />
         <el-table-column prop="chengji" width="80" label="当前成绩" />
         <el-table-column prop="graduation" width="80" label="还差成绩" />
         <el-table-column prop="failss" width="80" label="挂科次数" />
-        <el-table-column prop="entryDate" width="100" label="入学时间" />
+        <el-table-column prop="entryDate" min-width="100" label="入学时间" />
         <el-table-column v-if="power" label="操作" min-width="150">
           <template slot-scope="scope">
             <el-button
@@ -89,20 +89,14 @@
         <!-- 导出 -->
         <el-button size="mini" type="success" round :loading="downloadLoading" @click="handleDownload">导出当页excel</el-button>
         <!-- 导入 -->
-        <label class="fileinp">
-          <input type="button" class="btn" value="导入excel" round @click="handleInter">
-          <input
-            type="file"
-            class="fileinpd"
-            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-            @change="importfxx(this)"
-          >
-        </label>
+        <Export3Excel ref="enterson" />
       </div>
       <pageCount
+        ref="maxPage"
         style="position:fixed;left:600px;bottom:20px;z-index:1000"
         :total="total"
         :page-size="pageSize"
+        :page-sizes="maxPage"
         :current-page="currentPage"
         @getcurrentPage="getcurrentPage"
       />
@@ -135,26 +129,10 @@
               <th>籍贯</th>
               <th>入学时间</th>
             </tr>
-            <template v-for="item in exists">
-              <tr v-for="(items,index) in item">
-                <template v-if="index==0">
-                  <td>{{ items.studentID }}</td>
-                  <td>{{ items.name }}</td>
-                  <td>{{ items.classes }}</td>
-                  <td>{{ items.sex }}</td>
-                  <td>{{ items.age }}</td>
-                  <td>{{ items.major }}</td>
-                  <td>{{ items.citycenter }}</td>
-                  <td>{{ items.chengji }}</td>
-                  <td>{{ items.graduation }}</td>
-                  <td>{{ items.failss }}</td>
-                  <td>{{ items.study }}</td>
-                  <td>{{ items.nativeplace }}</td>
-                  <td>{{ items.entryDate }}</td>
-                </template>
-
-                <el-checkbox-group v-else id="Currentimport" v-model="checkList">
-                  <el-checkbox class="Currentimport-checkbox" :label="items">
+            <div id="bao">
+              <template v-for="item in exists">
+                <tr v-for="(items,index) in item">
+                  <template v-if="index==0">
                     <td>{{ items.studentID }}</td>
                     <td>{{ items.name }}</td>
                     <td>{{ items.classes }}</td>
@@ -168,11 +146,30 @@
                     <td>{{ items.study }}</td>
                     <td>{{ items.nativeplace }}</td>
                     <td>{{ items.entryDate }}</td>
-                  </el-checkbox>
-                </el-checkbox-group>
+                  </template>
 
-              </tr>
-            </template>
+                  <el-checkbox-group v-else id="Currentimport" v-model="checkList">
+                    <el-checkbox class="Currentimport-checkbox" :label="items">
+                      <td>{{ items.studentID }}</td>
+                      <td>{{ items.name }}</td>
+                      <td>{{ items.classes }}</td>
+                      <td>{{ items.sex }}</td>
+                      <td>{{ items.age }}</td>
+                      <td>{{ items.major }}</td>
+                      <td>{{ items.citycenter }}</td>
+                      <td>{{ items.chengji }}</td>
+                      <td>{{ items.graduation }}</td>
+                      <td>{{ items.failss }}</td>
+                      <td>{{ items.study }}</td>
+                      <td>{{ items.nativeplace }}</td>
+                      <td>{{ items.entryDate }}</td>
+                    </el-checkbox>
+                  </el-checkbox-group>
+
+                </tr>
+              </template>
+            </div>
+
           </table>
         </div>
 
@@ -193,7 +190,6 @@ import {
   delAllStudent,
   updateStudent, // 批量修改
   selectAllstud, // 查询学生
-  getExcel,
   updateExcelstudent, // 导入修改
   getClass // 获取班级
 } from '../../../api/api.js'
@@ -237,6 +233,7 @@ export default {
       updateShow: 100000, // 最大匹配的值
       total: 1, // 数据总条数，默认给1
       pageSize: 7, // 数据的总条数，默认是6条
+      maxPage: ['7', '10', '20', '30'], // 数据的总条数
       currentPage: 1, // 当前页数，默认是第1页
       power: true, // 操作按钮权限
       dialogVisible: false, // 导入时，重复的学生显示弹出框
@@ -261,17 +258,23 @@ export default {
     this.getClass = JSON.parse(localStorage.getItem('data'))
     this.selectStud()
     this.listLoading = false
+    this.enterstu()
+  },
+  updated() {
   },
   methods: {
     // 保存选中的数据id,row-key就是要指定一个key标识这一行的数据
     getRowKey(row) {
       return row.id
     },
+    enterstu() {
+      this.$refs.enterson.dialogVisible = this.dialogVisible
+      this.$refs.enterson.downloadLoading2 = this.downloadLoading2
+    },
     async selectStud() {
       const optionstu = await selectAllstud(this.currentPage, {
         classes: this.getClass
       })
-      console.log(this.optionstu)
       if (optionstu.data.code === 200) {
         this.all = optionstu.data.data
         this.total = optionstu.data.total
@@ -279,7 +282,6 @@ export default {
         this.listLoading = false
       }
       this.sliceJg(this.all)
-      console.log(this.all)
     },
     // 删除学生
     remove(row) {
@@ -419,7 +421,6 @@ export default {
         chengji: this.ruleForm.chengji,
         failss: this.ruleForm.failss
       }
-      console.log(obj)
       if (obj.classes === '') {
         delete obj.classes
       }
@@ -427,7 +428,7 @@ export default {
         delete obj.chengji
       } else {
         for (var i = 0; i < this.sels.length; i++) {
-          if (this.sels.length > 1 && this.sels[0] !== this.sels[1]) {
+          if (this.sels.length > 1 && this.sels[0] !== this.sels[i]) {
             this.$message.error('年制不同，修改失败')
             this.show = false
             this.$refs.multipleTable.clearSelection()
@@ -471,8 +472,8 @@ export default {
                 this.currentPage = this.currentPage - 1
                 this.deltotal = this.deltotal - 1
               }
-              this.$refs.multipleTable.clearSelection()
               this.selectStud()
+              this.$refs.multipleTable.clearSelection()
               this.$message({
                 message: res.data.msg,
                 type: 'success'
@@ -533,101 +534,10 @@ export default {
         })
       )
     },
-    handleInter() {
-      this.downloadLoading2 = true
-    },
-    // 导入
-    importfxx(obj) {
-      const _this = this
-      // eslint-disable-next-line no-unused-vars
-      const inputDOM = this.$refs.inputer
-      // 通过DOM取文件数据
-      this.file = event.currentTarget.files[0]
-      var rABS = false // 是否将文件读取为二进制字符串
-      var f = this.file
-      var reader = new FileReader()
-      // if (!FileReader.prototype.readAsBinaryString) {
-      FileReader.prototype.readAsBinaryString = function(f) {
-        var binary = ''
-        var rABS = false // 是否将文件读取为二进制字符串
-        // eslint-disable-next-line no-unused-vars
-        var pt = this
-        var wb // 读取完成的数据
-        var outdata
-        var reader = new FileReader()
-        reader.onload = async function(e) {
-          var bytes = new Uint8Array(reader.result)
-          var length = bytes.byteLength
-          for (var i = 0; i < length; i++) {
-            binary += String.fromCharCode(bytes[i])
-          }
-          var XLSX = require('xlsx')
-          if (rABS) {
-            // eslint-disable-next-line no-undef
-            wb = XLSX.read(btoa(fixdata(binary)), {
-              // 手动转化
-              type: 'base64'
-            })
-          } else {
-            wb = XLSX.read(binary, {
-              type: 'binary'
-            })
-          }
-          outdata = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]) // outdata就是你想要的东西
-          this.da = [...outdata]
-          const arr = []
-          this.da.map(v => {
-            const obj = {}
-            obj.classes = v.班级
-            obj.name = v.姓名
-            obj.sex = v.性别
-            obj.age = v.年龄
-            obj.major = v.专业
-            obj.citycenter = v.市场部
-            obj.chengji = v.当前成绩
-            obj.graduation = v.还差成绩
-            obj.failss = v.挂科次数
-            obj.study = v.学制
-            obj.nativeplace = v.籍贯
-            obj.studentID = v.学号
-            obj.entryDate = v.入学时间
-            arr.push(obj)
-          })
-          getExcel(arr).then(res => {
-            _this.exists = res.data.exist
-            if (res.data.code === 200) {
-              _this.$message({
-                message: '请耐心等待导入成功',
-                type: 'success'
-              })
-              _this.selectStud()
-            } else {
-              _this.$message({
-                message: res.data.msg,
-                type: 'success'
-              })
-              _this.dialogVisible = true // 进入学生重复
-            }
-          })
-          // eslint-disable-next-line no-unused-vars
-          const para = {
-            QwithList: arr
-          }
-        }
-        reader.readAsArrayBuffer(f)
-      }
-      if (rABS) {
-        reader.readAsArrayBuffer(f)
-      } else {
-        reader.readAsBinaryString(f)
-      }
-    },
     // 调用子组件传过来的事件
     getcurrentPage(currentPage) {
       this.currentPage = currentPage
-      // this.sliceJg(this.all)
       this.selectStud()
-      // this.$refs.multipleTable.clearSelection()
     },
     // 切割籍贯函数
     sliceJg(Array) {
