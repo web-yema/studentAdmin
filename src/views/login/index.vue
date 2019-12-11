@@ -41,13 +41,10 @@
             placeholder="密码"
             name="password"
             tabindex="2"
-            auto-complete="on"
             @keyup.enter.native="handleLogin"
           />
           <span class="show-pwd" @click="showPwd">
-            <svg-icon
-              :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
-            />
+            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
           </span>
         </el-form-item>
         <el-button
@@ -68,94 +65,101 @@
 </template>
 
 <script>
-import CopyrightNotice from '@/components/CopyrightNotice/index'
-import '@/assets/css/style.css'
-import branch from '@/assets/js/script.js'
+import CopyrightNotice from "@/components/CopyrightNotice/index";
+import "@/assets/css/style.css";
+import branch from "@/assets/js/script.js";
 export default {
-  name: 'Login',
+  name: "Login",
   components: {
     CopyrightNotice
   },
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入正确的用户名'))
+      if (value === "") {
+        callback(new Error("请输入正确的用户名"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error(' 密码不能小于6位'))
+        callback(new Error(" 密码不能小于6位"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     return {
       loginForm: {
-        username: '',
-        password: '',
-        loginFlag: ''
+        username: "",
+        password: "",
+        loginFlag: ""
       },
       loginRules: {
         username: [
-          { required: true, trigger: 'blur', validator: validateUsername }
+          { required: true, trigger: "blur", validator: validateUsername }
         ],
         password: [
-          { required: true, trigger: 'blur', validator: validatePassword }
+          { required: true, trigger: "blur", validator: validatePassword }
         ]
       },
       loading: false,
-      passwordType: 'password',
+      passwordType: "password",
       redirect: undefined
-    }
+    };
   },
   watch: {
     $route: {
       handler: function(route) {
-        this.redirect = route.query && route.query.redirect
+        this.redirect = route.query && route.query.redirect;
       },
       immediate: true
     }
   },
   mounted() {
-    branch(this.$refs.canvas)
+    branch(this.$refs.canvas);
+    // 阻止浏览器后退
+    history.pushState(null, null, document.URL);
+    window.addEventListener("popstate", function() {
+      history.pushState(null, null, document.URL);
+    });
   },
   methods: {
     // 显示密码
     showPwd() {
-      if (this.passwordType === 'password') {
-        this.passwordType = ''
+      if (this.passwordType === "password") {
+        this.passwordType = "";
       } else {
-        this.passwordType = 'password'
+        this.passwordType = "password";
       }
       this.$nextTick(() => {
-        this.$refs.password.focus()
-      })
+        this.$refs.password.focus();
+      });
     },
     // 登录按钮事件
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
-              this.$router.push({ path: this.redirect || '/' })
-              this.loading = false
+          this.loading = true;
+          this.$store
+            .dispatch("user/login", this.loginForm)
+            .then(() => {
+              this.$router.push({ path: this.redirect || "/" });
+              this.loading = false;
             })
             .catch(() => {
-              this.loading = false
-            })
+              this.loading = false;
+            });
         } else {
-          return false
+          return false;
         }
-      })
+      });
     },
     // 点击进去 学生查询页
     studentEnquiry() {
-      this.$router.replace('/student')
+      this.$router.replace("/student");
     }
   }
-}
+};
 </script>
 
 <style lang="scss">

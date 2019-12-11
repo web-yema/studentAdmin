@@ -31,16 +31,8 @@
         <el-table-column prop="entryDate" min-width="100" label="入学时间" />
         <el-table-column v-if="power" label="操作" min-width="150">
           <template slot-scope="scope">
-            <el-button
-              type="primary"
-              size="mini"
-              @click="update(scope.$index, scope.row)"
-            >修改</el-button>
-            <el-button
-              type="danger"
-              size="mini"
-              @click="remove(scope.row)"
-            >删除</el-button>
+            <el-button type="primary" size="mini" @click="update(scope.$index, scope.row)">修改</el-button>
+            <el-button type="danger" size="mini" @click="remove(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -56,7 +48,11 @@
             <el-input v-model="ruleForm.chengji" oninput="value=value.replace(/[^\d.]/g,'')" maxlength="2" />
           </el-form-item>
           <el-form-item label="挂科次数" prop="failss">
-            <el-input v-model="ruleForm.failss" oninput="value=value.replace(/[^\d.]/g,'')" maxlength="2" />
+            <el-input
+              v-model="ruleForm.failss"
+              oninput="value=value.replace(/[^\d.]/g,'')"
+              maxlength="2"
+            />
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -67,17 +63,26 @@
       </el-dialog>
     </div>
     <div class="buju">
-      <div
-        v-if="power"
-        style="position:fixed;bottom:20px;margin-left:10px;z-index:1000"
-      >
+      <div v-if="power" style="position:fixed;bottom:20px;margin-left:10px;z-index:1000">
         <!-- 批量删除 -->
         <template>
-          <el-button style="margin-top:10px" type="danger" size="small" :disabled="this.sels.length === 0" @click="soamdelstudent()">批量删除</el-button>
+          <el-button
+            style="margin-top:10px"
+            type="danger"
+            size="small"
+            :disabled="this.sels.length === 0"
+            @click="soamdelstudent()"
+          >批量删除</el-button>
         </template>
         <!-- 批量修改 -->
         <template>
-          <el-button style="margin-top:10px" type="success" size="small" :disabled="this.sels.length === 0" @click="updatesomestudent()">批量修改</el-button>
+          <el-button
+            style="margin-top:10px"
+            type="success"
+            size="small"
+            :disabled="this.sels.length === 0"
+            @click="updatesomestudent()"
+          >批量修改</el-button>
         </template>
         <!-- 添加 -->
         <template>
@@ -87,7 +92,13 @@
 
       <div v-if="power" style="position:fixed;right:50px;bottom:20px;z-index:1000;">
         <!-- 导出 -->
-        <el-button size="mini" type="success" round :loading="downloadLoading" @click="handleDownload">导出当页excel</el-button>
+        <el-button
+          size="mini"
+          type="success"
+          round
+          :loading="downloadLoading"
+          @click="handleDownload"
+        >导出当页excel</el-button>
         <!-- 导入 -->
         <Export3Excel ref="enterson" />
       </div>
@@ -192,14 +203,14 @@ import {
   selectAllstud, // 查询学生
   updateExcelstudent, // 导入修改
   getClass // 获取班级
-} from '../../../api/api.js'
-  // 分页模块
-import pageCount from '../../../components/Pagination/index'
+} from '../../../api/api.js';
+// 分页模块
+import pageCount from '../../../components/Pagination/index';
 // Excel模块
 // eslint-disable-next-line no-unused-vars
-import UploadExcel from '../../../components/UploadExcel/index'
+import UploadExcel from '../../../components/UploadExcel/index';
 // 引入vuex 权限
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 export default {
   components: {
     pageCount
@@ -312,7 +323,7 @@ export default {
           })
           // eslint-disable-next-line handle-callback-err
         })
-      // eslint-disable-next-line handle-callback-err
+        // eslint-disable-next-line handle-callback-err
         .catch(err => {
           this.$message({
             type: 'info',
@@ -348,9 +359,7 @@ export default {
         graduation: graduation
       }
       const ID = this.ruleForm.id
-      const {
-        data
-      } = await updateAllstud(ID, obj)
+      const { data } = await updateAllstud(ID, obj)
       // 判断值是否改变
       if (
         obj.classes === this.rowlist.classes &&
@@ -407,9 +416,9 @@ export default {
       this.sels.forEach((item, index) => {
         this.sels[index] = item.study
       })
-      this.ruleForm.classes = ''
-      this.ruleForm.chengji = ''
-      this.ruleForm.failss = ''
+      this.ruleForm.classes = '';
+      this.ruleForm.chengji = '';
+      this.ruleForm.failss = '';
       this.show = true
       this.xgshow = false
       this.plxgshow = true
@@ -424,6 +433,9 @@ export default {
       if (obj.classes === '') {
         delete obj.classes
       }
+      if (obj.classes === '') {
+        delete obj.classes
+      }
       if (obj.chengji === '') {
         delete obj.chengji
       } else {
@@ -434,7 +446,7 @@ export default {
             this.$refs.multipleTable.clearSelection()
             return false
           } else {
-            const key = 'graduation'
+            const key = 'graduation';
             obj[key] = this.sels[i] * 10 - obj.chengji
           }
         }
@@ -543,11 +555,15 @@ export default {
     sliceJg(Array) {
       // eslint-disable-next-line no-undef
       for (let i = 0; i < Array.length; i++) {
-        if (Array[i].nativeplace === '' || Array[i].nativeplace === null || Array[i].nativeplace === undefined) {
+        if (
+          Array[i].nativeplace === '' ||
+          Array[i].nativeplace === null ||
+          Array[i].nativeplace === undefined
+        ) {
           continue
         } else if (
           Array[i].nativeplace.includes('黑龙江') ||
-            Array[i].nativeplace.includes('内蒙古')
+          Array[i].nativeplace.includes('内蒙古')
         ) {
           // eslint-disable-next-line no-undef
           Array[i].nativeplace = Array[i].nativeplace.slice(0, 3)
@@ -559,6 +575,7 @@ export default {
     },
     // 重复学生
     async Confirmreplacement() {
+      console.log('已点击')
       const { data } = await updateExcelstudent(this.checkList)
       if (data.code === 200) {
         this.dialogVisible = false
@@ -571,5 +588,5 @@ export default {
 </script>
 
 <style scoped>
-  @import "./asset.scss";
+@import "./asset.scss";
 </style>

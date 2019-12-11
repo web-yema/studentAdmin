@@ -127,7 +127,6 @@ export default {
       this.tableData = data.data
       var list = []
       for (var i = 0; i < this.tableData.length; i++) {
-        // console.log(this.tableData[i].major)
         if (this.tableData[i].major === id || id === '全部讲师') {
           list.push(this.tableData[i])
         }
@@ -137,7 +136,6 @@ export default {
     // 获取全部讲师
     async getTeacherAlls(page) {
       const { data } = await getTeacherAll(page)
-      console.log(data)
       if (data.code === 202) {
         this.currentPage = this.currentPage - 1
         this.getTeacherAlls(this.currentPage)
