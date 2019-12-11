@@ -5,6 +5,7 @@ git add -A
 git commit -m $1
 echo '自动发布'
 git push origin ly
+echo '切换主分支'
 git checkout master
 git pull 
 echo '拉取完成'
