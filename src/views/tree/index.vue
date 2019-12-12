@@ -194,7 +194,6 @@ export default {
       new Date(this.intime).getDate()
     },
     getRouterData() {
-      console.log(123)
       this.patho = this.$route.query.value
     },
     async Majors() {
@@ -274,6 +273,7 @@ export default {
         return false
       } else {
         obj.nativeplace = this.$refs['cascaderAddr'].getCheckedNodes()[0].pathLabels.join('')
+        console.log(123)
         const success = await getStudent(obj)
         if (success.data.code === 200) {
           this.clearList()
