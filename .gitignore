@@ -15,4 +15,6 @@ deploy.sh
 *.ntvs*
 *.njsproj
 *.sln
+*.sh
+
 
