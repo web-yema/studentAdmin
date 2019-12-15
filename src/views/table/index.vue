@@ -148,13 +148,17 @@
       </el-table-column>
     </el-table>
     <!-- 分页模块 -->
-    <Pageoption
-      style="position:fixed;left:205px;bottom:20px;"
-      :total="total"
-      :page-size="pageSize"
-      :current-page="currentPage"
-      @getcurrentPage="getcurrentPage"
-    />
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="[5, 10, 20]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next"
+        :total="total"
+        style="position:fixed;left:250px;bottom:20px;"
+      >
+      </el-pagination>
     <!-- 导出excel表 -->
     <el-button
       v-if="power"
@@ -184,19 +188,8 @@ import {
   mapGetters
 } from 'vuex'
 
-// 引入分页模板
-import Pageoption from '../../components/Pagination'
-
-// 引入excel依赖文件
-import UploadExcelComponent from '../../components/UploadExcel/index'
-
 export default {
   name: 'Table',
-  components: {
-    Pageoption,
-    // eslint-disable-next-line vue/no-unused-components
-    UploadExcelComponent
-  },
   data() {
     return {
       exportLodding: false,
@@ -204,9 +197,9 @@ export default {
       searchShow: 1, // 搜索模块是否显示 不为1就是不显示
       //  ·················································· 分页数据
       selectflag: false, // 标识, 用来给查询使用
-      total: 1, // 数据总条数，默认给1
-      pageSize: 7, // 每页展示条数 用来让total进行切割，算出来一共的页数
-      currentPage: 1, // 当前在第几页,默认在第一页
+      currentPage: 1, // 默认在第几页
+      pageSize: 5, // 每页最大条数
+      total: 1, // 根据最大条数切割
       updateShow: 100000, // 当前展示的修改弹出项，给这么大是为了一开始谁也匹配不到
       intime: '', // 入学时间
       search: {
@@ -279,7 +272,7 @@ export default {
   },
   mounted() {
     // 分页加学生接口调用
-    this.getPage(this.currentPage)
+    this.getPage(this.currentPage,this.pageSize)
     // 专业接口调用
     this.Majors()
     // 班级接口调用
@@ -288,6 +281,14 @@ export default {
     this.CityCenters()
   },
   methods: {
+    handleSizeChange: function (size) {
+      this.pageSize = size //每页下拉显示数据
+      this.getPage(this.currentPage,this.pageSize) 
+    },
+    handleCurrentChange: function(currentPage){
+      this.currentPage = currentPage //点击第几页
+      this.getPage(this.currentPage,this.pageSize)
+    },
     // 切割籍贯函数
     sliceJg(Array) {
       // for循环出来这个数组的长度
@@ -309,6 +310,7 @@ export default {
       // 返回数组
       return Array
     },
+    // 查询接口调用
     async selectallstud(page, obj) {
       const searchSuc = await selectAllstud(page, obj)
       const sliceData = this.sliceJg(searchSuc.data.data) // 调用切割籍贯函数
@@ -316,20 +318,9 @@ export default {
       this.currentPage = page
       this.total = searchSuc.data.total
     },
-    // 调用子组件传过来的事件,用来写分页
-    getcurrentPage(currentPage) {
-      this.currentPage = currentPage
-      // 如果selectflag为true就调用查询函数
-      if (this.selectflag) {
-        this.selectallstud(currentPage, this.objselect)
-        // 否则就调用获取学生加分页接口
-      } else {
-        this.getPage(currentPage)
-      }
-    },
     // 分页加学生接口调用
-    async getPage(page) {
-      const { data } = await getPage(page)
+    async getPage(page,pageSize) {
+      const { data } = await getPage(page,pageSize)
       if (data.code === 200) {
         const sliceData = this.sliceJg(data.data) // 调用切割籍贯函数
         this.tableData = sliceData
@@ -422,7 +413,7 @@ export default {
       this.search.serFailss = ''
       this.search.serchengji.$gte = ''
       this.search.serchengji.$lte = ''
-      this.getPage(1)
+      this.getPage(1,this.pageSize)
       // 返回的时候默认展示第一页的数据
       this.currentPage = 1
     },
