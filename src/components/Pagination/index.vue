@@ -5,12 +5,13 @@
       :current-page="currentPage"
       :page-size="pageSize"
       background
-      layout="prev, pager, next, total, sizes"
+      layout="prev, pager, next"
       :total="total"
       :page-sizes="maxPage"
       @current-change="current_change"
       @size-change="handleSizeChange"
     />
+    <!--  total, sizes -->
   </div>
 </template>
 
@@ -39,7 +40,7 @@ export default {
       this.$emit('getcurrentPage', currentPage)
     },
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`)
+      // console.log(`每页 ${val} 条`)
     }
   }
 }

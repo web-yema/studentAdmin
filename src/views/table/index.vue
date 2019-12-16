@@ -39,10 +39,11 @@
         </el-select>
       </li>
       <li style="display:flex;">
-        <el-button size="small" type="success" @click="searchAll">确定</el-button>
-        <el-button size="small" type="info" @click="searchQ">清空</el-button>
+        <el-button size="mini" type="success" @click="searchAll">确定</el-button>
+        <el-button size="mini" type="info" @click="searchQ">清空</el-button>
       </li>
     </div>
+    <!-- 显示模块 -->
     <el-table :data="tableData" style="width: 150%">
       <el-table-column label="学号">
         <template slot-scope="scope">
@@ -133,7 +134,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="入学时间">
+      <el-table-column min-width="100" label="入学时间">
         <template slot-scope="scope">
           <el-input v-if="scope.$index === updateShow" v-model="intime" size="mini" placeholder="请输入内容" />
           <div v-else style="text-align:center">
@@ -148,17 +149,16 @@
       </el-table-column>
     </el-table>
     <!-- 分页模块 -->
-      <el-pagination
-        @size-change="handleSizeChange"
+    <el-pagination
+      @size-change="handleSizeChange"
+      :current-page="currentPage"
         @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-sizes="[5, 7, 10]"
-        :page-size="pageSize"
-        layout="total, sizes, prev, pager, next"
-        :total="total"
-        style="position:fixed;left:250px;bottom:20px;"
-      >
-      </el-pagination>
+      :page-sizes="[5, 10, 20]"
+      :page-size="pageSize"
+      layout="total, sizes, prev, pager, next"
+      :total="total"
+      style="position:fixed;left:250px;bottom:20px;"
+    />
     <!-- 导出excel表 -->
     <el-button
       v-if="power"
@@ -193,6 +193,7 @@ export default {
   data() {
     return {
       exportLodding: false,
+      updateShow: 100000,
       tableData: [], // 所有学生数据
       searchShow: 1, // 搜索模块是否显示 不为1就是不显示
       //  ·················································· 分页数据
@@ -272,7 +273,7 @@ export default {
   },
   mounted() {
     // 分页加学生接口调用
-    this.getPage(this.currentPage,this.pageSize)
+    this.getPage(this.currentPage, this.pageSize)
     // 专业接口调用
     this.Majors()
     // 班级接口调用
@@ -281,13 +282,13 @@ export default {
     this.CityCenters()
   },
   methods: {
-    handleSizeChange: function (size) {
-      this.pageSize = size //每页下拉显示数据
-      this.getPage(this.currentPage,this.pageSize) 
+    handleSizeChange: function(size) {
+      this.pageSize = size // 每页下拉显示数据
+      this.getPage(this.currentPage, this.pageSize)
     },
-    handleCurrentChange: function(currentPage){
-      this.currentPage = currentPage //点击第几页
-      this.getPage(this.currentPage,this.pageSize)
+    handleCurrentChange: function(currentPage) {
+      this.currentPage = currentPage // 点击第几页
+      this.getPage(this.currentPage, this.pageSize)
     },
     // 切割籍贯函数
     sliceJg(Array) {
@@ -319,8 +320,8 @@ export default {
       this.total = searchSuc.data.total
     },
     // 分页加学生接口调用
-    async getPage(page,pageSize) {
-      const { data } = await getPage(page,pageSize)
+    async getPage(page, pageSize) {
+      const { data } = await getPage(page, pageSize)
       if (data.code === 200) {
         const sliceData = this.sliceJg(data.data) // 调用切割籍贯函数
         this.tableData = sliceData
@@ -413,34 +414,13 @@ export default {
       this.search.serFailss = ''
       this.search.serchengji.$gte = ''
       this.search.serchengji.$lte = ''
-      this.getPage(1,this.pageSize)
+      this.getPage(1, this.pageSize)
       // 返回的时候默认展示第一页的数据
       this.currentPage = 1
     },
     // 导出Excel
     outExcel() {
-      if (this.searchShow === 1) {
-        // 处于搜索情况下
-        if (
-          this.search.serName === '' &&
-            this.search.serStudy === '' &&
-            this.search.serMajor === '' &&
-            this.search.serClasses === '' &&
-            this.search.serchengji === '' &&
-            this.search.sercityCenter === '' &&
-            this.search.serFailss === ''
-        ) {
-          this.$message.error('搜索不能全部为空!')
-          this.excelshow = false // 不在则不显示导入框
-          return false
-        } else if (this.daochuexcel) {
-          this.$message.error('请完成搜索后再进行导出!')
-        } else {
-          this.exportExcel()
-        }
-      } else {
-        this.exportExcel()
-      }
+      this.exportExcel()
     },
     // 导出函数
     exportExcel() {
