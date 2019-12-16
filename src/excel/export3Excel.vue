@@ -2,6 +2,7 @@
   <label class="fileinp">
     <input type="button" class="btn" value="导入excel" round @click="handleInter">
     <input
+      ref="inputer"
       type="file"
       class="fileinpd"
       accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"

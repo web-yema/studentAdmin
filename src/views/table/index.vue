@@ -39,10 +39,11 @@
         </el-select>
       </li>
       <li style="display:flex;">
-        <el-button size="small" type="success" @click="searchAll">确定</el-button>
-        <el-button size="small" type="info" @click="searchQ">清空</el-button>
+        <el-button size="mini" type="success" @click="searchAll">确定</el-button>
+        <el-button size="mini" type="info" @click="searchQ">清空</el-button>
       </li>
     </div>
+    <!-- 显示模块 -->
     <el-table :data="tableData" style="width: 150%">
       <el-table-column label="学号">
         <template slot-scope="scope">
@@ -133,7 +134,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="入学时间">
+      <el-table-column min-width="100" label="入学时间">
         <template slot-scope="scope">
           <el-input v-if="scope.$index === updateShow" v-model="intime" size="mini" placeholder="请输入内容" />
           <div v-else style="text-align:center">
@@ -187,19 +188,15 @@ import {
 // 引入分页模板
 import Pageoption from '../../components/Pagination'
 
-// 引入excel依赖文件
-import UploadExcelComponent from '../../components/UploadExcel/index'
-
 export default {
   name: 'Table',
   components: {
-    Pageoption,
-    // eslint-disable-next-line vue/no-unused-components
-    UploadExcelComponent
+    Pageoption
   },
   data() {
     return {
       exportLodding: false,
+      updateShow: 100000,
       tableData: [], // 所有学生数据
       searchShow: 1, // 搜索模块是否显示 不为1就是不显示
       //  ·················································· 分页数据
@@ -207,7 +204,6 @@ export default {
       total: 1, // 数据总条数，默认给1
       pageSize: 7, // 每页展示条数 用来让total进行切割，算出来一共的页数
       currentPage: 1, // 当前在第几页,默认在第一页
-      updateShow: 100000, // 当前展示的修改弹出项，给这么大是为了一开始谁也匹配不到
       intime: '', // 入学时间
       search: {
         // 搜索的v-model绑定值
@@ -428,28 +424,7 @@ export default {
     },
     // 导出Excel
     outExcel() {
-      if (this.searchShow === 1) {
-        // 处于搜索情况下
-        if (
-          this.search.serName === '' &&
-            this.search.serStudy === '' &&
-            this.search.serMajor === '' &&
-            this.search.serClasses === '' &&
-            this.search.serchengji === '' &&
-            this.search.sercityCenter === '' &&
-            this.search.serFailss === ''
-        ) {
-          this.$message.error('搜索不能全部为空!')
-          this.excelshow = false // 不在则不显示导入框
-          return false
-        } else if (this.daochuexcel) {
-          this.$message.error('请完成搜索后再进行导出!')
-        } else {
-          this.exportExcel()
-        }
-      } else {
-        this.exportExcel()
-      }
+      this.exportExcel()
     },
     // 导出函数
     exportExcel() {

@@ -12,9 +12,9 @@
         @selection-change="selsChange"
       >
         <el-table-column
-          reserve-selection
+          :reserve-selection="true"
           type="selection"
-          min-width="50"
+          width="30"
         />
         <el-table-column prop="studentID" min-width="85" label="学号" />
         <el-table-column prop="name" min-width="80" label="姓名" />
@@ -29,18 +29,21 @@
         <el-table-column prop="graduation" width="80" label="还差成绩" />
         <el-table-column prop="failss" width="80" label="挂科次数" />
         <el-table-column prop="entryDate" min-width="100" label="入学时间" />
-        <el-table-column v-if="power" label="操作" min-width="150">
+        <el-table-column v-if="power" label="操作" min-width="100">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="update(scope.$index, scope.row)">修改</el-button>
-            <el-button type="danger" size="mini" @click="remove(scope.row)">删除</el-button>
+            <el-button type="primary" size="mini" icon="el-icon-edit" circle @click="update(scope.$index, scope.row)" />
+            <el-button type="danger" size="mini" icon="el-icon-delete" circle @click="remove(scope.row)" />
           </template>
         </el-table-column>
       </el-table>
       <!-- 修改 -->
       <el-dialog title="修改操作" :visible.sync="show" width="30%">
         <el-form ref="ruleForm" :model="ruleForm" label-width="100px" class="demo-ruleForm">
+          <el-form-item label="年龄" prop="age">
+            <el-input v-model="ruleForm.age" oninput="value=value.replace(/[^\d.]/g,'')" maxlength="2" />
+          </el-form-item>
           <el-form-item label="班级" prop="major">
-            <el-select v-model="ruleForm.classes" placeholder="选择班级">
+            <el-select v-model="ruleForm.classes" style="width: 100%;" placeholder="选择班级">
               <el-option v-for="site in allClass" :key="site" :label="site" :value="site" />
             </el-select>
           </el-form-item>
@@ -203,14 +206,14 @@ import {
   selectAllstud, // 查询学生
   updateExcelstudent, // 导入修改
   getClass // 获取班级
-} from '../../../api/api.js';
+} from '../../../api/api.js'
 // 分页模块
-import pageCount from '../../../components/Pagination/index';
+import pageCount from '../../../components/Pagination/index'
 // Excel模块
 // eslint-disable-next-line no-unused-vars
-import UploadExcel from '../../../components/UploadExcel/index';
+import UploadExcel from '../../../components/UploadExcel/index'
 // 引入vuex 权限
-import { mapGetters } from 'vuex';
+import { mapGetters } from 'vuex'
 export default {
   components: {
     pageCount
@@ -221,7 +224,6 @@ export default {
       plxgshow: false,
       listLoading: true,
       downloadLoading: false,
-      downloadLoading2: false,
       show: false, // 弹窗
       classes: [], // 获取所有班级
       allstudent: [], // 获取所有学生
@@ -230,6 +232,7 @@ export default {
       all: [], // 获取班级学生
       createClass: [], // 导入
       ruleForm: {
+        age: '',
         classes: '',
         chengji: '',
         graduation: '',
@@ -246,6 +249,7 @@ export default {
       pageSize: 7, // 数据的总条数，默认是6条
       maxPage: ['7', '10', '20', '30'], // 数据的总条数
       currentPage: 1, // 当前页数，默认是第1页
+      b: [],
       power: true, // 操作按钮权限
       dialogVisible: false, // 导入时，重复的学生显示弹出框
       exists: [], // 导入-数据库中已存在的数据
@@ -269,9 +273,9 @@ export default {
     this.getClass = JSON.parse(localStorage.getItem('data'))
     this.selectStud()
     this.listLoading = false
-    this.enterstu()
   },
   updated() {
+    this.enterstu()
   },
   methods: {
     // 保存选中的数据id,row-key就是要指定一个key标识这一行的数据
@@ -280,7 +284,6 @@ export default {
     },
     enterstu() {
       this.$refs.enterson.dialogVisible = this.dialogVisible
-      this.$refs.enterson.downloadLoading2 = this.downloadLoading2
     },
     async selectStud() {
       const optionstu = await selectAllstud(this.currentPage, {
@@ -312,9 +315,9 @@ export default {
             } else {
               if (this.all.length === 1) {
                 this.currentPage = this.currentPage - 1
-                this.deltotal = this.deltotal - 1
               }
               this.selectStud()
+              this.currentPage = this.currentPage + 1
               this.$message({
                 message: res.data.msg,
                 type: 'success'
@@ -342,6 +345,7 @@ export default {
       this.plxgshow = false
       this.rowlist = row
       this.show = true
+      this.ruleForm.age = row.age
       this.ruleForm.classes = row.classes
       this.ruleForm.chengji = row.chengji
       this.ruleForm.failss = row.failss
@@ -353,6 +357,7 @@ export default {
       const graduation = this.study * 10 - this.ruleForm.chengji
       // 默认值
       const obj = {
+        age: this.ruleForm.age,
         classes: this.ruleForm.classes,
         chengji: this.ruleForm.chengji,
         failss: this.ruleForm.failss,
@@ -362,6 +367,7 @@ export default {
       const { data } = await updateAllstud(ID, obj)
       // 判断值是否改变
       if (
+        obj.age === this.rowlist.age &&
         obj.classes === this.rowlist.classes &&
         obj.chengji === this.rowlist.chengji &&
         obj.failss === this.rowlist.failss
@@ -416,9 +422,10 @@ export default {
       this.sels.forEach((item, index) => {
         this.sels[index] = item.study
       })
-      this.ruleForm.classes = '';
-      this.ruleForm.chengji = '';
-      this.ruleForm.failss = '';
+      this.ruleForm.age = ''
+      this.ruleForm.classes = ''
+      this.ruleForm.chengji = ''
+      this.ruleForm.failss = ''
       this.show = true
       this.xgshow = false
       this.plxgshow = true
@@ -426,11 +433,12 @@ export default {
     // 确定批量修改
     async plsubmitForm() {
       const obj = {
+        age: this.ruleForm.age,
         classes: this.ruleForm.classes,
         chengji: this.ruleForm.chengji,
         failss: this.ruleForm.failss
       }
-      if (obj.classes === '') {
+      if (obj.age === '') {
         delete obj.classes
       }
       if (obj.classes === '') {
@@ -446,7 +454,7 @@ export default {
             this.$refs.multipleTable.clearSelection()
             return false
           } else {
-            const key = 'graduation';
+            const key = 'graduation'
             obj[key] = this.sels[i] * 10 - obj.chengji
           }
         }
@@ -454,7 +462,7 @@ export default {
       if (obj.failss === '') {
         delete obj.failss
       }
-      if (!obj.classes && !obj.chengji && !obj.failss) {
+      if (!obj.age && !obj.classes && !obj.chengji && !obj.failss) {
         this.$message.error('没有任何修改')
       } else {
         const { data } = await updateStudent(this.checkeds, obj)
@@ -480,12 +488,11 @@ export default {
             if (res.data.code === 201) {
               this.$message.error(res.data.msg)
             } else {
-              if (this.all.length === 1) {
+              if (this.currentPage === Math.ceil(this.total / this.pageSize) && this.checkeds.length === this.all.length) {
                 this.currentPage = this.currentPage - 1
-                this.deltotal = this.deltotal - 1
               }
-              this.selectStud()
               this.$refs.multipleTable.clearSelection()
+              this.selectStud()
               this.$message({
                 message: res.data.msg,
                 type: 'success'
@@ -550,6 +557,7 @@ export default {
     getcurrentPage(currentPage) {
       this.currentPage = currentPage
       this.selectStud()
+      this.$refs.multipleTable.clearSelection()
     },
     // 切割籍贯函数
     sliceJg(Array) {
@@ -575,7 +583,6 @@ export default {
     },
     // 重复学生
     async Confirmreplacement() {
-      console.log('已点击')
       const { data } = await updateExcelstudent(this.checkList)
       if (data.code === 200) {
         this.dialogVisible = false
