@@ -326,9 +326,7 @@ export default {
         const sliceData = this.sliceJg(data.data) // 调用切割籍贯函数
         this.tableData = sliceData
         this.total = data.total
-      } else {
-        this.$message.error('暂无数据!')
-      }
+      } 
     },
     // 获取专业
     async Majors() {

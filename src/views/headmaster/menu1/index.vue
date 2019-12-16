@@ -139,8 +139,7 @@ export default {
     async getHeadAlls(page,pageSize) {
       const { data } = await getHeadAll(page,pageSize)
       if (data.code === 202) {
-        this.currentPage = this.currentPage - 1
-        this.getHeadAlls(this.currentPage)
+        this.getHeadAlls(this.currentPage,this.pageSize)
       } else {
         this.tableData = data.data
         this.total = data.total

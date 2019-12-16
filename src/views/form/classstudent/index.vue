@@ -198,7 +198,6 @@
 
 <script>
 // 引入接口函数
-// eslint-disable-next-line no-unused-vars
 import {
   updateAllstud,
   delAllStudent,
@@ -210,7 +209,6 @@ import {
 // 分页模块
 import pageCount from '../../../components/Pagination/index'
 // Excel模块
-// eslint-disable-next-line no-unused-vars
 import UploadExcel from '../../../components/UploadExcel/index'
 // 引入vuex 权限
 import { mapGetters } from 'vuex'

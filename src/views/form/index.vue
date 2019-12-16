@@ -126,12 +126,15 @@
         <el-button size="small" @click="zyStu = false">关 闭</el-button>
       </span>
     </el-dialog>
-    <pageCount
-      style="position:fixed;left:205px;bottom:20px;"
-      :total="total"
-      :page-size="pageSize"
+    <el-pagination
+      @size-change="handleSizeChange"
       :current-page="currentPage"
-      @getcurrentPage="getcurrentPage"
+        @current-change="handleCurrentChange"
+      :page-sizes="[5, 10, 20]"
+      :page-size="pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total"
+      style="position:fixed;left:250px;bottom:20px;"
     />
   </div>
 </template>
@@ -148,16 +151,10 @@ import {
   // eslint-disable-next-line no-unused-vars
   classPage // 班级分页
 } from '../../api/api.js'
-// 引入分页模块
-// eslint-disable-next-line no-unused-vars
-import pageCount from '../../components/Pagination/index'
+
 // 引入vuex权限
 import { mapGetters } from 'vuex'
 export default {
-  components: {
-    // eslint-disable-next-line vue/no-unused-components
-    pageCount
-  },
   data() {
     return {
       zyStu: false,
@@ -209,9 +206,9 @@ export default {
       multipleSelection: '',
       sels: [], // 选中的值显示
       currentRow: null,
-      total: 1, // 数据总条数，默认给1
-      pageSize: 6, // 数据的总条数，默认是6条
-      currentPage: 1, // 总页数，默认是第1页
+      currentPage: 1, // 默认在第几页
+      pageSize: 5, // 每页最大条数
+      total: 1, // 根据最大条数切割
       getMajor: [], // 所有专业
       checkeds: [], // 批量转移选中id
       power: true // 操作按钮权限
@@ -228,8 +225,8 @@ export default {
     }
   },
   async mounted() {
-    // 分页加学生接口调用
-    this.classPage(this.currentPage)
+    // 分页加班级接口调用
+    this.classPage(this.currentPage,this.pageSize)
     // 获取全部专业进行筛选
     const allmajor = await getMajor()
     this.getMajor = allmajor.data.data
@@ -283,7 +280,7 @@ export default {
             .then(async res => {
               const { data } = await delClass(id)
               if (data.code === 200) {
-                this.classPage(this.currentPage)
+                this.classPage(this.currentPage,this.pageSize)
                 return this.$message.success(data.msg)
               }
               this.$message({
@@ -313,7 +310,7 @@ export default {
       this.xzmajor = vel
       this.currentPage = 1
       // eslint-disable-next-line no-undef
-      this.classPage(this.currentPage)
+      this.classPage(this.currentPage,this.pageSize)
     },
     // 修改
     update(index, row) {
@@ -417,20 +414,22 @@ export default {
       }
       this.checkeds = all_Id
     },
-    // 调用子组件传过来的事件
-    getcurrentPage(currentPage) {
-      this.currentPage = currentPage
-      this.classPage(currentPage)
+    handleSizeChange: function(size) {
+      this.pageSize = size // 每页下拉显示数据
+      this.classPage(this.currentPage, this.pageSize)
+    },
+    handleCurrentChange: function(currentPage) {
+      this.currentPage = currentPage // 点击第几页
+      this.classPage(this.currentPage, this.pageSize)
     },
     // 分页加班级接口调用
-    async classPage(page) {
+    async classPage(page,pageSize) {
       if (this.xzmajor === '全部班级') {
         this.xzmajor = ''
       }
-      const { data } = await classPage(page, this.xzmajor)
+      const { data } = await classPage(page, this.xzmajor,pageSize)
       if (data.code === 202) {
-        this.currentPage = this.currentPage - 1
-        this.classPage(this.currentPage)
+        this.classPage(this.currentPage,this.pageSize)
       } else if (data.code === 200) {
         this.classes = data.data
         this.allClass = data.dataList
@@ -442,5 +441,10 @@ export default {
 </script>
 
 <style scoped>
+.el-table{
+    width:100%;
+    height:400px;
+    overflow:auto
+  }
 @import "./asset.scss";
 </style>

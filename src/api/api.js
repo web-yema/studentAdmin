@@ -37,10 +37,11 @@ export const getPage = (page, pageSize) => {
   })
 }
 // 获取分页和班级
-export const classPage = (page, major) => {
+export const classPage = (page, major, pageSize) => {
   return Axios.post('http://132.232.89.22:8080/classPage', {
     page: page,
-    major: major
+    major: major,
+    pageSize: pageSize
   })
 }
 // 查询学生
