@@ -30,9 +30,10 @@ export const getMarketing = () => {
   return Axios.get('http://132.232.89.22:8080/getMarket')
 }
 // 获取分页和学生
-export const getPage = (page) => {
+export const getPage = (page, pageSize) => {
   return Axios.post('http://132.232.89.22:8080/allstudentPage', {
-    page: page
+    page: page,
+    pageSize: pageSize
   })
 }
 // 获取分页和班级
