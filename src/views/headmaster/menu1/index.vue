@@ -78,7 +78,7 @@
       :current-page="currentPage"
       :page-sizes="[5, 7, 10]"
       :page-size="pageSize"
-      layout="total, sizes, prev, pager, next"
+      layout="total, sizes, prev, pager, next, jumper"
       :total="total"
       style="position:fixed;left:250px;bottom:20px;"
     >

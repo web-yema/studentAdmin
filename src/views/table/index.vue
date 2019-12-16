@@ -155,7 +155,7 @@
         @current-change="handleCurrentChange"
       :page-sizes="[5, 10, 20]"
       :page-size="pageSize"
-      layout="total, sizes, prev, pager, next"
+      layout="total, sizes, prev, pager, next, jumper"
       :total="total"
       style="position:fixed;left:250px;bottom:20px;"
     />
