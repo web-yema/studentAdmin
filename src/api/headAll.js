@@ -1,9 +1,10 @@
 import Axios from 'axios'
 
 // 获取所有班主任和分页
-export const getHeadAll = (page) => {
+export const getHeadAll = (page, pageSize) => {
   return Axios.post('http://132.232.89.22:8080/headTeacherPage', {
-    page: page
+    page: page,
+    pageSize: pageSize
   })
 }
 
@@ -30,9 +31,10 @@ export const deleteHead = (id) => {
 }
 
 // 获取所有讲师和分页
-export const getTeacherAll = (page) => {
+export const getTeacherAll = (page, pageSize) => {
   return Axios.post('http://132.232.89.22:8080/lecturerPage', {
-    page: page
+    page: page,
+    pageSize: pageSize
   })
 }
 

@@ -152,7 +152,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="currentPage"
-        :page-sizes="[5, 10, 20]"
+        :page-sizes="[5, 7, 10]"
         :page-size="pageSize"
         layout="total, sizes, prev, pager, next"
         :total="total"
@@ -499,6 +499,11 @@ export default {
 </script>
 
 <style>
+  .el-table{
+    width:100%;
+    height:400px;
+    overflow:auto
+  }
   .top_option{
     position:absolute;
     bottom:0px;

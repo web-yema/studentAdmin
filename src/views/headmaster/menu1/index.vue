@@ -72,13 +72,17 @@
       @click="addHeads"
     >添加班主任</el-button>
     <!-- 分页模块 -->
-    <pageCount
-      style="position:fixed;left:205px;bottom:80px;"
-      :total="total"
-      :page-size="pageSize"
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
       :current-page="currentPage"
-      @getcurrentPage="getcurrentPage"
-    />
+      :page-sizes="[5, 7, 10]"
+      :page-size="pageSize"
+      layout="total, sizes, prev, pager, next"
+      :total="total"
+      style="position:fixed;left:250px;bottom:20px;"
+    >
+    </el-pagination>
   </div>
 </template>
 
@@ -86,21 +90,15 @@
 // 引入接口函数
 import { getHeadAll, updateHead, deleteHead } from '../../../api/headAll'
 
-// 引入分页模块
-import pageCount from '../../../components/Pagination/index'
-
-//
+//vuex
 import { mapGetters } from 'vuex'
 
 export default {
-  components: {
-    pageCount
-  },
   data() {
     return {
-      total: 1, // 数据总条数，默认给1
-      pageSize: 6, // 数据的总条数，默认是6条
-      currentPage: 1, // 总页数，默认是第1页
+      currentPage: 1, // 默认在第几页
+      pageSize: 5, // 每页最大条数
+      total: 1, // 根据最大条数切割
       dialogVisible: false, // 弹窗状态
       listLoading: false,
       tableData: [], // 所有班主任
@@ -121,7 +119,7 @@ export default {
     }
   },
   mounted() {
-    this.getHeadAlls(this.currentPage)
+    this.getHeadAlls(this.currentPage,this.pageSize)
   },
   methods: {
     addHeads() {
@@ -129,14 +127,17 @@ export default {
         name: 'addHeads'
       })
     },
-    // 调用子组件传过来的事件
-    getcurrentPage(currentPage) {
-      this.currentPage = currentPage
-      this.getHeadAlls(currentPage)
+    handleSizeChange: function (size) {
+      this.pageSize = size //每页下拉显示数据
+      this.getHeadAlls(this.currentPage,this.pageSize) 
+    },
+    handleCurrentChange: function(currentPage){
+      this.currentPage = currentPage //点击第几页
+      this.getHeadAlls(this.currentPage,this.pageSize)
     },
     // 获取所有班主任
-    async getHeadAlls(page) {
-      const { data } = await getHeadAll(page)
+    async getHeadAlls(page,pageSize) {
+      const { data } = await getHeadAll(page,pageSize)
       if (data.code === 202) {
         this.currentPage = this.currentPage - 1
         this.getHeadAlls(this.currentPage)
@@ -165,7 +166,7 @@ export default {
           if (data.code === 200) {
             // 如果code码为200，提示用户修改成功
             this.$message.success(data.msg)
-            this.getHeadAlls(this.currentPage)
+            this.getHeadAlls(this.currentPage,this.pageSize)
           } else {
             // 否则就提示用户修改失败，请重试
             this.$message.error('修改失败，请重试!')
@@ -193,7 +194,7 @@ export default {
           if (data.code === 200) {
             // 如果code码为200，提示用户删除成功
             this.$message.success(data.msg)
-            this.getHeadAlls(this.currentPage)
+            this.getHeadAlls(this.currentPage,this.pageSize)
           } else if (data.code === 201) {
             // 如果code码为201，提示用户没有当前项
             this.$message.error('没有当前项!')
@@ -213,6 +214,11 @@ export default {
 </script>
 
 <style>
+.el-table{
+  width:100%;
+  height:400px;
+  overflow:auto
+}
 .addHead {
   margin-top: 50px;
   float: right;
