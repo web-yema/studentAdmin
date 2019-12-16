@@ -22,6 +22,7 @@
         <el-table-column prop="chengji" label="已有成绩" />
         <el-table-column prop="graduation" label="还差成绩" />
         <el-table-column prop="failss" label="挂科次数" />
+        <el-table-column prop="entryDate" label="入学时间" />
         <el-table-column prop="nativeplace" label="籍贯" />
       </el-table>
     </el-drawer>

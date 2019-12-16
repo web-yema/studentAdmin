@@ -5,12 +5,12 @@ git status
 git add -A
 git commit -m $1
 echo '自动发布'
-git push origin ly
+git push origin why
 git checkout master 
-git merge ly
+git merge why
 git pull 
 echo '拉取完成'
 git push origin master
-git checkout ly
+git checkout why
 git merge master
 echo '自动发布完成'
