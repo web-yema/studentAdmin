@@ -309,7 +309,7 @@ export default {
     async op_click(vel) {
       this.xzmajor = vel
       this.currentPage = 1
-      // eslint-disable-next-line no-undef
+      // 调用全部班级接口
       this.classPage(this.currentPage,this.pageSize)
     },
     // 修改
@@ -429,7 +429,8 @@ export default {
       }
       const { data } = await classPage(page, this.xzmajor,pageSize)
       if (data.code === 202) {
-        this.classPage(this.currentPage,this.pageSize)
+        this.classes = []
+        return false
       } else if (data.code === 200) {
         this.classes = data.data
         this.allClass = data.dataList

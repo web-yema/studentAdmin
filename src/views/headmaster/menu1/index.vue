@@ -127,10 +127,12 @@ export default {
         name: 'addHeads'
       })
     },
+    //每页下拉显示数据下拉事件调用
     handleSizeChange: function (size) {
       this.pageSize = size //每页下拉显示数据
       this.getHeadAlls(this.currentPage,this.pageSize) 
     },
+    //点击第几页调用
     handleCurrentChange: function(currentPage){
       this.currentPage = currentPage //点击第几页
       this.getHeadAlls(this.currentPage,this.pageSize)
