@@ -150,14 +150,14 @@
     </el-table>
     <!-- 分页模块 -->
     <el-pagination
-      @size-change="handleSizeChange"
       :current-page="currentPage"
-        @current-change="handleCurrentChange"
       :page-sizes="[5, 10, 20]"
       :page-size="pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="total"
       style="position:fixed;left:250px;bottom:20px;"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
     />
     <!-- 导出excel表 -->
     <el-button
@@ -326,7 +326,7 @@ export default {
         const sliceData = this.sliceJg(data.data) // 调用切割籍贯函数
         this.tableData = sliceData
         this.total = data.total
-      } 
+      }
     },
     // 获取专业
     async Majors() {
