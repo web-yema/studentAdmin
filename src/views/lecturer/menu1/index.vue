@@ -102,7 +102,8 @@ export default {
         value: 'ui',
         label: 'ui'
       }],
-      value: '全部讲师'
+      value: '全部讲师',
+      selectflag: false, // 标识, 用来给查询使用
     }
   },
   computed: {
@@ -114,7 +115,7 @@ export default {
     }
   },
   mounted() {
-    this.getTeacherAlls(this.currentPage,this.pageSize)
+      this.getTeacherAlls(this.currentPage,this.pageSize)
   },
   methods: {
     addLecturers() {
@@ -134,10 +135,12 @@ export default {
       }
       this.tableData = list
     },
+    //每页下拉显示数据调用
     handleSizeChange: function (size) {
       this.pageSize = size //每页下拉显示数据
       this.getTeacherAlls(this.currentPage,this.pageSize) 
     },
+    //点击第几页调用
     handleCurrentChange: function(currentPage){
       this.currentPage = currentPage //点击第几页
       this.getTeacherAlls(this.currentPage,this.pageSize)
@@ -147,7 +150,7 @@ export default {
       const { data } = await getTeacherAll(page,pageSize)
       if (data.code === 202) {
         this.getTeacherAlls(this.currentPage,this.pageSize)
-      } else {
+      }  else {
         this.tableData = data.data
         this.total = data.total
       }

@@ -304,8 +304,8 @@ export default {
     async op_click(vel) {
       this.xzmajor = vel
       this.currentPage = 1
-      // eslint-disable-next-line no-undef
-      this.classPage(this.currentPage, this.pageSize)
+      // 调用全部班级接口
+      this.classPage(this.currentPage,this.pageSize)
     },
     // 修改
     update(index, row) {

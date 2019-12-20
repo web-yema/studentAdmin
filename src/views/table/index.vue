@@ -151,6 +151,7 @@
     <!-- 分页模块 -->
     <el-pagination
       :current-page="currentPage"
+      @current-change="handleCurrentChange"
       :page-sizes="[5, 10, 20]"
       :page-size="pageSize"
       layout="total, sizes, prev, pager, next, jumper"
@@ -166,7 +167,7 @@
       :loading="exportLodding"
       type="success"
       round
-      style="position:fixed;right:5px;bottom:20px;"
+      style="position:fixed;right:100px;bottom:20px;"
       @click="outExcel"
     >导出当页excel
     </el-button>
@@ -193,7 +194,6 @@ export default {
   data() {
     return {
       exportLodding: false,
-      updateShow: 100000,
       tableData: [], // 所有学生数据
       searchShow: 1, // 搜索模块是否显示 不为1就是不显示
       //  ·················································· 分页数据
@@ -273,7 +273,7 @@ export default {
   },
   mounted() {
     // 分页加学生接口调用
-    this.getPage(this.currentPage, this.pageSize)
+    this.getPages(this.currentPage, this.pageSize)
     // 专业接口调用
     this.Majors()
     // 班级接口调用
@@ -282,14 +282,6 @@ export default {
     this.CityCenters()
   },
   methods: {
-    handleSizeChange: function(size) {
-      this.pageSize = size // 每页下拉显示数据
-      this.getPage(this.currentPage, this.pageSize)
-    },
-    handleCurrentChange: function(currentPage) {
-      this.currentPage = currentPage // 点击第几页
-      this.getPage(this.currentPage, this.pageSize)
-    },
     // 切割籍贯函数
     sliceJg(Array) {
       // for循环出来这个数组的长度
@@ -320,13 +312,27 @@ export default {
       this.total = searchSuc.data.total
     },
     // 分页加学生接口调用
-    async getPage(page, pageSize) {
-      const { data } = await getPage(page, pageSize)
-      if (data.code === 200) {
-        const sliceData = this.sliceJg(data.data) // 调用切割籍贯函数
-        this.tableData = sliceData
-        this.total = data.total
+    async getPages(page, pageSize) {
+      if(this.selectflag){
+        this.selectallstud(this.currentPage,this.objselect)
+      }else{
+          const { data } = await getPage(page, pageSize)
+          if (data.code === 200) {
+          const sliceData = this.sliceJg(data.data) // 调用切割籍贯函数
+          this.tableData = sliceData
+          this.total = data.total
+        }  
       }
+    },
+    //每页下拉显示数据事件调用
+    handleSizeChange: function(size) {
+      this.pageSize = size // 每页下拉显示数据
+      this.getPages(this.currentPage, this.pageSize)
+    },
+    //点击第几页事件调用
+    handleCurrentChange: function(currentPage) {
+      this.currentPage = currentPage // 点击第几页
+      this.getPages(this.currentPage, this.pageSize)
     },
     // 获取专业
     async Majors() {
@@ -412,11 +418,11 @@ export default {
       this.search.serFailss = ''
       this.search.serchengji.$gte = ''
       this.search.serchengji.$lte = ''
-      this.getPage(1, this.pageSize)
+      this.getPages(1, this.pageSize)
       // 返回的时候默认展示第一页的数据
       this.currentPage = 1
     },
-    // 导出Excel
+    // 调用导出Excel
     outExcel() {
       this.exportExcel()
     },
@@ -478,7 +484,7 @@ export default {
 
 <style>
   .el-table{
-    width:100%;
+    width:99%;
     height:400px;
     overflow:auto
   }

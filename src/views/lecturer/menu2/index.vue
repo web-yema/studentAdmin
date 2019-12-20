@@ -12,7 +12,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="年龄" prop="age" :rules="rules.age">
-          <el-input v-model="ruleForm.age" placeholder="请输入年龄" />
+          <el-input v-model.number="ruleForm.age" placeholder="请输入年龄" />
         </el-form-item>
         <el-form-item label="专业" prop="major" :rules="rules.major">
           <el-select v-model="ruleForm.major" placeholder="请选择专业">
@@ -58,7 +58,7 @@ export default {
         // 姓名
         name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
         // 年龄
-        age: [{ message: '年龄不能为空' }, { type: 'number', message: '年龄必须为数字值' }],
+        age: [{ type: 'number', message: '年龄必须为数字值' }],
         // 时间
         time: [{ type: 'date', message: '请选择日期', trigger: 'blur' }],
         // 专业
