@@ -2,7 +2,7 @@ import Vue from 'vue'
 
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 
-import ElementUI from 'element-ui'
+import './plugins/element.js'
 import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/zh-CN' // lang i18n
 
@@ -25,7 +25,7 @@ import '@/permission' // permission control
  */
 
 // set ElementUI lang to EN
-Vue.use(ElementUI, { locale })
+Vue.use({ locale })
 // 如果想要中文版 element-ui，按如下方式声明
 // Vue.use(ElementUI)
 
@@ -46,5 +46,8 @@ new Vue({
   el: '#app',
   router,
   store,
+  mounted() {
+    document.dispatchEvent(new Event('render-event'))
+  },
   render: h => h(App)
-})
+}).$mount('#app')

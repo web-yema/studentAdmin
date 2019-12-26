@@ -1,11 +1,17 @@
 'use strict'
 const path = require('path')
+// 预渲染插件
+const PrerenderSPAPlugin = require('prerender-spa-plugin')
+const Renderer = PrerenderSPAPlugin.PuppeteerRenderer
+// 骨架屏插件
+const SkeletonWebpackPlugin = require('vue-skeleton-webpack-plugin')
 const defaultSettings = require('./src/settings.js')
 
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
+// eslint-disable-next-line no-unused-vars
 const name = defaultSettings.title || 'vue Admin Template' // page title
 
 // If your port is set to 80,
@@ -49,15 +55,54 @@ module.exports = {
     }
     // after: require('./mock/mock-server.js')
   },
-  configureWebpack: {
-    // provide the app's title in webpack's name field, so that
-    // it can be accessed in index.html to inject the correct title.
-    name: name,
-    resolve: {
-      alias: {
-        '@': resolve('src')
+  // eslint-disable-next-line no-dupe-keys
+  configureWebpack: config => {
+    // vue骨架屏插件配置
+    config.plugins.push(new SkeletonWebpackPlugin({
+      webpackConfig: {
+        entry: {
+          app: path.join(__dirname, './src/utils/skeleton.js')
+        }
+      },
+      minimize: true,
+      quiet: true
+    }))
+    if (process.env.NODE_ENV === 'production') {
+      // 为生产环境修改配置...
+      return {
+        plugins: [
+          // 预渲染配置
+          new PrerenderSPAPlugin({
+            // 要求-给的WebPack-输出应用程序的路径预渲染。
+            staticDir: path.join(__dirname, 'dist'),
+            // 必需，要渲染的路线。
+            routes: ['/login'],
+            // 必须，要使用的实际渲染器，没有则不能预编译
+            renderer: new Renderer({
+              inject: {
+                foo: 'bar'
+              },
+              headless: false, // 渲染时显示浏览器窗口。对调试很有用。
+              // 等待渲染，直到检测到指定元素。
+              // 例如，在项目入口使用`document.dispatchEvent(new Event('custom-render-trigger'))`
+              renderAfterDocumentEvent: 'render-event'
+            })
+          })
+        ]
       }
+    } else {
+      // 为开发环境修改配置...
+      return
     }
+  },
+  // css相关配置
+  css: {
+    // 是否使用css分离插件 ExtractTextPlugin
+    extract: true,
+    // 开启 CSS source maps?
+    sourceMap: false,
+    // 启用 CSS modules for all css / pre-processor files.
+    modules: false
   },
   chainWebpack(config) {
     config.plugins.delete('preload') // TODO: need test

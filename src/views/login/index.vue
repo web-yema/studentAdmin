@@ -120,7 +120,7 @@ export default {
     // 阻止浏览器后退
     history.pushState(null, null, document.URL);
     window.addEventListener("popstate", function() {
-      history.pushState(null, null, document.URL);
+    history.pushState(null, null, document.URL);
     });
   },
   methods: {

@@ -201,7 +201,6 @@ export default {
       pageSize: 5, // 每页最大条数
       total: 1, // 根据最大条数切割
       updateShow: 100000, // 当前展示的修改弹出项，给这么大是为了一开始谁也匹配不到
-      intime: '', // 入学时间
       search: {
         // 搜索的v-model绑定值
         serName: '', // 姓名

@@ -149,8 +149,8 @@ export default {
     async getTeacherAlls(page,pageSize) {
       const { data } = await getTeacherAll(page,pageSize)
       if (data.code === 202) {
-        this.getTeacherAlls(this.currentPage,this.pageSize)
-      }  else {
+        return false
+      } else {
         this.tableData = data.data
         this.total = data.total
       }
