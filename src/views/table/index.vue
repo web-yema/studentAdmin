@@ -150,7 +150,6 @@
     </el-table>
     <!-- 分页模块 -->
     <el-pagination
-      @size-change="handleSizeChange"
       :current-page="currentPage"
       @current-change="handleCurrentChange"
       :page-sizes="[5, 10, 20]"
@@ -158,6 +157,8 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="total"
       style="position:fixed;left:250px;bottom:20px;"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
     />
     <!-- 导出excel表 -->
     <el-button

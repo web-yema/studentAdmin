@@ -127,14 +127,14 @@
       </span>
     </el-dialog>
     <el-pagination
-      @size-change="handleSizeChange"
       :current-page="currentPage"
-        @current-change="handleCurrentChange"
       :page-sizes="[5, 10, 20]"
       :page-size="pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="total"
       style="position:fixed;left:250px;bottom:20px;"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
     />
   </div>
 </template>
@@ -145,8 +145,6 @@ import {
   delClass, // 删除班级
   updateClass, // 修改班级信息
   allstudent, // 所有学生信息
-  getUpdate, // 修改学生信息
-  getMajor, // 所有专业
   updateStudent, // 批量修改
   // eslint-disable-next-line no-unused-vars
   classPage // 班级分页
@@ -209,7 +207,6 @@ export default {
       currentPage: 1, // 默认在第几页
       pageSize: 5, // 每页最大条数
       total: 1, // 根据最大条数切割
-      getMajor: [], // 所有专业
       checkeds: [], // 批量转移选中id
       power: true // 操作按钮权限
     }
@@ -226,10 +223,8 @@ export default {
   },
   async mounted() {
     // 分页加班级接口调用
-    this.classPage(this.currentPage,this.pageSize)
+    this.classPage(this.currentPage, this.pageSize)
     // 获取全部专业进行筛选
-    const allmajor = await getMajor()
-    this.getMajor = allmajor.data.data
     this.listLoading = false
   },
   methods: {
@@ -280,7 +275,7 @@ export default {
             .then(async res => {
               const { data } = await delClass(id)
               if (data.code === 200) {
-                this.classPage(this.currentPage,this.pageSize)
+                this.classPage(this.currentPage, this.pageSize)
                 return this.$message.success(data.msg)
               }
               this.$message({
@@ -423,11 +418,12 @@ export default {
       this.classPage(this.currentPage, this.pageSize)
     },
     // 分页加班级接口调用
-    async classPage(page,pageSize) {
+    async classPage(page, pageSize) {
       if (this.xzmajor === '全部班级') {
         this.xzmajor = ''
       }
-      const { data } = await classPage(page, this.xzmajor,pageSize)
+      const { data } = await classPage(page, this.xzmajor, pageSize)
+      console.log(data)
       if (data.code === 202) {
         this.classes = []
         return false
