@@ -158,7 +158,6 @@
       :total="total"
       style="position:fixed;left:250px;bottom:20px;"
       @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
     />
     <!-- 导出excel表 -->
     <el-button
